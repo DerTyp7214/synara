@@ -5,7 +5,8 @@ const config = {
 	extensions: ['.svelte'],
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({ fallback: 'index.html' }),
+        prerender: { default: true }
 	}
 };
 
