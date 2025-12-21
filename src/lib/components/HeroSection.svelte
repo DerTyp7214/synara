@@ -1,17 +1,21 @@
 <script lang="ts">
-    import { Play, ArrowDown } from '@lucide/svelte';
+    import {Play, ArrowDown} from '@lucide/svelte';
     import GitHub from "$lib/assets/icons/GitHub.svelte";
-    import LogoLong from "$lib/components/Logo_LONG.svelte";
 </script>
 
-<section class="relative w-full min-h-screen -mt-24 pt-32 flex flex-col items-center justify-center px-6 overflow-hidden">
+<section
+        class="relative w-full min-h-screen -mt-24 pt-32 flex flex-col items-center justify-center px-6 overflow-hidden bg-surface-50 dark:bg-surface-950">
 
     <div class="absolute inset-0 z-0 pointer-events-none">
-        <div class="absolute inset-0 h-full w-full bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+        <div class="absolute inset-0 h-full w-full
+            bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)]
+            bg-[size:3rem_3rem]
+            [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]">
+        </div>
     </div>
 
-    <div class="absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-primary-500/20 rounded-full blur-[120px] animate-pulse-slow mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-secondary-500/20 rounded-full blur-[120px] animate-pulse-slow mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[10%] w-[500px] h-[500px] bg-primary-500/20 rounded-full blur-[120px] animate-pulse mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[10%] w-[500px] h-[500px] bg-secondary-500/20 rounded-full blur-[120px] animate-pulse delay-700 mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
 
     <div class="relative z-10 max-w-5xl mx-auto text-center">
         <div class="container w-full h-full mx-auto p-8 flex flex-col items-center text-center">
@@ -21,7 +25,7 @@
                 <span class="text-sm font-medium tracking-wide text-surface-950-50">Now supporting Tidal</span>
             </div>
 
-            <h1 class="flex flex-col justify-center items-center font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 animate-fade-up tracking-tight text-surface-950-50">
+            <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 animate-fade-up tracking-tight text-surface-950-50">
                 Your Music.
                 <br/>
                 <span class="bg-gradient-to-r from-primary-600 via-secondary-500 to-primary-600 dark:from-primary-400 dark:via-secondary-400 dark:to-primary-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
@@ -29,18 +33,21 @@
                 </span>
             </h1>
 
-            <p class="flex justify-center text-center items-center text-lg md:text-xl text-surface-700-300 max-w-xl mx-auto mb-8 animate-fade-up leading-relaxed">
+            <p class="text-lg md:text-xl text-surface-700-300 max-w-xl mx-auto mb-8 animate-fade-up leading-relaxed text-center">
                 Synara is a self-hosted music player that delivers lossless audio quality with original FLAC files.
                 Experience music the way it was meant to be heard.
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up">
-                <button type="button" class="btn preset-filled-primary-500 gap-2 py-3 px-8 font-bold shadow-lg shadow-primary-500/20">
+                <button type="button"
+                        class="btn preset-filled-primary-500 gap-2 font-bold shadow-lg shadow-primary-500/20 pt-2.5 px-8 pb-3.5 hover:scale-105 transition-transform">
                     <Play class="w-5 h-5 fill-current"/>
                     Get Started
                 </button>
-                <button type="button" class="btn preset-outlined-surface-500 gap-2 py-3 px-8 font-semibold hover:preset-tonal-surface transition-all" on:click={() => window.open('https://github.com/dertyp7214/synara', '_blank')}>
-                    <GitHub class="w-6 h-6" color="currentColor"/>
+                <button type="button"
+                        class="btn preset-outlined-surface-500 gap-2 py-3 px-8 font-semibold hover:preset-tonal-surface transition-all"
+                        onclick={() => window.open('https://github.com/dertyp7214/synara', '_blank')}>
+                    <GitHub class="w-6 h-6"/>
                     GitHub
                 </button>
             </div>
@@ -53,3 +60,22 @@
     </div>
 
 </section>
+
+<style>
+    /* Ensure the gradient text animates */
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .animate-gradient {
+        animation: gradient 6s ease infinite;
+    }
+</style>

@@ -1,370 +1,97 @@
 <script lang="ts">
-	import { themeStore, theme, mode, type ThemeName, type ThemeMode } from '$lib/stores/theme';
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+    import { themeStore, theme, type ThemeName } from '$lib/stores/theme';
+    import { browser } from '$app/environment';
+    import { onMount } from 'svelte';
+    import { fade, scale } from 'svelte/transition';
 
-	let isOpen = $state(false);
-	let menuRef: HTMLDivElement | undefined = $state();
-	let mounted = $state(false);
-	let themes: ThemeName[] = $state([]);
+    let { class: className = "" } = $props();
 
-	function handleClickOutside(event: MouseEvent) {
-		if (menuRef && !menuRef.contains(event.target as Node)) {
-			isOpen = false;
-		}
-	}
+    let isOpen = $state(false);
+    let menuRef: HTMLDivElement | undefined = $state();
+    let mounted = $state(false);
+    let themes: ThemeName[] = $state([]);
 
-	function handleKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			isOpen = false;
-		}
-	}
+    function handleClickOutside(event: MouseEvent) {
+        if (menuRef && !menuRef.contains(event.target as Node)) {
+            isOpen = false;
+        }
+    }
 
-	function selectTheme(newTheme: ThemeName) {
-		try {
-			theme.set(newTheme);
-			isOpen = false;
-		} catch (error) {
-			console.error('Failed to set theme:', error);
-		}
-	}
+    function selectTheme(newTheme: ThemeName) {
+        theme.set(newTheme);
+        isOpen = false;
+    }
 
-	function selectMode(newMode: ThemeMode) {
-		try {
-			mode.set(newMode);
-		} catch (error) {
-			console.error('Failed to set mode:', error);
-		}
-	}
+    onMount(() => {
+        mounted = true;
+        try {
+            themes = themeStore.getThemes();
+        } catch {
+            themes = ['crimson'];
+        }
 
-	function toggleMenu() {
-		isOpen = !isOpen;
-	}
+        if (browser) {
+            document.addEventListener('click', handleClickOutside);
+            return () => document.removeEventListener('click', handleClickOutside);
+        }
+    });
 
-	onMount(() => {
-		mounted = true;
-		try {
-			themes = themeStore.getThemes();
-		} catch (error) {
-			console.error('Failed to load themes:', error);
-			themes = ['crimson'];
-		}
-		if (browser) {
-			document.addEventListener('click', handleClickOutside);
-			document.addEventListener('keydown', handleKeydown);
-			return () => {
-				document.removeEventListener('click', handleClickOutside);
-				document.removeEventListener('keydown', handleKeydown);
-			};
-		}
-	});
-
-	function formatThemeName(theme: ThemeName): string {
-		return theme
-			.split('-')
-			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-			.join(' ');
-	}
+    const formatName = (name: string) => name.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 </script>
 
 {#if mounted}
-<div class="relative" bind:this={menuRef}>
-	<button
-		class="btn-icon btn-icon-lg"
-		onclick={toggleMenu}
-		aria-label="Change theme"
-		aria-expanded={isOpen}
-		aria-haspopup="true"
-		title="Theme Settings"
-	>
-		{#if $mode === 'dark'}
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="20"
-				height="20"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			>
-				<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-			</svg>
-		{:else}
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="20"
-				height="20"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-			>
-				<circle cx="12" cy="12" r="5"></circle>
-				<line x1="12" y1="1" x2="12" y2="3"></line>
-				<line x1="12" y1="21" x2="12" y2="23"></line>
-				<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-				<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-				<line x1="1" y1="12" x2="3" y2="12"></line>
-				<line x1="21" y1="12" x2="23" y2="12"></line>
-				<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-				<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-			</svg>
-		{/if}
-	</button>
+    <div class="relative inline-block {className}" bind:this={menuRef}>
+        <button
+                onclick={() => isOpen = !isOpen}
+                class="flex items-center justify-center p-2 rounded-lg transition-all duration-200
+              bg-surface-100/50 dark:bg-surface-800/50 hover:bg-primary-500 hover:text-white
+              border border-surface-200/50 dark:border-surface-700/50 backdrop-blur-sm"
+                aria-label="Change theme"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+            </svg>
+        </button>
 
-	{#if isOpen}
-		<div
-			class="theme-menu"
-			role="menu"
-			transition:fade={{ duration: 150 }}
-		>
-			<div class="theme-menu-section">
-				<div class="theme-menu-label">Mode</div>
-				<div class="theme-mode-toggle">
-					<button
-						class="theme-mode-btn"
-						class:active={$mode === 'light'}
-						onclick={() => selectMode('light')}
-						role="menuitem"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<circle cx="12" cy="12" r="5"></circle>
-							<line x1="12" y1="1" x2="12" y2="3"></line>
-							<line x1="12" y1="21" x2="12" y2="23"></line>
-							<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-							<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-							<line x1="1" y1="12" x2="3" y2="12"></line>
-							<line x1="21" y1="12" x2="23" y2="12"></line>
-							<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-							<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-						</svg>
-						<span>Light</span>
-					</button>
-					<button
-						class="theme-mode-btn"
-						class:active={$mode === 'dark'}
-						onclick={() => selectMode('dark')}
-						role="menuitem"
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="16"
-							height="16"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-						</svg>
-						<span>Dark</span>
-					</button>
-				</div>
-			</div>
+        {#if isOpen}
+            <div
+                    transition:scale={{ duration: 150, start: 0.95 }}
+                    class="absolute right-0 mt-2 w-64 z-50 overflow-hidden
+                 bg-white/90 dark:bg-surface-900/90 backdrop-blur-xl
+                 border border-surface-200 dark:border-surface-700
+                 rounded-xl shadow-2xl ring-1 ring-black/5"
+            >
+                <div class="px-4 py-3 border-b border-surface-200 dark:border-surface-700">
+                    <p class="text-xs font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400">
+                        Appearance
+                    </p>
+                </div>
 
-			<div class="theme-menu-section">
-				<div class="theme-menu-label">Theme</div>
-				<div class="theme-list" role="group">
-					{#each themes as themeName}
-						<button
-							class="theme-item"
-							class:active={$theme === themeName}
-							onclick={() => selectTheme(themeName)}
-							role="menuitemradio"
-							aria-checked={$theme === themeName}
-						>
-							<div class="theme-preview">
-								<div class="theme-preview-color" style="background: var(--color-primary-500, #0FBA81);"></div>
-								<div class="theme-preview-color" style="background: var(--color-secondary-500, #4F46E5);"></div>
-							</div>
-							<span>{formatThemeName(themeName)}</span>
-							{#if $theme === themeName}
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									class="check-icon"
-								>
-									<polyline points="20 6 9 17 4 12"></polyline>
-								</svg>
-							{/if}
-						</button>
-					{/each}
-				</div>
-			</div>
-		</div>
-	{/if}
-</div>
+                <div class="p-2 max-h-[320px] overflow-y-auto scrollbar-thin scrollbar-thumb-surface-300 dark:scrollbar-thumb-surface-600">
+                    {#each themes as themeName}
+                        <button
+                                onclick={() => selectTheme(themeName)}
+                                class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group
+                          { $theme === themeName
+                            ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 font-semibold'
+                            : 'hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-700 dark:text-surface-200' }"
+                        >
+                            <div class="flex -space-x-1">
+                                <div class="w-4 h-4 rounded-full border border-white/20" style="background: var(--color-primary-500);"></div>
+                                <div class="w-4 h-4 rounded-full border border-white/20" style="background: var(--color-secondary-500);"></div>
+                            </div>
+
+                            <span class="flex-1 text-sm text-left">{formatName(themeName)}</span>
+
+                            {#if $theme === themeName}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            {/if}
+                        </button>
+                    {/each}
+                </div>
+            </div>
+        {/if}
+    </div>
 {/if}
-
-<style>
-	.theme-menu {
-		position: absolute;
-		top: calc(100% + 0.5rem);
-		right: 0;
-		background: var(--color-surface-50-900-token);
-		border: 1px solid var(--color-surface-200-800-token);
-		border-radius: var(--theme-rounded-container);
-		box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-		padding: 0.75rem;
-		min-width: 240px;
-		max-width: 280px;
-		z-index: 1000;
-		overflow: hidden;
-	}
-
-	.theme-menu-section {
-		margin-bottom: 0.75rem;
-	}
-
-	.theme-menu-section:last-child {
-		margin-bottom: 0;
-	}
-
-	.theme-menu-label {
-		font-size: 0.75rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--color-surface-600-400-token);
-		margin-bottom: 0.5rem;
-		padding: 0 0.5rem;
-	}
-
-	.theme-mode-toggle {
-		display: flex;
-		gap: 0.25rem;
-		background: var(--color-surface-100-900-token);
-		border-radius: var(--theme-rounded-base);
-		padding: 0.25rem;
-	}
-
-	.theme-mode-btn {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		padding: 0.5rem 0.75rem;
-		border-radius: calc(var(--theme-rounded-base) - 2px);
-		border: none;
-		background: transparent;
-		color: var(--color-surface-600-400-token);
-		font-size: 0.875rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.theme-mode-btn:hover {
-		background: var(--color-surface-200-800-token);
-		color: var(--color-surface-900-50-token);
-	}
-
-	.theme-mode-btn.active {
-		background: var(--color-primary-500);
-		color: var(--on-primary);
-	}
-
-	.theme-mode-btn svg {
-		flex-shrink: 0;
-	}
-
-	.theme-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-		max-height: 300px;
-		overflow-y: auto;
-	}
-
-	.theme-item {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.625rem 0.75rem;
-		border-radius: var(--theme-rounded-container);
-		border: none;
-		background: transparent;
-		color: var(--color-surface-900-50-token);
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		text-align: left;
-		width: 100%;
-	}
-
-	.theme-item:hover {
-		background: var(--color-surface-100-900-token);
-	}
-
-	.theme-item.active {
-		background: var(--color-primary-500/10);
-		color: var(--color-primary-500);
-		font-weight: 600;
-	}
-
-	.theme-preview {
-		display: flex;
-		gap: 0.25rem;
-		flex-shrink: 0;
-	}
-
-	.theme-preview-color {
-		width: 12px;
-		height: 12px;
-		border-radius: 2px;
-		border: 1px solid var(--color-surface-300-700-token);
-	}
-
-	.theme-item span {
-		flex: 1;
-	}
-
-	.check-icon {
-		flex-shrink: 0;
-		color: var(--color-primary-500);
-	}
-
-	/* Scrollbar styling */
-	.theme-list::-webkit-scrollbar {
-		width: 6px;
-	}
-
-	.theme-list::-webkit-scrollbar-track {
-		background: transparent;
-	}
-
-	.theme-list::-webkit-scrollbar-thumb {
-		background: var(--color-surface-300-700-token);
-		border-radius: 3px;
-	}
-
-	.theme-list::-webkit-scrollbar-thumb:hover {
-		background: var(--color-surface-400-600-token);
-	}
-</style>
-

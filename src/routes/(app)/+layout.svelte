@@ -94,7 +94,7 @@
 
                 <div class="flex items-center gap-2">
                     <ThemeSwitcher />
-                    <a href="/docs" class="btn preset-filled-primary-500 font-bold shadow-lg">
+                    <a href="/docs" class="btn preset-filled-primary-500 font-bold shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all leading-tight pt-1.5 px-4 pb-2.5">
                         Get Synara
                     </a>
                 </div>
@@ -102,6 +102,7 @@
             </div>
         </AppBar>
     </header>
+
 
     <div class="flex-1 w-full pt-24 relative z-0">
         <div class="w-full min-h-screen relative bg-surface-50-950 transition-colors duration-200">
