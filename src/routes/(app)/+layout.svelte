@@ -2,9 +2,11 @@
     import '../../app.css';
     import { AppBar } from '@skeletonlabs/skeleton-svelte';
     import { page } from '$app/state';
-    import Logo from "$lib/components/Logo.svelte";
+    import LogoLong from "$lib/components/Logo_LONG.svelte";
     import ThemeSwitcher from "$lib/components/ThemeSwitcher.svelte";
     import { fly, fade } from 'svelte/transition';
+    import Logo from "$lib/components/Logo.svelte";
+    import Logo_TEXT from "$lib/components/Logo_TEXT.svelte";
 
     let { children } = $props();
     let isDrawerOpen = $state(false);
@@ -40,7 +42,7 @@
         transition:fly={{ x: -300, duration: 200 }}
     >
         <h2 class="h2 font-bold bg-gradient-to-br from-primary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
-            <Logo class="inline h-8 w-auto mr-2"/>
+            <LogoLong class="inline h-8 w-auto mr-2"/>
         </h2>
         <hr class="opacity-50"/>
         <nav class="list-nav">
@@ -76,8 +78,9 @@
                             </svg>
                         </span>
                     </button>
-                    <a href="/" class="text-2xl font-bold uppercase tracking-widest hover:text-primary-500 transition-colors flex items-center text-surface-950-50">
-                        <Logo class="inline h-8 w-auto mr-2"/>
+                    <a href="/" class="text-2xl font-bold uppercase tracking-widest hover:text-primary-500 transition-colors flex items-center gap-3
+                     text-surface-950-50 ms-4">
+                        <LogoLong class="h-8 w-auto"/>
                     </a>
                 </div>
 
@@ -109,8 +112,9 @@
     <footer class="bg-surface-100-900 text-surface-700-300 py-16 border-t border-surface-200-800 transition-colors duration-200 relative z-0">
         <div class="container mx-auto px-8 flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-0">
             <div class="lg:w-1/2 lg:pr-24 space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
-                <a href="/" class="flex items-center gap-3 text-surface-950-50 hover:text-primary-500 transition-colors group">
-                    <Logo class="h-10 w-auto group-hover:animate-pulse"/>
+                <a href="/" class="text-2xl font-bold uppercase tracking-widest hover:text-primary-500 transition-colors flex items-center gap-4
+                     text-surface-950-50">
+                    <LogoLong class="h-8 w-auto"/>
                 </a>
                 <p class="opacity-80 leading-relaxed">
                     The all-rounder music player tailored for your local library and streaming needs.

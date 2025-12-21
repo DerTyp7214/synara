@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Play, ArrowDown } from '@lucide/svelte';
     import GitHub from "$lib/assets/icons/GitHub.svelte";
-    import Logo from "$lib/components/Logo.svelte";
+    import LogoLong from "$lib/components/Logo_LONG.svelte";
 </script>
 
 <section class="relative w-full min-h-screen -mt-24 pt-32 flex flex-col items-center justify-center px-6 overflow-hidden">

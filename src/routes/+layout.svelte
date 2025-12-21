@@ -4,6 +4,9 @@
     import { themeStore } from '$lib/stores/theme';
     import { onMount } from 'svelte';
 
+    export const prerender = true;
+    export const ssr = false;
+
     let { children } = $props();
 
     onMount(() => {
