@@ -7,9 +7,9 @@ export default {
         adapter: adapter({
             fallback: '404.html'
         }),
+        appDir: 'internal',
         paths: {
             base: '',
-            relative: false
         }
     }
 };
