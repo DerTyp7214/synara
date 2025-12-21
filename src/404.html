@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 - Signal Lost</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: white; margin: 0; overflow: hidden; font-family: sans-serif; }
+        .glow {
+            position: absolute; width: 600px; height: 600px;
+            background: rgba(255, 69, 147, 0.2);
+            filter: blur(120px); border-radius: 50%;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+        .scanlines {
+            position: absolute; inset: 0; pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px; z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="scanlines"></div>
+
+<div class="relative z-20 flex flex-col items-center justify-center h-screen text-center p-6">
+    <h1 class="text-[12rem] font-black opacity-10 italic leading-none">404</h1>
+    <h2 class="text-4xl font-bold uppercase tracking-widest -mt-16 mb-4">Signal Lost</h2>
+    <p class="text-slate-400 max-w-sm mb-8">The requested path has drifted out of range.</p>
+
+    <a href="/" class="bg-gradient-to-r from-pink-500 to-orange-500 px-8 py-3 rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-lg shadow-pink-500/20">
+        Return to Synara
+    </a>
+</div>
+</body>
+</html>
