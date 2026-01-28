@@ -24,22 +24,24 @@
     function getActiveClass(href: string) {
         return page.url.pathname === href ? 'bg-primary-500/20 text-primary-500 font-bold' : '';
     }
+
+    let showHeader = $derived(page.url.pathname !== '/share');
 </script>
 
 {#if isDrawerOpen}
-    <div 
-        class="fixed inset-0 bg-black/50 dark:bg-black/70 z-40" 
-        onclick={() => isDrawerOpen = false}
-        onkeydown={(e) => e.key === 'Escape' && (isDrawerOpen = false)}
-        role="button"
-        tabindex="-1"
-        aria-label="Close menu"
-        transition:fade={{ duration: 200 }}
+    <div
+            class="fixed inset-0 bg-black/50 dark:bg-black/70 z-40"
+            onclick={() => isDrawerOpen = false}
+            onkeydown={(e) => e.key === 'Escape' && (isDrawerOpen = false)}
+            role="button"
+            tabindex="-1"
+            aria-label="Close menu"
+            transition:fade={{ duration: 200 }}
     ></div>
-    
-    <div 
-        class="fixed left-0 top-0 h-screen w-[280px] bg-surface-50-900-token border-r border-surface-200-800 shadow-2xl overflow-y-auto z-50 p-4 space-y-4"
-        transition:fly={{ x: -300, duration: 200 }}
+
+    <div
+            class="fixed left-0 top-0 h-screen w-[280px] bg-surface-50-900-token border-r border-surface-200-800 shadow-2xl overflow-y-auto z-50 p-4 space-y-4"
+            transition:fly={{ x: -300, duration: 200 }}
     >
         <h2 class="h2 font-bold bg-gradient-to-br from-primary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
             <LogoLong class="inline h-8 w-auto mr-2"/>
@@ -62,49 +64,51 @@
 
 <div class="min-h-screen w-full flex flex-col bg-surface-50-900-token text-surface-900-50-token transition-colors duration-200">
 
-    <header class="fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-surface-900/70 backdrop-blur-md transition-colors duration-200">
+    {#if showHeader}
+        <header class="fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-surface-900/70 backdrop-blur-md transition-colors duration-200">
 
-        <AppBar class="!bg-transparent p-4">
+            <AppBar class="!bg-transparent p-4">
 
-            <div class="flex items-center justify-between w-full">
+                <div class="flex items-center justify-between w-full">
 
-                <div class="flex items-center gap-4">
-                    <button class="btn-icon btn-icon-sm md:hidden" onclick={() => isDrawerOpen = true} aria-label="Open Menu">
-                        <span>
-                            <svg viewBox="0 0 100 80" width="20" height="20" fill="currentColor">
-                                <rect width="100" height="15"></rect>
-                                <rect y="30" width="100" height="15"></rect>
-                                <rect y="60" width="100" height="15"></rect>
-                            </svg>
-                        </span>
-                    </button>
-                    <a href="/" class="text-2xl font-bold uppercase tracking-widest hover:text-primary-500 transition-colors flex items-center gap-3
-                     text-surface-950-50 ms-4">
-                        <LogoLong class="h-8 w-auto"/>
-                    </a>
-                </div>
-
-                <div class="hidden md:flex justify-center gap-1">
-                    {#each navLinks as link}
-                        <a href={link.href} class="btn btn-sm hover:preset-tonal-primary {getActiveClass(link.href)}">
-                            {link.label}
+                    <div class="flex items-center gap-4">
+                        <button class="btn-icon btn-icon-sm md:hidden" onclick={() => isDrawerOpen = true} aria-label="Open Menu">
+                            <span>
+                                <svg viewBox="0 0 100 80" width="20" height="20" fill="currentColor">
+                                    <rect width="100" height="15"></rect>
+                                    <rect y="30" width="100" height="15"></rect>
+                                    <rect y="60" width="100" height="15"></rect>
+                                </svg>
+                            </span>
+                        </button>
+                        <a href="/" class="text-2xl font-bold uppercase tracking-widest hover:text-primary-500 transition-colors flex items-center gap-3
+                         text-surface-950-50 ms-4">
+                            <LogoLong class="h-8 w-auto"/>
                         </a>
-                    {/each}
+                    </div>
+
+                    <div class="hidden md:flex justify-center gap-1">
+                        {#each navLinks as link}
+                            <a href={link.href} class="btn btn-sm hover:preset-tonal-primary {getActiveClass(link.href)}">
+                                {link.label}
+                            </a>
+                        {/each}
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <ThemeSwitcher />
+                        <a href="/docs" class="btn preset-filled-primary-500 font-bold shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all leading-tight pt-1.5 px-4 pb-2.5">
+                            Get Synara
+                        </a>
+                    </div>
+
                 </div>
-
-                <div class="flex items-center gap-2">
-                    <ThemeSwitcher />
-                    <a href="/docs" class="btn preset-filled-primary-500 font-bold shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all leading-tight pt-1.5 px-4 pb-2.5">
-                        Get Synara
-                    </a>
-                </div>
-
-            </div>
-        </AppBar>
-    </header>
+            </AppBar>
+        </header>
+    {/if}
 
 
-    <div class="flex-1 w-full pt-24 relative z-0">
+    <div class="flex-1 w-full {showHeader ? 'pt-24' : ''} relative z-0">
         <div class="w-full min-h-screen relative bg-surface-50-950 transition-colors duration-200">
             {@render children()}
         </div>
