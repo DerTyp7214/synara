@@ -1,0 +1,18 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "dev.dertyp.synara",
+      "sha256_cert_fingerprints": ["B0:1F:F5:56:B7:52:EE:A0:0C:49:15:82:A6:52:59:DB:98:91:9C:3F:A6:92:51:49:E5:0F:32:35:2A:08:FA:F4"]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "dev.dertyp.synara.debug",
+      "sha256_cert_fingerprints": ["19:4B:5D:1D:34:DB:42:47:E5:3B:06:A1:27:64:55:E4:1E:EC:09:40:5C:51:42:69:D0:87:7F:E5:C8:09:26:81"]
+    }
+  }
+]
