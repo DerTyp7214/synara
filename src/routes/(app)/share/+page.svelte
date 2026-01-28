@@ -45,7 +45,7 @@
     let displayDuration = $derived(
         mbData?.length
             ? formatDuration(mbData.length)
-            : durationParam
+            : formatDuration(Number(durationParam) ?? 0)
     );
 
     let deeplink = $derived(`synara://share${page.url.search}`);
