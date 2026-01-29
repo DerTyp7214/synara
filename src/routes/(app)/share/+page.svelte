@@ -14,8 +14,6 @@
         const query = [titleParam, ...artistsParam].join(' ');
         if (query.trim()) {
             loading = true;
-            // Use a CORS proxy for client-side requests
-            const corsProxy = 'https://corsproxy.io/?url=';
 
             const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=1`;
 
@@ -25,8 +23,11 @@
                     if (data.results && data.results.length > 0) {
                         trackData = data.results[0];
                         const trackUrl = trackData.trackViewUrl;
-                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${trackUrl}`;
-                        return fetch(corsProxy + encodeURIComponent(songlinkUrl));
+
+                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(trackUrl)}`;
+                        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(songlinkUrl)}`;
+
+                        return fetch(proxyUrl);
                     } else {
                         console.warn("Track not found on iTunes");
                         return null;
