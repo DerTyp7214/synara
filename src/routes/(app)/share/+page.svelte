@@ -25,7 +25,7 @@
                     if (data.results && data.results.length > 0) {
                         trackData = data.results[0];
                         const trackUrl = trackData.trackViewUrl;
-                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(trackUrl)}`;
+                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${trackUrl}`;
                         return fetch(corsProxy + encodeURIComponent(songlinkUrl));
                     } else {
                         console.warn("Track not found on iTunes");
