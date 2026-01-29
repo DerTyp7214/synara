@@ -6,35 +6,40 @@
     let durationParam = $derived(page.url.searchParams.get('duration'));
     let mbid = $derived(page.url.searchParams.get('mbid'));
 
-    let mbData = $state<any>(null);
+    let trackData = $state<any>(null);
+    let linksData = $state<any>(null);
     let loading = $state(false);
 
     $effect(() => {
-        if (mbid) {
+        const query = [titleParam, ...artistsParam].join(' ');
+        if (query.trim()) {
             loading = true;
-            fetch(`https://musicbrainz.org/ws/2/recording/${mbid}?fmt=json&inc=artist-credits+releases`)
+            fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=1`)
                 .then(res => res.json())
                 .then(data => {
-                    mbData = data;
+                    if (data.results && data.results.length > 0) {
+                        trackData = data.results[0];
+                        const trackUrl = trackData.trackViewUrl;
+                        return fetch(`https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(trackUrl)}`);
+                    } else {
+                        console.warn("Track not found on iTunes");
+                        return null;
+                    }
+                })
+                .then(res => res ? res.json() : null)
+                .then(data => {
+                    linksData = data;
                     loading = false;
                 })
                 .catch(err => {
-                    console.error("Failed to fetch MB data", err);
+                    console.error("Failed to fetch streaming links", err);
                     loading = false;
                 });
-        } else {
-            mbData = null;
         }
     });
 
-    let displayTitle = $derived(mbData?.title ?? titleParam);
-
-    let displayArtists = $derived.by(() => {
-        if (mbData?.['artist-credit']) {
-            return mbData['artist-credit'].map((c: any) => c.name + (c.joinphrase || '')).join('');
-        }
-        return artistsParam.length > 0 ? artistsParam.join(', ') : 'Unknown Artist';
-    });
+    let displayTitle = $derived(trackData?.trackName ?? titleParam);
+    let displayArtists = $derived(trackData?.artistName ?? (artistsParam.length > 0 ? artistsParam.join(', ') : 'Unknown Artist'));
 
     function formatDuration(ms: number) {
         const minutes = Math.floor(ms / 60000);
@@ -43,10 +48,33 @@
     }
 
     let displayDuration = $derived(
-        mbData?.length
-            ? formatDuration(mbData.length)
+        trackData?.trackTimeMillis
+            ? formatDuration(trackData.trackTimeMillis)
             : formatDuration(Number(durationParam) ?? 0)
     );
+
+    let streamingLinks = $derived.by(() => {
+        if (!linksData?.linksByPlatform) return [];
+
+        const platforms = [
+            { id: 'spotify', name: 'Spotify' },
+            { id: 'appleMusic', name: 'Apple Music' },
+            { id: 'youtubeMusic', name: 'YouTube Music' },
+            { id: 'soundcloud', name: 'SoundCloud' },
+            { id: 'deezer', name: 'Deezer' },
+            { id: 'tidal', name: 'Tidal' },
+            { id: 'bandcamp', name: 'Bandcamp' },
+            { id: 'napster', name: 'Napster' },
+            { id: 'amazonMusic', name: 'Amazon Music' }
+        ];
+
+        return platforms
+            .map(p => {
+                const link = linksData.linksByPlatform[p.id];
+                return link ? { name: p.name, url: link.url } : null;
+            })
+            .filter((link): link is { name: string, url: string } => link !== null);
+    });
 
     let deeplink = $derived(`synara://share${page.url.search}`);
     let mbLink = $derived(mbid ? `https://musicbrainz.org/recording/${mbid}` : null);
@@ -78,6 +106,18 @@
                 <a href={deeplink} class="btn preset-filled-primary-500 font-bold w-full shadow-lg shadow-primary-500/20">
                     Open in Synara
                 </a>
+
+                {#if loading}
+                    <div class="placeholder animate-pulse h-10 w-full rounded-token"></div>
+                {:else if streamingLinks.length > 0}
+                    <div class="grid grid-cols-2 gap-2 w-full">
+                        {#each streamingLinks as link}
+                            <a href={link.url} target="_blank" rel="noopener noreferrer" class="btn preset-tonal">
+                                {link.name}
+                            </a>
+                        {/each}
+                    </div>
+                {/if}
 
                 {#if mbLink}
                     <a href={mbLink} target="_blank" rel="noopener noreferrer" class="btn preset-tonal w-full">
