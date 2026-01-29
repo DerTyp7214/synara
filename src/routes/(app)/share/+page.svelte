@@ -14,13 +14,19 @@
         const query = [titleParam, ...artistsParam].join(' ');
         if (query.trim()) {
             loading = true;
-            fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=1`)
+            // Use a CORS proxy for client-side requests
+            const corsProxy = 'https://corsproxy.io/?url=';
+
+            const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=1`;
+
+            fetch(itunesUrl)
                 .then(res => res.json())
                 .then(data => {
                     if (data.results && data.results.length > 0) {
                         trackData = data.results[0];
                         const trackUrl = trackData.trackViewUrl;
-                        return fetch(`https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(trackUrl)}`);
+                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(trackUrl)}`;
+                        return fetch(corsProxy + songlinkUrl);
                     } else {
                         console.warn("Track not found on iTunes");
                         return null;
