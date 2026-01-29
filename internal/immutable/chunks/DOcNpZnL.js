@@ -1,0 +1,1 @@
+import{b as o,m as _,n as c,E as b,o as d,H as E,v as T,w as m,x as f}from"./CYChEm4a.js";import{B as p}from"./BUB_SVW2.js";function g(t,i,u=!1){_&&c();var e=new p(t),h=u?b:0;function n(a,r){if(_){const l=d(t)===E;if(a===l){var s=T();m(s),e.anchor=s,f(!1),e.ensure(a,r),f(!0);return}}e.ensure(a,r)}o(()=>{var a=!1;i((r,s=!0)=>{a=!0,n(s,r)}),a||n(!1,null)},h)}export{g as i};
