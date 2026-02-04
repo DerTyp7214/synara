@@ -1,6 +1,7 @@
 <script lang="ts">
     import { page } from '$app/state';
 
+    let typeParam = $derived(page.url.searchParams.get('type') ?? 'song');
     let titleParam = $derived(page.url.searchParams.get('title') ?? 'Unknown Title');
     let artistsParam = $derived(page.url.searchParams.getAll('artist'));
     let durationParam = $derived(page.url.searchParams.get('duration'));
@@ -15,21 +16,27 @@
         if (query.trim()) {
             loading = true;
 
-            const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=1`;
+            const entity = typeParam === 'album' ? 'album' : 'song';
+            const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=${entity}&limit=1`;
 
             fetch(itunesUrl)
                 .then(res => res.json())
                 .then(data => {
                     if (data.results && data.results.length > 0) {
                         trackData = data.results[0];
-                        const trackUrl = trackData.trackViewUrl;
+                        const itemUrl = typeParam === 'album' ? trackData.collectionViewUrl : trackData.trackViewUrl;
 
-                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(trackUrl)}`;
+                        if (!itemUrl) {
+                             console.warn("Item URL not found in iTunes data");
+                             return null;
+                        }
+
+                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(itemUrl)}`;
                         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(songlinkUrl)}`;
 
                         return fetch(proxyUrl);
                     } else {
-                        console.warn("Track not found on iTunes");
+                        console.warn("Item not found on iTunes");
                         return null;
                     }
                 })
@@ -45,7 +52,9 @@
         }
     });
 
-    let displayTitle = $derived(trackData?.trackName ?? titleParam);
+    let displayTitle = $derived(
+        (typeParam === 'album' ? trackData?.collectionName : trackData?.trackName) ?? titleParam
+    );
     let displayArtists = $derived(trackData?.artistName ?? (artistsParam.length > 0 ? artistsParam.join(', ') : 'Unknown Artist'));
 
     function formatDuration(ms: number) {
@@ -55,9 +64,11 @@
     }
 
     let displayDuration = $derived(
-        trackData?.trackTimeMillis
-            ? formatDuration(trackData.trackTimeMillis)
-            : formatDuration(Number(durationParam) ?? 0)
+        typeParam === 'song'
+            ? (trackData?.trackTimeMillis
+                ? formatDuration(trackData.trackTimeMillis)
+                : (durationParam ? formatDuration(Number(durationParam)) : null))
+            : null
     );
 
     let streamingLinks = $derived.by(() => {
@@ -84,7 +95,7 @@
     });
 
     let deeplink = $derived(`synara://share${page.url.search}`);
-    let mbLink = $derived(mbid ? `https://musicbrainz.org/recording/${mbid}` : null);
+    let mbLink = $derived(mbid ? `https://musicbrainz.org/${typeParam === 'album' ? 'release' : 'recording'}/${mbid}` : null);
 </script>
 
 <div class="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-surface-900">
@@ -94,7 +105,7 @@
 
     <div class="container mx-auto p-4 flex flex-col items-center justify-center relative z-20">
         <div class="card p-8 w-full max-w-2xl bg-surface-100-800-token shadow-xl space-y-6 text-center border border-surface-200-700-token rounded-container-token backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90">
-            <h1 class="h3 font-bold uppercase tracking-widest opacity-60">Shared Track</h1>
+            <h1 class="h3 font-bold uppercase tracking-widest opacity-60">Shared {typeParam === 'album' ? 'Album' : 'Song'}</h1>
 
             <div class="space-y-2">
                 <h2 class="h1 font-bold text-primary-500">{displayTitle}</h2>
