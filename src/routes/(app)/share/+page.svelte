@@ -16,14 +16,27 @@
         if (query.trim()) {
             loading = true;
 
-            const entity = typeParam === 'album' ? 'album' : 'song';
-            const itunesUrl = `https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=${entity}&limit=1`;
+            const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
 
-            fetch(itunesUrl)
-                .then(res => res.json())
+            const fetchItunes = (entity: string) =>
+                fetch(`https://itunes.apple.com/search?term=${encodedQuery}&entity=${entity}&limit=1`)
+                    .then(res => res.json());
+
+            const primaryEntity = typeParam === 'album' ? 'album' : 'song';
+
+            fetchItunes(primaryEntity)
                 .then(data => {
                     if (data.results && data.results.length > 0) {
-                        trackData = data.results[0];
+                        return data.results[0];
+                    } else if (typeParam === 'album') {
+                        console.log("Album search failed, falling back to song search");
+                        return fetchItunes('song').then(data => data.results?.[0] ?? null);
+                    }
+                    return null;
+                })
+                .then(result => {
+                    if (result) {
+                        trackData = result;
                         const itemUrl = typeParam === 'album' ? trackData.collectionViewUrl : trackData.trackViewUrl;
 
                         if (!itemUrl) {
@@ -31,7 +44,7 @@
                              return null;
                         }
 
-                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(itemUrl)}`;
+                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(itemUrl.split("?")[0])}`;
                         const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(songlinkUrl)}`;
 
                         return fetch(proxyUrl);
@@ -55,7 +68,13 @@
     let displayTitle = $derived(
         (typeParam === 'album' ? trackData?.collectionName : trackData?.trackName) ?? titleParam
     );
-    let displayArtists = $derived(trackData?.artistName ?? (artistsParam.length > 0 ? artistsParam.join(', ') : 'Unknown Artist'));
+    let displayArtists = $derived(
+        (typeParam === 'album' && trackData?.collectionArtistName)
+            ? trackData.collectionArtistName
+            : (trackData?.artistName ?? (artistsParam.length > 0 ? artistsParam.join(', ') : 'Unknown Artist'))
+    );
+
+    let displayCover = $derived(trackData?.artworkUrl100?.replace('100x100', '600x600'));
 
     function formatDuration(ms: number) {
         const minutes = Math.floor(ms / 60000);
@@ -106,6 +125,10 @@
     <div class="container mx-auto p-4 flex flex-col items-center justify-center relative z-20">
         <div class="card p-8 w-full max-w-2xl bg-surface-100-800-token shadow-xl space-y-6 text-center border border-surface-200-700-token rounded-container-token backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90">
             <h1 class="h3 font-bold uppercase tracking-widest opacity-60">Shared {typeParam === 'album' ? 'Album' : 'Song'}</h1>
+
+            {#if displayCover}
+                <img src={displayCover} alt="Album Art" class="w-48 h-48 mx-auto rounded-lg shadow-2xl" />
+            {/if}
 
             <div class="space-y-2">
                 <h2 class="h1 font-bold text-primary-500">{displayTitle}</h2>
