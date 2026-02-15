@@ -45,7 +45,7 @@
                         }
 
                         const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(itemUrl.split("?")[0])}`;
-                        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(songlinkUrl)}`;
+                        const proxyUrl = `https://corsproxy.io?key=e7de893f&url=${encodeURIComponent(songlinkUrl)}`;
 
                         return fetch(proxyUrl);
                     } else {
