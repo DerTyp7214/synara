@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "7G3ZXCFGTK.dev.dertyp.synara",
+        "paths": ["/share*"]
+      }
+    ]
+  }
+}
