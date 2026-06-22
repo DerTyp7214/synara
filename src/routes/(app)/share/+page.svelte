@@ -96,11 +96,20 @@
                 const lookupParam = typeParam === 'song' ? 'isrc' : 'upc';
 
                 if (lookupId) {
-                    const r = await fetch(`https://linkresolver.synara.audio/resolve?${lookupParam}=${encodeURIComponent(lookupId)}`, {
+                    const r = await fetch(`https://linkresolver.synara.audio/resolve?${lookupParam}=${encodeURIComponent(lookupId)}&metadata=true`, {
                         headers: { 'X-API-Key': PUBLIC_LINKRESOLVER_API_KEY }
                     });
                     if (!cancelled && r.ok) {
                         const data = await r.json();
+                        if (data.metadata && !cancelled) {
+                            trackData = {
+                                trackName: data.metadata.title,
+                                collectionName: typeParam === 'album' ? data.metadata.title : (data.metadata.album ?? data.metadata.title),
+                                artistName: data.metadata.artist,
+                                artworkUrl100: data.metadata.cover,
+                                trackTimeMillis: data.metadata.durationMs,
+                            };
+                        }
                         const links = extractResolverLinks(data.links ?? {});
                         if (links.length > 0) {
                             streamingLinks = links;
