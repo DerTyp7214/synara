@@ -1,1 +1,1 @@
-export const env={}
+export const env={"PUBLIC_LINKRESOLVER_API_KEY":"BBu92k6EUOt6l2GC5JQJCDP9uQL4MAUJTs5ecPqdzDY"}
