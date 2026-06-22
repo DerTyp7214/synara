@@ -1,68 +1,149 @@
 <script lang="ts">
     import { page } from '$app/state';
+    import { PUBLIC_LINKRESOLVER_API_KEY } from '$env/static/public';
 
     let typeParam = $derived(page.url.searchParams.get('type') ?? 'song');
     let titleParam = $derived(page.url.searchParams.get('title') ?? 'Unknown Title');
     let artistsParam = $derived(page.url.searchParams.getAll('artist'));
     let durationParam = $derived(page.url.searchParams.get('duration'));
     let mbid = $derived(page.url.searchParams.get('mbid'));
+    let isrc = $derived(page.url.searchParams.get('isrc'));
+    let barcode = $derived(page.url.searchParams.get('barcode'));
 
     let trackData = $state<any>(null);
-    let linksData = $state<any>(null);
+    let streamingLinks = $state<{ name: string; url: string }[]>([]);
     let loading = $state(false);
+
+    const platforms = [
+        { id: 'spotify', name: 'Spotify' },
+        { id: 'appleMusic', name: 'Apple Music' },
+        { id: 'youtubeMusic', name: 'YouTube Music' },
+        { id: 'soundcloud', name: 'SoundCloud' },
+        { id: 'deezer', name: 'Deezer' },
+        { id: 'tidal', name: 'Tidal' },
+        { id: 'bandcamp', name: 'Bandcamp' },
+        { id: 'napster', name: 'Napster' },
+        { id: 'amazonMusic', name: 'Amazon Music' },
+        { id: 'discogs', name: 'Discogs' },
+    ];
+
+    const mbDomainMap: Record<string, string> = {
+        'open.spotify.com': 'Spotify',
+        'music.apple.com': 'Apple Music',
+        'itunes.apple.com': 'Apple Music',
+        'music.youtube.com': 'YouTube Music',
+        'soundcloud.com': 'SoundCloud',
+        'deezer.com': 'Deezer',
+        'tidal.com': 'Tidal',
+        'bandcamp.com': 'Bandcamp',
+        'music.amazon.com': 'Amazon Music',
+        'napster.com': 'Napster',
+        'discogs.com': 'Discogs',
+    };
+
+    function extractResolverLinks(links: Record<string, string>): { name: string; url: string }[] {
+        return platforms
+            .filter(p => links[p.id])
+            .map(p => ({ name: p.name, url: links[p.id] }));
+    }
 
     $effect(() => {
         const query = [titleParam, ...artistsParam].join(' ');
-        if (query.trim()) {
-            loading = true;
+        if (!query.trim()) return;
 
-            const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
+        loading = true;
+        streamingLinks = [];
+        trackData = null;
 
-            const fetchItunes = (entity: string) =>
-                fetch(`https://itunes.apple.com/search?term=${encodedQuery}&entity=${entity}&limit=1`)
-                    .then(res => res.json());
+        let cancelled = false;
 
-            const primaryEntity = typeParam === 'album' ? 'album' : 'song';
+        const encodedQuery = encodeURIComponent(query).replace(/%20/g, '+');
+        const fetchItunes = (entity: string) =>
+            fetch(`https://itunes.apple.com/search?term=${encodedQuery}&entity=${entity}&limit=1`)
+                .then(r => r.json());
 
-            fetchItunes(primaryEntity)
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        return data.results[0];
-                    } else if (typeParam === 'album') {
-                        console.log("Album search failed, falling back to song search");
-                        return fetchItunes('song').then(data => data.results?.[0] ?? null);
+        const primaryEntity = typeParam === 'album' ? 'album' : 'song';
+
+        const directLookupId = typeParam === 'song' ? isrc : barcode;
+        const directLookupParam = typeParam === 'song' ? 'isrc' : 'upc';
+
+        const fetchItunesDirect = () => directLookupId
+            ? fetch(`https://itunes.apple.com/lookup?${directLookupParam}=${encodeURIComponent(directLookupId)}`)
+                .then(r => r.json())
+                .then((d: any) => d.results?.[0] ?? null)
+            : Promise.resolve(null);
+
+        const itunesPromise = fetchItunesDirect()
+            .then((direct: any) => {
+                if (direct) return direct;
+                return fetchItunes(primaryEntity).then((data: any) => {
+                    if (data.results?.length > 0) return data.results[0];
+                    if (typeParam === 'album') {
+                        console.log('Album search failed, falling back to song search');
+                        return fetchItunes('song').then((d: any) => d.results?.[0] ?? null);
                     }
                     return null;
-                })
-                .then(result => {
-                    if (result) {
-                        trackData = result;
-                        const itemUrl = typeParam === 'album' ? trackData.collectionViewUrl : trackData.trackViewUrl;
-
-                        if (!itemUrl) {
-                             console.warn("Item URL not found in iTunes data");
-                             return null;
-                        }
-
-                        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=${encodeURIComponent(itemUrl.split("?")[0])}`;
-                        const proxyUrl = `https://corsproxy.io?key=e7de893f&url=${encodeURIComponent(songlinkUrl)}`;
-
-                        return fetch(proxyUrl);
-                    } else {
-                        console.warn("Item not found on iTunes");
-                        return null;
-                    }
-                })
-                .then(res => res ? res.json() : null)
-                .then(data => {
-                    linksData = data;
-                    loading = false;
-                })
-                .catch(err => {
-                    console.error("Failed to fetch streaming links", err);
-                    loading = false;
                 });
-        }
+            })
+            .then((result: any) => {
+                if (result && !cancelled) trackData = result;
+                return result;
+            });
+
+        (async () => {
+            try {
+                const lookupId = typeParam === 'song' ? isrc : barcode;
+                const lookupParam = typeParam === 'song' ? 'isrc' : 'upc';
+
+                if (lookupId) {
+                    const r = await fetch(`https://linkresolver.synara.audio/resolve?${lookupParam}=${encodeURIComponent(lookupId)}`, {
+                        headers: { 'X-API-Key': PUBLIC_LINKRESOLVER_API_KEY }
+                    });
+                    if (!cancelled && r.ok) {
+                        const data = await r.json();
+                        const links = extractResolverLinks(data.links ?? {});
+                        if (links.length > 0) {
+                            streamingLinks = links;
+                            return;
+                        }
+                    }
+                }
+
+                if (cancelled) return;
+
+                if (mbid) {
+                    const mbType = typeParam === 'album' ? 'release' : 'recording';
+                    const r = await fetch(`https://musicbrainz.org/ws/2/${mbType}/${mbid}?inc=url-rels&fmt=json`);
+                    if (!cancelled && r.ok) {
+                        const data = await r.json();
+                        const mbLinks: { name: string; url: string }[] = [];
+                        for (const rel of (data?.relations ?? [])) {
+                            const resource = rel?.url?.resource;
+                            if (!resource) continue;
+                            try {
+                                const hostname = new URL(resource).hostname.replace(/^www\./, '');
+                                const name = mbDomainMap[hostname];
+                                if (name && !mbLinks.some(l => l.name === name)) {
+                                    mbLinks.push({ name, url: resource });
+                                }
+                            } catch {}
+                        }
+                        if (mbLinks.length > 0) {
+                            streamingLinks = mbLinks;
+                            return;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to fetch streaming links', err);
+            } finally {
+                if (!cancelled) loading = false;
+            }
+        })();
+
+        itunesPromise.catch((err: any) => console.error('Failed to fetch iTunes data', err));
+
+        return () => { cancelled = true; };
     });
 
     let displayTitle = $derived(
@@ -79,7 +160,7 @@
     function formatDuration(ms: number) {
         const minutes = Math.floor(ms / 60000);
         const seconds = ((ms % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (Number(seconds) < 10 ? '0' : '') + seconds;
+        return minutes + ':' + (Number(seconds) < 10 ? '0' : '') + seconds;
     }
 
     let displayDuration = $derived(
@@ -89,29 +170,6 @@
                 : (durationParam ? formatDuration(Number(durationParam)) : null))
             : null
     );
-
-    let streamingLinks = $derived.by(() => {
-        if (!linksData?.linksByPlatform) return [];
-
-        const platforms = [
-            { id: 'spotify', name: 'Spotify' },
-            { id: 'appleMusic', name: 'Apple Music' },
-            { id: 'youtubeMusic', name: 'YouTube Music' },
-            { id: 'soundcloud', name: 'SoundCloud' },
-            { id: 'deezer', name: 'Deezer' },
-            { id: 'tidal', name: 'Tidal' },
-            { id: 'bandcamp', name: 'Bandcamp' },
-            { id: 'napster', name: 'Napster' },
-            { id: 'amazonMusic', name: 'Amazon Music' }
-        ];
-
-        return platforms
-            .map(p => {
-                const link = linksData.linksByPlatform[p.id];
-                return link ? { name: p.name, url: link.url } : null;
-            })
-            .filter((link): link is { name: string, url: string } => link !== null);
-    });
 
     let deeplink = $derived(`synara://share${page.url.search}`);
     let mbLink = $derived(mbid ? `https://musicbrainz.org/${typeParam === 'album' ? 'release' : 'recording'}/${mbid}` : null);
@@ -167,9 +225,11 @@
                 {/if}
             </div>
 
-            {#if mbid}
-                <div class="text-xs opacity-50 font-mono mt-2 break-all">
-                    MBID: {mbid}
+            {#if mbid || isrc || barcode}
+                <div class="text-xs opacity-50 font-mono mt-2 space-y-1">
+                    {#if mbid}<div class="break-all">MBID: {mbid}</div>{/if}
+                    {#if isrc}<div class="break-all">ISRC: {isrc}</div>{/if}
+                    {#if barcode}<div class="break-all">Barcode: {barcode}</div>{/if}
                 </div>
             {/if}
         </div>

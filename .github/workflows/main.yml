@@ -25,6 +25,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
+        env:
+          PUBLIC_LINKRESOLVER_API_KEY: ${{ secrets.LINKRESOLVER_API_KEY }}
         run: |
           pnpm check
           pnpm build
