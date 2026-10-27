@@ -273,9 +273,11 @@ Transition helpers), the components listed under "Modern components", and `pages
 ### Component idioms (baseline reskin of the shared classes)
 - Buttons: `.key` = **tinted** capsule (accent text on `--m-tint-fill`), `.key-primary` = **prominent** (accent fill,
   `on-accent` text, one per region), `.key-quiet` = **plain** (accent text, fill on hover). Press = scale 0.97 with a spring, no 2 px drop.
-- `.selector` = iOS segmented control: `--m-fill` track, equal segments, one `--m-thumb` thumb that slides to the
+- `.selector` = iOS segmented control, as in the app's `GlassSegmentedControl` (see `shots/ios/*/05-listening-stats`,
+  `08-search`): a light track (`--m-seg-track` with a `--m-seg-border` rim), equal segments, and one thumb that is a
+  translucent dark pill (`--m-thumb`: black 32% dark, 8% light, no shadow). It slides to the
   `aria-pressed|selected|current="true"` child (CSS `:has()`, up to 5 segments; without `:has()` the selected segment carries
-  the thumb).
+  the thumb). `ThemeSegmented`, `DesignToggle` and the features picture use the same tokens.
 - `.module` / `.faceplate` = inset-grouped cards on the grouped background (no bevel, no shadow). `.module-head` keeps a hairline
   separator; `.module-title` is a headline. `.module.is-selected` keeps an accent rim.
 - `.lcd` and `.code-block` = secondary-grouped surfaces with ink text, tertiary when nested in a card. Code stays mono.
@@ -290,8 +292,8 @@ Transition helpers), the components listed under "Modern components", and `pages
 
 ### Modern components (`src/lib/designs/modern`)
 - `Header.svelte`: a floating Liquid Glass capsule (52 px, sticky, 10 px from the top; `--header-h` is 4.25rem on Modern
-  so sticky things clear it). Logo, then the `nav.ts` links as tab-bar items: the current page is a tinted capsule with
-  accent text and `aria-current="page"`; hash links are never current. From lg up, the design switch and
+  so sticky things clear it). Logo, then the `nav.ts` links as tab-bar items: the current page is a neutral pill
+  (`--m-fill-strong`) with an accent label and `aria-current="page"`, as in the app's tab bar; hash links are never current. From lg up, the design switch and
   `ThemeSegmented` sit in the bar on a plain fill (no glass on glass). Below lg, a circle menu button opens a floating
   glass panel (28 radius, thicker glass because it holds text over text) with the links as rows and both controls with
   labels. Esc closes it and returns focus to the button. Opening it focuses the first item. A click outside closes it.
@@ -302,11 +304,13 @@ Transition helpers), the components listed under "Modern components", and `pages
   Docs and Download (tinted) capsules. It is centred, as iOS empty states are.
 - `home/*` (styles shared in `home/home.css`, prefixed `mh-`):
   - `Hero.svelte`: a large title with lead, buttons and licence, beside a glass now-playing card (`.glass`, 28 radius,
-    cover inset 16 with a concentric 12 radius) modelled on the iOS player: cover, title/artist, a format capsule,
-    progress with tabular times, and the transport row. It is a small playback demo without audio, with two CC BY 4.0
+    cover inset 16 with a concentric 12 radius) modelled on the iOS player (`shots/ios/*/01-now-playing`): cover,
+    title/artist with a heart, a thin progress bar with elapsed and total time and the format as the centre accessory,
+    and shuffle / rewind / play-pause / fast-forward / repeat. Play/Pause is the app's glass button: cover-tinted glass
+    with the glyph in `--tint-primary`. It is a small playback demo without audio, with two CC BY 4.0
     songs (Stellardrone, *Light Years*, and Broke For Free, "Night Owl" from *Directionless EP*). Each plays about 16 s
     of real-time progress from an offset and then moves on to the next, looping. Play/Pause (it morphs between a
-    rounded square and a circle like the app's button) and Previous/Next are real buttons. Shuffle and repeat are
+    rounded square and a circle like the app's button) and Previous/Next (rewind and fast-forward glyphs) are real buttons. Shuffle and repeat are
     decoration, and the ticking times are `aria-hidden`. One rAF loop runs only while playing, on screen
     (IntersectionObserver), in a visible tab and on Modern. Under reduced motion the demo starts paused. Colour follows
     the cover like the app: the section carries the current song's build-time tint class (`.tint-light-years`,
