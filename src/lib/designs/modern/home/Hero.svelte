@@ -183,8 +183,9 @@
         z-index: -1;
         background: var(--tint-surface);
         /* The mask sits on the container, after the image's blur, so nothing bleeds past the fade. */
-        -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
-        mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
+        /* Even colour over the whole hero (also when stacked); only the last stretch fades into the page. */
+        -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 calc(100% - 16rem), transparent 100%);
+        mask-image: linear-gradient(180deg, #000 0%, #000 calc(100% - 16rem), transparent 100%);
     }
     .backdrop img {
         position: absolute;
@@ -258,13 +259,20 @@
     }
 
     /* ---- The player card: large glass card (28), cover inset 16 with a concentric 12 radius ---- */
+    /* The stage is a size container: the card's parts scale with it (cqi), and a wide stage (stacked
+     * layout on landscape phones and small tablets) turns the card sideways, like the iPad player. */
     .stage {
+        container-type: inline-size;
         width: 100%;
-        max-width: 23.5rem;
+        max-width: 36rem;
     }
     .player {
+        --pad: clamp(0.75rem, 4.2cqi, 1rem);
+        --play: clamp(3.25rem, 17cqi, 4rem);
+        --ctl: clamp(2.5rem, 12cqi, 2.75rem);
+        --glyph: clamp(1.375rem, 7cqi, 1.625rem);
         margin: 0;
-        padding: 1rem 1rem 1.25rem;
+        padding: var(--pad) var(--pad) calc(var(--pad) + 0.25rem);
         border-radius: var(--m-radius-card-lg);
         color: var(--tint-ink);
     }
@@ -273,7 +281,7 @@
         display: block;
         aspect-ratio: 1;
         overflow: hidden;
-        border-radius: calc(var(--m-radius-card-lg) - 1rem);
+        border-radius: calc(var(--m-radius-card-lg) - var(--pad));
         box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.5);
     }
     .cover img {
@@ -297,7 +305,7 @@
     }
     .title {
         font-family: var(--font-display);
-        font-size: var(--ios-title2-size);
+        font-size: clamp(var(--ios-title3-size), 5.8cqi, var(--ios-title2-size));
         line-height: var(--ios-title2-leading);
         font-weight: 700;
         letter-spacing: -0.01em;
@@ -365,8 +373,8 @@
         color: var(--tint-ink);
     }
     button.ctl {
-        width: 2.75rem;
-        height: 2.75rem;
+        width: var(--ctl);
+        height: var(--ctl);
         border-radius: 50%;
         cursor: pointer;
         transition:
@@ -380,8 +388,8 @@
         transform: scale(0.88);
     }
     .ctl :global(svg) {
-        width: 1.625rem;
-        height: 1.625rem;
+        width: var(--glyph);
+        height: var(--glyph);
         fill: currentColor;
         stroke-width: 1.5;
     }
@@ -398,9 +406,9 @@
     .play {
         display: inline-grid;
         place-items: center;
-        width: 4rem;
-        height: 4rem;
-        border-radius: 2rem;
+        width: var(--play);
+        height: var(--play);
+        border-radius: calc(var(--play) / 2);
         background:
             var(--glass-specular),
             color-mix(in oklab, var(--tint-container) 72%, transparent);
@@ -415,14 +423,14 @@
             transform var(--m-dur-press) var(--ease-spring);
     }
     .play.is-playing {
-        border-radius: 1.375rem;
+        border-radius: calc(var(--play) * 0.34);
     }
     .play:active {
         transform: scale(0.92);
     }
     .play :global(svg) {
-        width: 1.75rem;
-        height: 1.75rem;
+        width: calc(var(--play) * 0.44);
+        height: calc(var(--play) * 0.44);
         fill: currentColor;
         stroke-width: 1.5;
     }
@@ -442,14 +450,51 @@
         color: var(--tint-ink);
     }
 
-    @media (min-width: 64rem) {
-        .m-hero {
-            padding-block: calc(var(--header-h) + 4.5rem) 4.5rem;
+    /* A wide stage (stacked, about 32rem and up): cover on the left, the rest beside it. */
+    @container (min-width: 32rem) {
+        .player {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr);
+            /* Spacer rows above and below keep the three blocks together, centred on the cover. */
+            grid-template-rows: 1fr auto auto auto 1fr;
+            column-gap: 1.25rem;
+            padding: var(--pad);
         }
+        .cover {
+            grid-row: 1 / -1;
+            align-self: center;
+        }
+        .track {
+            margin-top: 0;
+        }
+        .track,
+        .scrubber,
+        .controls {
+            grid-column: 2;
+        }
+        .track {
+            grid-row: 2;
+        }
+        .scrubber {
+            grid-row: 3;
+        }
+        .controls {
+            grid-row: 4;
+        }
+    }
+
+    /* Side by side from tablet portrait up, with the card scaling with the viewport. */
+    @media (min-width: 48rem) {
         .layout {
-            grid-template-columns: minmax(0, 1fr) 23.5rem;
+            grid-template-columns: minmax(0, 1fr) clamp(16.5rem, 31vw, 23.5rem);
             align-items: center;
-            gap: 5rem;
+            gap: clamp(2rem, 5vw, 5rem);
+        }
+        .stage {
+            max-width: none;
+        }
+        .m-hero {
+            padding-block: calc(var(--header-h) + clamp(2.5rem, 5vw, 4.5rem)) clamp(3rem, 5vw, 4.5rem);
         }
     }
     @media (prefers-reduced-transparency: reduce) {

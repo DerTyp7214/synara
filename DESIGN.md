@@ -316,7 +316,12 @@ Transition helpers), the components listed under "Modern components", and `pages
     the cover like the app: the section carries the current song's build-time tint class (`.tint-light-years`,
     `.tint-directionless`), the registered `--tint-*` colours transition over `--m-tint-dur`, and the cover and the
     blurred cover backdrop (`--m-cover-backdrop-filter|opacity|veil`, per theme; the veil keeps text AA) crossfade. The
-    credit line under the card follows the song. The secondary button is a glass capsule because it sits on colour.
+    credit line under the card follows the song. Layout: stacked below 48rem, with copy and card in one 36rem
+    column (the credit aligned with the card). From 48rem it is side by side, with the card at
+    `clamp(16.5rem, 31vw, 23.5rem)`. The stage is a size container: the card's padding, title, play button, transport
+    buttons and glyphs scale with `cqi`, and a stage of 32rem or wider (a stacked layout on landscape phones or small
+    tablets) lays the card out sideways, with the cover on the left. The backdrop stays even over the whole hero and
+    fades only in its last 16rem. The secondary button is a glass capsule because it sits on colour.
   - `HowItWorks.svelte`: the server as a grouped card with value rows (term left, value right, like Settings > About),
     one arrow in a circle, then the apps as an inset-grouped list with leading icon tiles. Apple is muted with a
     "Coming soon" tag. No cables.
