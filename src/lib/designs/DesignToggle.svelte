@@ -17,6 +17,7 @@
 
     // Prerendered as Modern (the default; the server store says so too) and follows the store after
     // hydration. A constant start value means a client on Retro gets a real update, not a stale attribute.
+    // eslint-disable-next-line svelte/prefer-writable-derived -- must hydrate as the prerendered value, see above
     let value = $state<DesignPref>('modern');
     $effect(() => {
         value = design.current;

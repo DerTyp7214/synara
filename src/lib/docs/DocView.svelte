@@ -85,7 +85,7 @@
 
     // Scroll-spy for the "On this page" list.
     $effect(() => {
-        data.toc;
+        void data.toc
         if (!article || !data.toc.length) return;
         const heads = data.toc.map((t) => document.getElementById(t.id)).filter((e): e is HTMLElement => !!e);
         const io = new IntersectionObserver(
@@ -115,6 +115,7 @@
             </details>
         {/if}
         <article class="prose" data-doc={data.file} bind:this={article}>
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -- rendered at build time from the synara-api docs -->
             {@html data.html}
         </article>
 

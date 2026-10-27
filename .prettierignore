@@ -1,0 +1,14 @@
+# Package managers
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build output and generated files
+/build
+/.svelte-kit
+/.docs-src
+/shots
+src/lib/designs/modern/tokens.css
+
+# Static assets are served as-is (app-site-association files must stay byte-identical)
+/static

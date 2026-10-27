@@ -6,7 +6,6 @@
     import Monitor from '@lucide/svelte/icons/monitor';
     import Server from '@lucide/svelte/icons/server';
     import Smartphone from '@lucide/svelte/icons/smartphone';
-    import Terminal from '@lucide/svelte/icons/terminal';
     import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
     import CodeBlock from '$lib/components/CodeBlock.svelte';
     import ChannelToggle from '$lib/components/download/ChannelToggle.svelte';
@@ -120,7 +119,7 @@
                 </p>
             {/if}
             <p class="mg-foot">
-                {desktop.body}{#if desktopUpdated}{' '}Updated {formatDate(desktopUpdated)}.{/if}
+                {desktop.body}{desktopUpdated ? ` Updated ${formatDate(desktopUpdated)}.` : ''}
             </p>
 
             <details class="mg-disclosure mt-4">
@@ -195,7 +194,7 @@
                     <span class="mg-icon dim" aria-hidden="true"><Apple class="size-5"/></span>
                     <div class="mg-text">
                         <p class="mg-title">iPhone, iPad, Mac and more <span class="tag">Coming soon</span></p>
-                        <p class="mg-sub">{apple.body}{#if os === 'ios'}{' '}{apple.meanwhile}{/if}</p>
+                        <p class="mg-sub">{apple.body}{os === 'ios' ? ` ${apple.meanwhile}` : ''}</p>
                     </div>
                 </li>
             </ul>

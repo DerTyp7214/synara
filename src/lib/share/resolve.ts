@@ -43,6 +43,39 @@ export const platforms = [
     { id: 'discogs', name: 'Discogs' },
 ] as const;
 
+type PlatformId = (typeof platforms)[number]['id'];
+
+/** The fields read from an iTunes Search/Lookup API result. */
+interface ItunesResult {
+    trackName?: string;
+    collectionName?: string;
+    artistName?: string;
+    collectionArtistName?: string;
+    artworkUrl100?: string;
+    trackTimeMillis?: number;
+}
+
+interface ItunesResponse {
+    results?: ItunesResult[];
+}
+
+/** linkresolver.synara.audio `/resolve?…&metadata=true`. */
+interface ResolverResponse {
+    metadata?: {
+        title?: string;
+        album?: string;
+        artist?: string;
+        cover?: string;
+        durationMs?: number;
+    };
+    links?: Partial<Record<PlatformId, string>>;
+}
+
+/** MusicBrainz `?inc=url-rels&fmt=json`, only the relation URLs. */
+interface MusicBrainzResponse {
+    relations?: { url?: { resource?: string } }[];
+}
+
 export const mbDomainMap: Record<string, string> = {
     'open.spotify.com': 'Spotify',
     'music.apple.com': 'Apple Music',
@@ -80,25 +113,25 @@ export function musicBrainzUrl(p: ShareParams): string | null {
     return p.mbid ? `https://musicbrainz.org/${musicBrainzPath(p.type)}/${p.mbid}` : null;
 }
 
-async function getJson(url: string, signal: AbortSignal, init?: RequestInit): Promise<any | null> {
+async function getJson<T>(url: string, signal: AbortSignal, init?: RequestInit): Promise<T | null> {
     const r = await fetch(url, { ...init, signal });
-    return r.ok ? r.json() : null;
+    return r.ok ? ((await r.json()) as T) : null;
 }
 
 /** iTunes: direct lookup by isrc/upc, else search (album falls back to song). Normalised to ShareMeta. */
 async function fetchItunes(p: ShareParams, signal: AbortSignal): Promise<ShareMeta | null> {
     const query = [p.title ?? '', ...p.artists].join(' ').trim();
     const encoded = encodeURIComponent(query).replace(/%20/g, '+');
-    const search = async (entity: string) => {
-        const d = await getJson(`https://itunes.apple.com/search?term=${encoded}&entity=${entity}&limit=1`, signal);
+    const search = async (entity: string): Promise<ItunesResult | null> => {
+        const d = await getJson<ItunesResponse>(`https://itunes.apple.com/search?term=${encoded}&entity=${entity}&limit=1`, signal);
         return d?.results?.[0] ?? null;
     };
 
-    let hit: any = null;
+    let hit: ItunesResult | null = null;
     const directId = p.type === 'song' ? p.isrc : p.type === 'album' ? p.barcode : null;
     if (directId) {
         const param = p.type === 'song' ? 'isrc' : 'upc';
-        const d = await getJson(`https://itunes.apple.com/lookup?${param}=${encodeURIComponent(directId)}`, signal);
+        const d = await getJson<ItunesResponse>(`https://itunes.apple.com/lookup?${param}=${encodeURIComponent(directId)}`, signal);
         hit = d?.results?.[0] ?? null;
     }
     if (!hit && query) {
@@ -110,7 +143,7 @@ async function fetchItunes(p: ShareParams, signal: AbortSignal): Promise<ShareMe
     }
     if (!hit) return null;
 
-    const cover: string | undefined = hit.artworkUrl100?.replace('100x100', '600x600');
+    const cover = hit.artworkUrl100?.replace('100x100', '600x600');
     if (p.type === 'artist') return { title: hit.artistName, artist: hit.artistName };
     if (p.type === 'album') {
         return { title: hit.collectionName, album: hit.collectionName, artist: hit.collectionArtistName ?? hit.artistName, cover };
@@ -122,7 +155,7 @@ async function fetchResolver(p: ShareParams, signal: AbortSignal): Promise<{ met
     const id = p.type === 'song' ? p.isrc : p.type === 'album' ? p.barcode : null;
     if (!id) return { meta: null, links: [] };
     const param = p.type === 'song' ? 'isrc' : 'upc';
-    const data = await getJson(
+    const data = await getJson<ResolverResponse>(
         `https://linkresolver.synara.audio/resolve?${param}=${encodeURIComponent(id)}&metadata=true`,
         signal,
         { headers: { 'X-API-Key': PUBLIC_LINKRESOLVER_API_KEY } },
@@ -138,15 +171,16 @@ async function fetchResolver(p: ShareParams, signal: AbortSignal): Promise<{ met
             durationMs: m.durationMs,
         }
         : null;
-    const links = platforms
-        .filter(pl => data.links?.[pl.id])
-        .map(pl => ({ name: pl.name, url: data.links[pl.id] as string }));
+    const links = platforms.flatMap(pl => {
+        const url = data.links?.[pl.id];
+        return url ? [{ name: pl.name, url }] : [];
+    });
     return { meta, links };
 }
 
 async function fetchMusicBrainzLinks(p: ShareParams, signal: AbortSignal): Promise<ShareLink[]> {
     if (!p.mbid) return [];
-    const data = await getJson(
+    const data = await getJson<MusicBrainzResponse>(
         `https://musicbrainz.org/ws/2/${musicBrainzPath(p.type)}/${encodeURIComponent(p.mbid)}?inc=url-rels&fmt=json`,
         signal,
     );
@@ -164,9 +198,8 @@ async function fetchMusicBrainzLinks(p: ShareParams, signal: AbortSignal): Promi
 }
 
 function mergeMeta(base: ShareMeta | null, over: ShareMeta | null): ShareMeta {
-    const out: ShareMeta = { ...(base ?? {}) };
-    for (const [k, v] of Object.entries(over ?? {})) if (v != null && v !== '') (out as any)[k] = v;
-    return out;
+    const filled = Object.entries(over ?? {}).filter(([, v]) => v != null && v !== '');
+    return { ...(base ?? {}), ...(Object.fromEntries(filled) as ShareMeta) };
 }
 
 /**

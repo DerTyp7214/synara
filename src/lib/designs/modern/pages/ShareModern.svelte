@@ -47,7 +47,7 @@
     let coverLoaded = $state(false);
 
     $effect(() => {
-        cover;
+        void cover
         cors = true;
         coverLoaded = false;
         if (root) root.style.cssText = ''; // drop the previous cover's tint

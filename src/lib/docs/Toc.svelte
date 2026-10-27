@@ -48,9 +48,9 @@
         if (!indReady) requestAnimationFrame(() => (indReady = true)); // no slide from nowhere on first placement
     }
     $effect(() => {
-        activeId;
-        query;
-        design.current;
+        void activeId
+        void query
+        void design.current
         tick().then(placeIndicator);
     });
     $effect(() => {
