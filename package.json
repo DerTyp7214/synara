@@ -11,12 +11,14 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "fetch-docs": "node scripts/fetch-docs.mjs",
+    "gen:tokens": "node scripts/gen-tonal-tokens.mjs",
     "predev": "node scripts/fetch-docs.mjs",
     "prebuild": "node scripts/fetch-docs.mjs",
     "precheck": "node scripts/fetch-docs.mjs"
   },
   "devDependencies": {
     "@lucide/svelte": "^0.561.0",
+    "@material/material-color-utilities": "^0.3.0",
     "@shikijs/rehype": "^4.5.0",
     "@sveltejs/adapter-static": "^3.0.10",
     "@sveltejs/kit": "^2.49.1",

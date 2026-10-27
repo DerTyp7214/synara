@@ -9,7 +9,7 @@ export const intro = {
 };
 
 export const channelNotes = {
-	stable: 'Release builds. Android has one; desktop and the server have none yet, so they use the current dev builds.',
+	stable: 'Release builds. Android has one. Desktop and the server have none yet, so they use the current dev builds.',
 	dev: 'Built from the latest commit. New features first, and sometimes new bugs.'
 } as const;
 
@@ -22,7 +22,7 @@ export const desktop = {
 
 export const android = {
 	body: 'Android 12 and newer. Offline downloads, a home screen player widget and a sleep timer.',
-	install: 'Install the APK directly; allow installs from your browser when Android asks.'
+	install: 'Install the APK directly. Allow installs from your browser when Android asks.'
 };
 
 export const apple = {

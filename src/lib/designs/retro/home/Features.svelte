@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { apps, features, leadFeatures } from './content';
+    import { apps, features, leadFeatures } from '$lib/components/home/content';
     const { lossless, imports } = leadFeatures;
 </script>
 

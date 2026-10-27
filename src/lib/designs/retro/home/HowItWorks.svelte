@@ -2,7 +2,7 @@
     import Smartphone from '@lucide/svelte/icons/smartphone';
     import Laptop from '@lucide/svelte/icons/laptop';
     import Apple from '@lucide/svelte/icons/apple';
-    import { platforms, serverFacts, type Platform } from './content';
+    import { platforms, serverFacts, type Platform } from '$lib/components/home/content';
 
     // Signal flow, drawn as a patch bay: the server's output is cabled to each client's input.
     const icons: Record<Platform['id'], typeof Laptop> = { android: Smartphone, desktop: Laptop, apple: Apple };

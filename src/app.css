@@ -8,8 +8,16 @@
  * text-ink, text-muted, border-line, font-label, font-lcd, ...).
  * Component classes live in @layer components, so plain utilities can override them.
  * See DESIGN.md for usage rules.
+ *
+ * Two designs share this file: Retro (the default, everything below) and Modern
+ * (<html data-design="modern">, src/lib/designs/modern/). Theme tokens are defined once per design:
+ * dark values, then a nested `@variant light { ... }` that expands to the stored and the OS preference.
  */
 @import "tailwindcss";
+/* The Modern design: generated tokens, then its baseline styles. Both are scoped to
+ * :root[data-design="modern"] and leave Retro untouched. */
+@import "./lib/designs/modern/tokens.css";
+@import "./lib/designs/modern/modern.css";
 
 /* ---------- Fonts (self-hosted, SIL OFL 1.1, latin subset from Fontsource) ---------- */
 @font-face {
@@ -174,44 +182,10 @@
 		--dur-ui: 140ms;
 		--dur-reveal: 480ms;
 		color-scheme: dark;
-	}
-	@media (min-width: 40rem) {
-		:root {
-			--gutter: 2rem;
-		}
-	}
-	:root[data-theme="light"] {
-		--color-bg: #e6e5e0;
-		--color-surface: #f2f1ed;
-		--color-raised: #fbfaf7;
-		--color-recess: #d7d6d0;
-		--color-ink: #1b1b1a;
-		--color-muted: #54534d;
-		--color-faint: #5b5a54;
-		--color-line: rgb(0 0 0 / 0.1);
-		--color-line-strong: rgb(0 0 0 / 0.2);
-		--color-accent: #ee5a16;
-		--color-accent-ink: #a53b05;
-		--color-on-accent: #170b04;
-		--color-ok: #1b7c43;
-		--color-warn: #8a5800;
-		--color-led-off: #bebdb6;
-		--brush: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.012) 0 1px, transparent 1px 3px);
-		--plate-shade: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.025));
-		--plate-edge: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 -1px 0 rgb(0 0 0 / 0.08);
-		--plate-drop: 0 1px 0 rgb(0 0 0 / 0.12), 0 18px 30px -24px rgb(40 36 30 / 0.45);
-		--well: inset 0 1px 3px rgb(0 0 0 / 0.18), inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 0 rgb(255 255 255 / 0.8);
-		--key-top: #ffffff;
-		--key-bottom: #eceae5;
-		--key-edge: #a6a59e;
-		--key-hl: rgb(255 255 255 / 0.95);
-		--key-drop: #9b9a93;
-		--scroll-thumb: rgb(0 0 0 / 0.24);
-		--scroll-thumb-hover: rgb(0 0 0 / 0.38);
-		color-scheme: light;
-	}
-	@media (prefers-color-scheme: light) {
-		:root:not([data-theme="dark"]) {
+
+		/* Light (off-white aluminium). One definition: the `light` variant expands to both
+		 * <html data-theme="light"> and the OS preference when no theme is stored. */
+		@variant light {
 			--color-bg: #e6e5e0;
 			--color-surface: #f2f1ed;
 			--color-raised: #fbfaf7;
@@ -240,6 +214,11 @@
 			--scroll-thumb: rgb(0 0 0 / 0.24);
 			--scroll-thumb-hover: rgb(0 0 0 / 0.38);
 			color-scheme: light;
+		}
+	}
+	@media (min-width: 40rem) {
+		:root {
+			--gutter: 2rem;
 		}
 	}
 }
@@ -984,6 +963,15 @@
 	}
 }
 
+/* ---------- Design variants ----------
+ * Markup that differs per design is rendered for both and the inactive one is hidden here, so the
+ * prerendered HTML is correct for either design before any JavaScript runs. See DESIGN.md, "Variants".
+ */
+:root:not([data-design="modern"]) .design-modern,
+:root[data-design="modern"] .design-retro {
+	display: none !important;
+}
+
 /* Mermaid pan/zoom panel ($lib/docs/zoom.ts). Built at runtime, so these are global. */
 .mmd-panel {
 	border-radius: var(--radius-plate);
@@ -1070,12 +1058,7 @@
 .shiki,
 .shiki span {
 	color: var(--shiki-dark);
-}
-:root[data-theme="light"] :is(.shiki, .shiki span) {
-	color: var(--shiki-light);
-}
-@media (prefers-color-scheme: light) {
-	:root:not([data-theme="dark"]) :is(.shiki, .shiki span) {
+	@variant light {
 		color: var(--shiki-light);
 	}
 }

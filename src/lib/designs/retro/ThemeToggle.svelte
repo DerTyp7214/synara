@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import Monitor from '@lucide/svelte/icons/monitor';
     import Sun from '@lucide/svelte/icons/sun';
     import Moon from '@lucide/svelte/icons/moon';
     import { applyThemePref, readThemePref, type ThemePref } from '$lib/theme';
+    import { design } from '$lib/designs/design.svelte';
 
     let { class: className = '' }: { class?: string } = $props();
 
@@ -14,7 +14,9 @@
     let next = $derived(order[(order.indexOf(pref) + 1) % order.length]);
     let pos = $derived(order.indexOf(pref));
 
-    onMount(() => {
+    // Read on mount, and again on a design switch: the Modern theme control may have changed it.
+    $effect(() => {
+        void design.current;
         pref = readThemePref();
     });
 

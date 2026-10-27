@@ -1,5 +1,6 @@
 <script lang="ts">
     import { tick, untrack } from 'svelte';
+    import { design } from '$lib/designs/design.svelte';
 
     type Item = { id: string; text: string; depth: 2 | 3 };
     type Group = { key: string; head: Item | null; children: Item[] };
@@ -31,6 +32,33 @@
     let open = $state<Record<string, boolean>>({});
     let query = $state('');
     let panel: HTMLElement | undefined = $state();
+
+    // Modern: one highlight that slides to the current entry (measured, so it follows nested groups).
+    let ind = $state<{ x: number; y: number; w: number; h: number } | null>(null);
+    let indReady = $state(false);
+    function placeIndicator() {
+        const el = design.isModern ? panel?.querySelector<HTMLElement>('a[aria-current]') : null;
+        if (!panel || !el || !el.offsetParent) {
+            ind = null;
+            return;
+        }
+        const pr = panel.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        ind = { x: r.left - pr.left, y: r.top - pr.top, w: r.width, h: r.height };
+        if (!indReady) requestAnimationFrame(() => (indReady = true)); // no slide from nowhere on first placement
+    }
+    $effect(() => {
+        activeId;
+        query;
+        design.current;
+        tick().then(placeIndicator);
+    });
+    $effect(() => {
+        if (!panel || !design.isModern) return;
+        const ro = new ResizeObserver(placeIndicator); // groups opening/closing move the entries
+        ro.observe(panel);
+        return () => ro.disconnect();
+    });
 
     const q = $derived(query.trim().toLowerCase());
     const matches = (i: Item) => i.text.toLowerCase().includes(q);
@@ -71,6 +99,10 @@
 </script>
 
 <div class="toc-body" bind:this={panel}>
+    {#if ind}
+        <span class="ind" class:ready={indReady} aria-hidden="true"
+              style="transform: translate({ind.x}px, {ind.y}px); width: {ind.w}px; height: {ind.h}px"></span>
+    {/if}
     {#if toc.length >= FILTER_FROM}
         <label class="filter">
             <span class="sr-only">Filter headings</span>
@@ -190,5 +222,71 @@
     }
     .sub a {
         font-size: 0.8125rem;
+    }
+    /* ---------- Modern: a search field, quiet rows, an accent-tinted current entry ---------- */
+    :global(:root[data-design='modern']) .filter input {
+        min-height: 2.25rem;
+        padding: 0.35rem 0.9rem;
+        border-radius: var(--m-radius-capsule);
+        background: var(--m-fill);
+        font-family: var(--font-sans);
+        font-size: var(--ios-subheadline-size);
+    }
+    :global(:root[data-design='modern']) a {
+        padding: 0.3rem 0.5rem;
+        border-radius: 0.5rem;
+        font-size: var(--ios-subheadline-size);
+        letter-spacing: var(--ios-subheadline-tracking);
+    }
+    :global(:root[data-design='modern']) a:hover {
+        background: color-mix(in oklab, var(--color-ink) 6%, transparent);
+    }
+    :global(:root[data-design='modern']) a {
+        position: relative;
+    }
+    :global(:root[data-design='modern']) a[aria-current] {
+        color: var(--color-accent-ink);
+        font-weight: 600;
+    }
+    :global(:root[data-design='modern']) .toc-body {
+        position: relative;
+    }
+    .ind {
+        display: none;
+    }
+    :global(:root[data-design='modern']) .ind {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        border-radius: 0.5rem;
+        background: var(--m-tint-fill);
+        pointer-events: none;
+    }
+    :global(:root[data-design='modern']) .ind.ready {
+        transition:
+            transform 360ms var(--ease-spring, cubic-bezier(0.3, 1.25, 0.5, 1)),
+            width 360ms var(--ease-spring, cubic-bezier(0.3, 1.25, 0.5, 1)),
+            height 360ms var(--ease-spring, cubic-bezier(0.3, 1.25, 0.5, 1));
+    }
+    @media (prefers-reduced-motion: reduce) {
+        :global(:root[data-design='modern']) .ind.ready {
+            transition: none;
+        }
+    }
+    :global(:root[data-design='modern']) .solo {
+        padding-left: 0.5rem;
+    }
+    :global(:root[data-design='modern']) .sub {
+        margin-left: 1.1rem;
+    }
+    :global(:root[data-design='modern']) .sub a {
+        font-size: var(--ios-footnote-size);
+    }
+    :global(:root[data-design='modern']) .count {
+        font-family: var(--font-sans);
+        font-size: var(--ios-caption1-size);
+        font-variant-numeric: tabular-nums;
     }
 </style>

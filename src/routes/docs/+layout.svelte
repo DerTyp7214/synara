@@ -154,4 +154,49 @@
             box-shadow: none;
         }
     }
+    /* ---------- Modern: an iPad-style sidebar (grouped list, selection pill) ---------- */
+    :global(:root[data-design='modern']) .docs-menu-btn {
+        font-size: var(--ios-subheadline-size);
+        letter-spacing: -0.01em;
+    }
+    :global(:root[data-design='modern']) .docs-nav {
+        padding: 0.5rem;
+        border: 0;
+        border-radius: var(--m-radius-group);
+        background: var(--m-grouped-bg-2);
+        box-shadow: none;
+    }
+    :global(:root[data-design='modern']) .docs-nav section + section {
+        margin-top: 0.75rem;
+    }
+    :global(:root[data-design='modern']) .docs-nav h2 {
+        margin: 0;
+        padding: 0.5rem 0.75rem 0.375rem;
+    }
+    :global(:root[data-design='modern']) .docs-nav a {
+        min-height: 2.5rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: calc(var(--m-radius-group) - 0.5rem);
+        font-size: var(--ios-callout-size);
+        letter-spacing: var(--ios-callout-tracking);
+        color: var(--color-ink);
+        transition: background-color var(--dur-ui);
+    }
+    :global(:root[data-design='modern']) .docs-nav a:hover {
+        background: color-mix(in oklab, var(--color-ink) 6%, transparent);
+    }
+    :global(:root[data-design='modern']) .docs-nav a[aria-current='page'] {
+        background: var(--m-tint-fill);
+        box-shadow: none;
+        color: var(--color-accent-ink);
+        font-weight: 600;
+    }
+    @media (min-width: 64rem) {
+        :global(:root[data-design='modern']) .docs-nav {
+            padding: 0.5rem;
+            border: 0;
+            border-radius: var(--m-radius-group);
+            background: var(--m-grouped-bg-2);
+        }
+    }
 </style>

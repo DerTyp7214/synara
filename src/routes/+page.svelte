@@ -1,9 +1,14 @@
 <script lang="ts">
     import Download from '@lucide/svelte/icons/download';
-    import HeroVisual from '$lib/components/home/HeroVisual.svelte';
-    import HowItWorks from '$lib/components/home/HowItWorks.svelte';
-    import Features from '$lib/components/home/Features.svelte';
-    import SetupTeaser from '$lib/components/home/SetupTeaser.svelte';
+    import HeroVisual from '$lib/designs/retro/home/HeroVisual.svelte';
+    import HowItWorks from '$lib/designs/retro/home/HowItWorks.svelte';
+    import Features from '$lib/designs/retro/home/Features.svelte';
+    import SetupTeaser from '$lib/designs/retro/home/SetupTeaser.svelte';
+    import ModernHero from '$lib/designs/modern/home/Hero.svelte';
+    import ModernHowItWorks from '$lib/designs/modern/home/HowItWorks.svelte';
+    import ModernFeatures from '$lib/designs/modern/home/Features.svelte';
+    import ModernSetupTeaser from '$lib/designs/modern/home/SetupTeaser.svelte';
+    import ModernCta from '$lib/designs/modern/home/Cta.svelte';
     import { hero, sections } from '$lib/components/home/content';
 </script>
 
@@ -15,6 +20,8 @@
     />
 </svelte:head>
 
+<!-- Both designs are prerendered; CSS hides the inactive one (DESIGN.md, "Variants"). -->
+<div class="design-retro contents">
 <!-- Hero: the front panel -->
 <section class="pt-6 pb-(--section-space) md:pt-10" aria-labelledby="hero-h">
     <div class="shell">
@@ -63,8 +70,16 @@
     </div>
 </section>
 
-<!-- Features -->
-<section id="features" class="section section-ruled" aria-labelledby="features-heading">
+</div>
+<div class="design-modern contents">
+    <ModernHero/>
+    <ModernHowItWorks/>
+</div>
+
+<!-- Features: one anchor for /#features, whichever design is shown -->
+<div id="features">
+<div class="design-retro contents">
+<section class="section section-ruled" aria-labelledby="features-heading">
     <div class="shell">
         <h2 id="features-heading" class="h-section max-w-2xl">{sections.features.title}</h2>
         <div class="mt-12">
@@ -73,6 +88,11 @@
     </div>
 </section>
 
+</div>
+<div class="design-modern contents"><ModernFeatures/></div>
+</div>
+
+<div class="design-retro contents">
 <!-- Self-hosting teaser -->
 <section class="section section-ruled" aria-labelledby="host-heading">
     <div class="shell">
@@ -95,6 +115,11 @@
         </div>
     </div>
 </section>
+</div>
+<div class="design-modern contents">
+    <ModernSetupTeaser/>
+    <ModernCta/>
+</div>
 
 <style>
     .front {

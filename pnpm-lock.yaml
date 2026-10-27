@@ -11,6 +11,9 @@ importers:
       '@lucide/svelte':
         specifier: ^0.561.0
         version: 0.561.0(svelte@5.46.0)
+      '@material/material-color-utilities':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@shikijs/rehype':
         specifier: ^4.5.0
         version: 4.5.0
@@ -301,6 +304,9 @@ packages:
     resolution: {integrity: sha512-vofKV2UFVrKE6I4ewKJ3dfCXSV6iP6nWVmiM83MLjsU91EeJcEg7LoWUABLp/aOTxj1HQNbJD1f3g3L0JQgH9A==}
     peerDependencies:
       svelte: ^5
+
+  '@material/material-color-utilities@0.3.0':
+    resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
 
   '@mermaid-js/parser@2.0.1':
     resolution: {integrity: sha512-j37dj/h6p6pots1L7pLPPNuABEEu9WP4OYg9pW1g+nYG331j0+3canE9OagtYdytYvdSAMG+2fKU5cxep6LgjA==}
@@ -1707,6 +1713,8 @@ snapshots:
   '@lucide/svelte@0.561.0(svelte@5.46.0)':
     dependencies:
       svelte: 5.46.0
+
+  '@material/material-color-utilities@0.3.0': {}
 
   '@mermaid-js/parser@2.0.1':
     dependencies:

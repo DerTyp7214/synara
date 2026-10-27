@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
+    import ModernError from '$lib/designs/modern/ErrorState.svelte';
 
     let notFound = $derived(page.status === 404);
 </script>
@@ -9,6 +10,8 @@
     <meta name="robots" content="noindex" />
 </svelte:head>
 
+<!-- Both designs are prerendered; CSS hides the inactive one (DESIGN.md, "Variants"). -->
+<div class="design-retro contents">
 <section class="pt-10 pb-(--section-space) md:pt-16">
     <div class="shell grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
         <div class="lcd screen order-first lg:order-last" aria-hidden="true">
@@ -35,6 +38,8 @@
         </div>
     </div>
 </section>
+</div>
+<div class="design-modern contents"><ModernError status={page.status} message={page.error?.message}/></div>
 
 <style>
     .screen {

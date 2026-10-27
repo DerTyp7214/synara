@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import Play from '@lucide/svelte/icons/play';
     import Pause from '@lucide/svelte/icons/pause';
+    import { design } from '$lib/designs/design.svelte';
 
     // The display section of the front panel: a now-playing readout and stereo VU meters.
     // Fictional track; nothing here is a real screenshot.
@@ -47,6 +48,8 @@
 
     let needles: SVGGElement[] = $state([]);
     let peaks: HTMLSpanElement[] = $state([]);
+    // start/stop of the meter loop, set on mount. The loop only runs while Retro is the active design.
+    let loop: { start: () => void; stop: () => void } | null = null;
 
     onMount(() => {
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -91,7 +94,7 @@
         };
 
         const start = () => {
-            if (raf || still || !visible || document.hidden) return;
+            if (raf || still || !visible || document.hidden || !design.isRetro) return;
             last = performance.now();
             raf = requestAnimationFrame(frame);
         };
@@ -100,6 +103,7 @@
             raf = 0;
         };
 
+        loop = { start, stop };
         if (still) {
             level[0] = REST;
             level[1] = REST - 0.04;
@@ -126,10 +130,19 @@
         reduce.addEventListener('change', onMotion);
         return () => {
             stop();
+            loop = null;
             io.disconnect();
             document.removeEventListener('visibilitychange', onVis);
             reduce.removeEventListener('change', onMotion);
         };
+    });
+
+    // Follow design switches: stop the loop when Modern takes over, resume when Retro returns.
+    $effect(() => {
+        const retro = design.isRetro;
+        if (!loop) return;
+        if (retro) loop.start();
+        else loop.stop();
     });
 </script>
 

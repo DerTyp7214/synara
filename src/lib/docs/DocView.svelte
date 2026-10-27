@@ -6,6 +6,7 @@
     import Github from '@lucide/svelte/icons/github';
     import Toc from './Toc.svelte';
     import { attachZoom } from './zoom';
+    import '$lib/designs/modern/pages/docs-motion.css';
 
     type Link = { title: string; href: string } | null;
     let { data }: {
@@ -36,7 +37,9 @@
             startOnLoad: false,
             securityLevel: 'strict',
             theme: 'base',
-            fontFamily: 'Barlow, ui-sans-serif, system-ui, sans-serif',
+            fontFamily: document.documentElement.dataset.design === 'modern'
+                ? getComputedStyle(document.body).fontFamily
+                : 'Barlow, ui-sans-serif, system-ui, sans-serif',
             themeVariables: light
                 ? { background: '#e6e5e0', primaryColor: '#fbfaf7', primaryTextColor: '#1b1b1a', primaryBorderColor: '#a53b05',
                     lineColor: '#54534d', secondaryColor: '#f2f1ed', tertiaryColor: '#e6e5e0', noteBkgColor: '#f2f1ed', noteTextColor: '#1b1b1a',
@@ -66,7 +69,7 @@
         // From now on this article is live DOM (mermaid may have rewritten it), not the prerendered markup.
         if (article) article.dataset.hydrated = 'true';
         const obs = new MutationObserver(() => renderMermaid());
-        obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-design'] });
         const mq = matchMedia('(prefers-color-scheme: light)');
         const onMq = () => renderMermaid();
         mq.addEventListener('change', onMq);
@@ -311,6 +314,68 @@
             overflow-y: auto;
             overscroll-behavior: contain;
             padding: 0 0.25rem 1rem 0;
+        }
+    }
+    /* ---------- Modern: grouped cards, a glass floating TOC, a calm reading column ---------- */
+    :global(:root[data-design='modern']) .toc-inline {
+        border: 0;
+        border-radius: var(--m-radius-group);
+        background: var(--m-grouped-bg-2);
+        box-shadow: none;
+        padding: 0.5rem 1rem;
+    }
+    :global(:root[data-design='modern']) .toc-inline > summary {
+        font-family: var(--font-sans);
+        font-size: var(--ios-callout-size);
+        font-weight: 500;
+        letter-spacing: var(--ios-callout-tracking);
+        text-transform: none;
+        min-height: 2.5rem;
+        display: flex;
+        align-items: center;
+    }
+    :global(:root[data-design='modern']) .pn a {
+        border: 0;
+        border-radius: var(--m-radius-group);
+        background: var(--m-grouped-bg-2);
+        box-shadow: none;
+        transition: background-color var(--dur-ui);
+    }
+    :global(:root[data-design='modern']) .pn a:hover {
+        background: var(--m-grouped-bg-3);
+    }
+    :global(:root[data-design='modern']) .pn span {
+        color: var(--color-accent-ink);
+        font-weight: 600;
+    }
+    :global(:root[data-design='modern']) .doc-foot {
+        border-top-color: var(--color-line);
+    }
+    :global(:root[data-design='modern']) .doc-col :global(.prose pre.mermaid) {
+        background: var(--m-grouped-bg-2) !important;
+        box-shadow: none;
+        border-radius: var(--m-radius-card);
+    }
+    @media (min-width: 80rem) {
+        /* The TOC floats over the scrolling page as a glass panel. */
+        :global(:root[data-design='modern']) .toc {
+            padding: 0.875rem 0.5rem 0.5rem 1rem;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--m-radius-group);
+            background: var(--glass-specular), var(--glass-bg);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+            box-shadow: inset 0 1px 0 var(--glass-highlight), var(--glass-shadow);
+        }
+        :global(:root[data-design='modern']) .toc h2 {
+            margin-bottom: 0.4rem;
+        }
+    }
+    @media (prefers-reduced-transparency: reduce) {
+        :global(:root[data-design='modern']) .toc {
+            background: var(--glass-solid);
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
         }
     }
 </style>

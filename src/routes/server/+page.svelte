@@ -4,6 +4,7 @@
     import ServerNotes from '$lib/components/server/ServerNotes.svelte';
     import EnvTable from '$lib/components/server/EnvTable.svelte';
     import DocLinks from '$lib/components/server/DocLinks.svelte';
+    import ServerModern from '$lib/designs/modern/pages/ServerModern.svelte';
     import { intro } from '$lib/components/server/content';
 </script>
 
@@ -15,6 +16,7 @@
     />
 </svelte:head>
 
+<div class="design-retro">
 <section class="pt-10 pb-12 md:pt-16 md:pb-16" aria-labelledby="server-h">
     <div class="shell">
         <h1 id="server-h" class="h-display">{intro.title}</h1>
@@ -59,3 +61,8 @@
         <div class="mt-6"><DocLinks/></div>
     </div>
 </section>
+</div>
+
+<div class="design-modern">
+    <ServerModern/>
+</div>

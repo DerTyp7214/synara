@@ -23,7 +23,7 @@ export const serverFacts: { term: string; value: string; mono?: boolean }[] = [
 export const leadFeatures = {
 	lossless: {
 		title: 'Lossless at the source',
-		body: 'Your library is kept in a lossless format: FLAC by default, or WAV/AIFF. Synara transcodes to Opus or AAC on the fly, or ahead of time, when a connection or download needs it; the lossless file stays untouched.',
+		body: 'Your library is kept in a lossless format: FLAC by default, or WAV/AIFF. Synara transcodes to Opus or AAC on the fly, or ahead of time, when a connection or download needs it. The lossless file stays untouched.',
 		formats: ['Original', 'Opus', 'AAC']
 	},
 	imports: {

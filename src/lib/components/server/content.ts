@@ -1,11 +1,11 @@
 /*
  * /server/ copy as data. Facts were checked against synara-api (see docs/ENVIRONMENT_VARIABLES.md).
- * Strings may contain `backticks`; they render as inline code via content/Inline.svelte.
+ * Strings may contain `backticks`, which render as inline code via content/Inline.svelte.
  */
 
 export const intro = {
 	title: 'Run your own server',
-	lead: "Synara's server is open source under GPL-2.0 and ships as a Docker image. Start with one container and SQLite; add Postgres, a Redis cluster and the trained recommendation model when you want them.",
+	lead: "Synara's server is open source under GPL-2.0 and ships as a Docker image. Start with one container and SQLite. Add Postgres, a Redis cluster and the trained recommendation model when you want them.",
 	envLead: "The environment variables you're most likely to touch."
 };
 
@@ -51,7 +51,7 @@ export const notes = [
 	},
 	{
 		title: 'Redis has to be a cluster',
-		body: 'Redis is optional; leave `REDIS_HOST` empty to run without it. Synara connects to Redis in cluster mode only. Pointed at a plain standalone Redis, the server fails to start, so use `synara-redis-cluster` as in the full file.'
+		body: 'Redis is optional. Leave `REDIS_HOST` empty to run without it. Synara connects to Redis in cluster mode only. Pointed at a plain standalone Redis, the server fails to start, so use `synara-redis-cluster` as in the full file.'
 	},
 	{
 		title: 'Behind an HTTPS proxy',
@@ -66,7 +66,7 @@ export const notes = [
 export const envVars: { name: string; body: string; def?: string }[] = [
 	{
 		name: 'CLIENT_ID, CLIENT_SECRET',
-		body: 'Username and password of the initial admin. Created at startup if no user with that name exists; changing them later does not change the password.'
+		body: 'Username and password of the initial admin. Created at startup if no user with that name exists. Changing them later does not change the password.'
 	},
 	{ name: 'JWT_SECRET', body: 'Signs login tokens. Set a long random string.', def: 'changeme' },
 	{ name: 'DB_URL', body: 'JDBC URL. Use an absolute path for SQLite: `jdbc:sqlite:/data/synara.db`.' },
@@ -83,7 +83,7 @@ export const envVars: { name: string; body: string; def?: string }[] = [
 	},
 	{
 		name: 'REDIS_HOST, REDIS_PORT',
-		body: 'Optional Redis; leave `REDIS_HOST` empty to run without it. Cluster mode only: pointed at a plain standalone Redis, the server fails to start.'
+		body: 'Optional Redis. Leave `REDIS_HOST` empty to run without it. Cluster mode only: pointed at a plain standalone Redis, the server fails to start.'
 	},
 	{ name: 'AUDIO_EMBED_URL', body: 'Audio embedding service. Empty disables it.' },
 	{ name: 'RECSYS_DATA_DIR', body: 'Directory shared with the recommendation service. Empty disables it.' },

@@ -1,25 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-design="modern">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)" />
-		<meta name="theme-color" content="#e6e5e0" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+		<meta name="theme-color" content="#f1f1f1" media="(prefers-color-scheme: light)" />
 
 		<script>
-			// Apply the stored theme before first paint. "light" | "dark" | absent = follow the system.
+			// Before first paint: apply the stored theme ("light" | "dark" | absent = follow the system) and
+			// design ("modern" | "retro" | absent = Modern). ?design=modern|retro applies and saves a design.
+			// The HTML ships with data-design="modern"; Retro is expressed by removing it.
+			// Colours: design x theme, keep in sync with $lib/theme.ts (META_COLOR) and the style below.
 			(function () {
+				var d = document.documentElement, t = null, g = null, q = null;
 				try {
-					var t = localStorage.getItem('synara-theme');
-					if (t === 'light' || t === 'dark') {
-						document.documentElement.setAttribute('data-theme', t);
-						var c = t === 'light' ? '#e6e5e0' : '#1c1c1e';
-						document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
-							m.setAttribute('content', c);
-						});
-					}
+					t = localStorage.getItem('synara-theme');
+					g = localStorage.getItem('synara-design');
 				} catch (e) {}
+				try {
+					q = new URLSearchParams(location.search).get('design');
+				} catch (e) {}
+				if (q === 'modern' || q === 'retro') {
+					g = q;
+					try {
+						localStorage.setItem('synara-design', q);
+					} catch (e) {}
+				}
+				var modern = g !== 'retro';
+				if (!modern) d.removeAttribute('data-design');
+				if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+				var c = modern ? { light: '#f1f1f1', dark: '#0e0e0e' } : { light: '#e6e5e0', dark: '#1c1c1e' };
+				if (!modern || t === 'light' || t === 'dark') {
+					document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+						var k = t === 'light' || t === 'dark' ? t : m.getAttribute('media').indexOf('light') >= 0 ? 'light' : 'dark';
+						m.setAttribute('content', c[k]);
+					});
+				}
+				// Preload only the active design's fonts. Modern sets type in SF on Apple platforms and in
+				// self-hosted Inter elsewhere; Retro uses Barlow and Barlow Condensed.
+				var fonts = modern
+					? /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent) ? [] : ['Inter-var']
+					: ['Barlow-400', 'BarlowCondensed-600'];
+				fonts.forEach(function (f) {
+					var l = document.createElement('link');
+					l.rel = 'preload';
+					l.href = '/fonts/' + f + '.woff2';
+					l.as = 'font';
+					l.type = 'font/woff2';
+					l.crossOrigin = 'anonymous';
+					document.head.appendChild(l);
+				});
 			})();
 		</script>
 		<style>
@@ -29,12 +60,16 @@
 			}
 			html[data-theme='light'] { background-color: #e6e5e0; color: #1b1b1a; color-scheme: light; }
 			html[data-theme='dark'] { background-color: #1c1c1e; color: #edece7; color-scheme: dark; }
+			html[data-design='modern'] { background-color: #0e0e0e; color: #ece0da; }
+			@media (prefers-color-scheme: light) {
+				html[data-design='modern']:not([data-theme='dark']) { background-color: #f1f1f1; color: #201a17; }
+			}
+			html[data-design='modern'][data-theme='light'] { background-color: #f1f1f1; color: #201a17; }
+			html[data-design='modern'][data-theme='dark'] { background-color: #0e0e0e; color: #ece0da; }
 		</style>
 
 		<meta name="description" content="Synara is a self-hosted lossless music server with native apps for Android and desktop." />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="preload" href="/fonts/Barlow-400.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/BarlowCondensed-600.woff2" as="font" type="font/woff2" crossorigin />
 
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="Synara" />

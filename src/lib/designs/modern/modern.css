@@ -1,0 +1,717 @@
+/*
+ * Modern design (iOS 26 idiom): fonts, shapes, the mapping of Retro-only variables, the baseline
+ * restyle of the shared semantic classes, Liquid Glass utilities and the hardware-hiding rule.
+ * Everything is scoped to :root[data-design="modern"]; Retro is untouched.
+ * Colour roles, glass tokens and the text-style scale are generated: see tokens.css.
+ * Usage rules: DESIGN.md, "Modern".
+ */
+
+/* Inter (SIL OFL 1.1, @fontsource-variable/inter, latin): the non-Apple fallback for SF. Only fetched
+ * when Modern renders text with it. */
+@font-face {
+	font-family: "Inter";
+	src: url("/fonts/Inter-var.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* ---------- Tokens that are not generated ---------- */
+@layer theme {
+	:root[data-design="modern"] {
+		/* SF on Apple platforms (it can't be self-hosted), Inter elsewhere. Inter sits before system-ui
+		 * on purpose: system-ui always resolves, so anything after it would never be used. */
+		--font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif;
+		--font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, sans-serif;
+		--font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, "IBM Plex Mono", monospace;
+		/* Retro's label and dot-matrix faces fall back to the Modern families. */
+		--font-label: var(--font-sans);
+		--font-lcd: var(--font-mono);
+
+		/* Shapes. Native first: capsules for buttons/pills/segments, circles for icon buttons, and
+		 * inset-grouped cards with concentric corners (inner radius = outer radius - inset).
+		 * 16 / 28 are the app's explicit glass-card radii (Theme.cornerRadius / largeCornerRadius). */
+		--m-radius-group: 1.625rem; /* inset-grouped section / card */
+		--m-radius-card: 1rem; /* custom glass card (Theme.cornerRadius) */
+		--m-radius-card-lg: 1.75rem; /* large glass card (Theme.largeCornerRadius) */
+		--m-radius-capsule: 999px;
+		--radius-plate: var(--m-radius-group);
+		--radius-key: 0.875rem; /* concentric: group radius - 0.75rem inset */
+		--radius-tight: 0.375rem;
+
+		/* Retro-only variables, mapped so shared components keep working before Phase 2. */
+		--brush: linear-gradient(transparent, transparent);
+		--plate-shade: linear-gradient(transparent, transparent);
+		--plate-edge: 0 0 0 0 transparent;
+		--plate-drop: 0 0 0 0 transparent;
+		--well: 0 0 0 0 transparent;
+		/* Key caps -> the selected segment ("thumb") of a segmented control. */
+		/* Segmented controls, as in the app (GlassSegmentedControl): a light glass track and a selected
+		 * segment that is a translucent dark pill (black 25-32% dark, 8% light), no shadow. */
+		--m-thumb: rgb(0 0 0 / 0.32);
+		--m-seg-track: rgb(255 255 255 / 0.08);
+		--m-seg-border: rgb(255 255 255 / 0.1);
+		--key-top: var(--m-thumb);
+		--key-bottom: var(--m-thumb);
+		--key-edge: transparent;
+		--key-hl: transparent;
+		--key-drop: transparent;
+		--key-ink: var(--color-ink);
+		/* The amber display -> a secondary-grouped surface with ink text. */
+		--color-lcd: var(--m-grouped-bg-2);
+		--color-lcd-ink: var(--color-ink);
+		--color-lcd-dim: var(--color-muted);
+		--color-lcd-ghost: var(--color-line);
+		--color-led-off: var(--m-outline-variant);
+		/* Thin, neutral scrollbars. */
+		--scroll-thumb: color-mix(in oklab, var(--color-ink) 26%, transparent);
+		--scroll-thumb-hover: color-mix(in oklab, var(--color-ink) 42%, transparent);
+		--scroll-track: transparent;
+		/* Motion (Modern only; everything is instant under prefers-reduced-motion, see app.css Base).
+		 * Durations by size of the change; easings modelled on UIKit springs. */
+		--m-dur-press: 160ms; /* button press, hover fills */
+		--m-dur-control: 320ms; /* segment thumb, switch, chevron */
+		--m-dur-panel: 380ms; /* menus, popovers, disclosure height, tab panels */
+		--m-dur-page: 340ms; /* page transitions, theme/design crossfade */
+		--ease-spring: cubic-bezier(0.3, 1.25, 0.5, 1); /* bouncy: thumbs, toggles, the play button */
+		--m-ease-spring-soft: cubic-bezier(0.25, 1.1, 0.4, 1); /* slight overshoot: panels popping in */
+		--m-ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* no overshoot: heights, fades, page pushes */
+		--m-ease-in-out: cubic-bezier(0.42, 0, 0.2, 1); /* crossfades */
+		--m-tint-dur: 1200ms; /* a cover change re-tinting a section (registered --tint-* colours) */
+		/* The floating glass header: 0.625rem gap + 3.25rem bar + 0.375rem. Sticky things sit below it. */
+		--header-h: 4.25rem;
+		/* A cover used as a soft, blurred backdrop (hero, share page): filter and strength per theme. */
+		--m-cover-backdrop-filter: blur(72px) saturate(1.35);
+		--m-cover-backdrop-opacity: 0.7;
+		--m-cover-backdrop-veil: rgb(0 0 0 / 0.22); /* a wash over the blur, keeps text on it AA */
+
+		@variant light {
+			--m-thumb: rgb(0 0 0 / 0.08);
+			--m-seg-track: rgb(255 255 255 / 0.72);
+			--m-seg-border: rgb(0 0 0 / 0.07);
+			--m-cover-backdrop-filter: blur(72px) saturate(2.2) brightness(1.8);
+			--m-cover-backdrop-opacity: 0.55;
+			--m-cover-backdrop-veil: rgb(255 255 255 / 0.5);
+		}
+	}
+}
+
+/* ---------- Base ---------- */
+@layer base {
+	:root[data-design="modern"] body {
+		line-height: 1.5;
+		letter-spacing: -0.011em;
+	}
+	:root[data-design="modern"] :focus-visible {
+		outline-color: color-mix(in oklab, var(--color-accent) 85%, var(--color-ink));
+		outline-offset: 2px;
+	}
+	:root[data-design="modern"] ::selection {
+		background: color-mix(in oklab, var(--color-accent) 32%, transparent);
+	}
+	/* Displays and docs code: the same neutral scrollbar as everywhere else. */
+	:root[data-design="modern"] :is(.lcd, .lcd *, .prose pre) {
+		--scroll-thumb: color-mix(in oklab, var(--color-ink) 26%, transparent);
+		--scroll-thumb-hover: color-mix(in oklab, var(--color-ink) 42%, transparent);
+		--scroll-track: transparent;
+	}
+}
+
+/* ---------- Components (baseline reskin of the shared semantic classes) ---------- */
+@layer components {
+	/* Type: the iOS text-style scale, scaled up for the web's large headings. */
+	:root[data-design="modern"] :is(.h-display, .h-section, .h-title, .prose h1) {
+		font-family: var(--font-display);
+	}
+	:root[data-design="modern"] .h-display {
+		font-weight: var(--ios-large-title-weight);
+		font-size: clamp(var(--ios-large-title-size), 1.45rem + 2.6vw, 3.5rem);
+		line-height: 1.07;
+		letter-spacing: -0.02em;
+	}
+	:root[data-design="modern"] .h-section {
+		font-weight: var(--ios-title1-weight);
+		font-size: clamp(var(--ios-title1-size), 1.45rem + 1.3vw, 2.5rem);
+		line-height: 1.12;
+		letter-spacing: -0.015em;
+	}
+	:root[data-design="modern"] .h-title {
+		font-weight: var(--ios-title2-weight);
+		font-size: clamp(var(--ios-title3-size), 1.2rem + 0.3vw, var(--ios-title2-size));
+		line-height: 1.25;
+		letter-spacing: -0.01em;
+	}
+	:root[data-design="modern"] .h-sub {
+		font-weight: var(--ios-headline-weight);
+		font-size: var(--ios-headline-size);
+		letter-spacing: var(--ios-headline-tracking);
+	}
+	:root[data-design="modern"] .lead {
+		line-height: 1.45;
+		letter-spacing: -0.015em;
+	}
+	:root[data-design="modern"] .meta {
+		font-size: var(--ios-subheadline-size);
+		letter-spacing: var(--ios-subheadline-tracking);
+	}
+	/* Legends become grouped-section headers: footnote, secondary label, sentence case. */
+	:root[data-design="modern"] .legend {
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: var(--ios-footnote-size);
+		letter-spacing: 0;
+		text-transform: none;
+		color: var(--color-muted);
+	}
+	:root[data-design="modern"] .module-title {
+		font-family: var(--font-sans);
+		font-weight: var(--ios-headline-weight);
+		font-size: var(--ios-headline-size);
+		letter-spacing: var(--ios-headline-tracking);
+		text-transform: none;
+	}
+	:root[data-design="modern"] .module-title > svg {
+		color: var(--color-accent-ink);
+	}
+	:root[data-design="modern"] .link {
+		color: var(--color-accent-ink);
+		text-decoration-color: color-mix(in oklab, var(--color-accent-ink) 40%, transparent);
+		text-decoration-thickness: 1px;
+	}
+	:root[data-design="modern"] .section-ruled {
+		border-top-color: transparent;
+	}
+
+	/* Surfaces: inset-grouped cards on the grouped background. No bevel, no brushing, no drop. */
+	:root[data-design="modern"] :is(.faceplate, .module) {
+		background: var(--m-grouped-bg-2);
+		border-color: transparent;
+		border-radius: var(--m-radius-group);
+		box-shadow: none;
+	}
+	:root[data-design="modern"] .module.is-selected {
+		border-color: color-mix(in oklab, var(--color-accent) 70%, transparent);
+	}
+	:root[data-design="modern"] .module.is-selected .module-head {
+		border-bottom-color: var(--color-line);
+	}
+	:root[data-design="modern"] .module-blank {
+		border-radius: var(--m-radius-group);
+		background: transparent;
+	}
+	:root[data-design="modern"] .well {
+		background: var(--m-grouped-bg-3);
+		box-shadow: none;
+	}
+
+	/* Buttons: capsules. .key = tinted, .key-primary = prominent (accent fill), .key-quiet = plain. */
+	:root[data-design="modern"] .key {
+		gap: 0.45rem;
+		min-height: 2.75rem;
+		padding: 0.5rem 1.25rem;
+		border: 0;
+		border-radius: var(--m-radius-capsule);
+		background: var(--m-tint-fill);
+		box-shadow: none;
+		color: var(--color-accent-ink);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: var(--ios-body-size);
+		letter-spacing: -0.015em;
+		text-transform: none;
+		transition:
+			transform var(--m-dur-press) var(--ease-spring),
+			background-color var(--dur-ui),
+			opacity var(--dur-ui);
+	}
+	:root[data-design="modern"] .key:hover {
+		filter: none;
+		background: var(--m-tint-fill-hover);
+	}
+	:root[data-design="modern"] .key:active {
+		transform: scale(0.97);
+		box-shadow: none;
+		opacity: 0.85;
+	}
+	:root[data-design="modern"] .key-primary {
+		background: var(--color-accent);
+		color: var(--color-on-accent);
+	}
+	:root[data-design="modern"] .key-primary:hover {
+		background: color-mix(in oklab, var(--color-accent) 88%, var(--color-ink));
+	}
+	:root[data-design="modern"] .key-quiet {
+		background: transparent;
+		color: var(--color-accent-ink);
+	}
+	:root[data-design="modern"] .key-quiet:hover {
+		background: var(--m-fill);
+		color: var(--color-accent-ink);
+	}
+	:root[data-design="modern"] .key-sm {
+		min-height: 2.25rem;
+		padding: 0.375rem 0.95rem;
+		font-size: var(--ios-subheadline-size);
+	}
+	:root[data-design="modern"] .key-lg {
+		min-height: 3.25rem;
+		padding: 0.75rem 1.6rem;
+		font-size: var(--ios-body-size);
+	}
+	/* Icon buttons are circles. */
+	:root[data-design="modern"] .key-icon {
+		width: 2.5rem;
+		height: 2.5rem;
+		min-height: 0;
+		padding: 0;
+		border-radius: 50%;
+	}
+
+	/* Segmented control: a glass track and one thumb that slides to the selected segment.
+	 * Segments are equal width; the thumb is placed with :has() (up to 5 segments). */
+	:root[data-design="modern"] .selector {
+		--n: 1;
+		--i: 0;
+		position: relative;
+		isolation: isolate;
+		display: inline-grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+		gap: 0;
+		padding: 2px;
+		border-radius: var(--m-radius-capsule);
+		background: var(--m-seg-track);
+		box-shadow: inset 0 0 0 1px var(--m-seg-border);
+	}
+	:root[data-design="modern"] .selector > :is(button, a) {
+		justify-content: center;
+		gap: 0.4rem;
+		min-height: 2rem;
+		padding: 0.25rem 1rem;
+		border: 0;
+		border-radius: var(--m-radius-capsule);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: var(--ios-subheadline-size);
+		letter-spacing: -0.01em;
+		text-transform: none;
+		color: var(--color-ink);
+		background: transparent;
+		box-shadow: none;
+	}
+	:root[data-design="modern"] .selector > :is(button, a)::before {
+		display: none;
+	}
+	:root[data-design="modern"] .selector > :is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"]) {
+		font-weight: 600;
+		/* Without :has() support the selected segment carries the thumb itself. */
+		background: var(--m-thumb);
+		box-shadow: none;
+	}
+	@supports selector(:has(*)) {
+		:root[data-design="modern"] .selector > :is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"]) {
+			background: transparent;
+			box-shadow: none;
+		}
+		:root[data-design="modern"] .selector::after {
+			content: "";
+			position: absolute;
+			z-index: -1;
+			top: 2px;
+			bottom: 2px;
+			left: 2px;
+			width: calc((100% - 4px) / var(--n));
+			border-radius: var(--m-radius-capsule);
+			background: var(--m-thumb);
+			box-shadow: none;
+			transform: translateX(calc(100% * var(--i)));
+			transition: transform var(--m-dur-control) var(--ease-spring);
+		}
+		:root[data-design="modern"] .selector:not(:has(> :is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"])))::after {
+			display: none;
+		}
+		:root[data-design="modern"] .selector:has(> :nth-child(2):last-child) { --n: 2; }
+		:root[data-design="modern"] .selector:has(> :nth-child(3):last-child) { --n: 3; }
+		:root[data-design="modern"] .selector:has(> :nth-child(4):last-child) { --n: 4; }
+		:root[data-design="modern"] .selector:has(> :nth-child(5):last-child) { --n: 5; }
+		:root[data-design="modern"] .selector:has(> :nth-child(2):is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"])) { --i: 1; }
+		:root[data-design="modern"] .selector:has(> :nth-child(3):is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"])) { --i: 2; }
+		:root[data-design="modern"] .selector:has(> :nth-child(4):is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"])) { --i: 3; }
+		:root[data-design="modern"] .selector:has(> :nth-child(5):is([aria-pressed="true"], [aria-selected="true"], [aria-current="true"])) { --i: 4; }
+	}
+
+	/* Displays and code: secondary-grouped surfaces with ink text (no amber, no glow). One level up
+	 * (tertiary) when they sit inside a card. */
+	:root[data-design="modern"] .lcd {
+		background: var(--m-grouped-bg-2);
+		color: var(--color-ink);
+		border-radius: var(--radius-key);
+		box-shadow: none;
+		text-shadow: none;
+	}
+	:root[data-design="modern"] :is(.module, .faceplate) .lcd {
+		background: var(--m-grouped-bg-3);
+	}
+	:root[data-design="modern"] .lcd ::selection {
+		background: color-mix(in oklab, var(--color-accent) 32%, transparent);
+		color: inherit;
+	}
+	:root[data-design="modern"] .lcd-dots {
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		font-variant-numeric: tabular-nums;
+	}
+	:root[data-design="modern"] .code-block {
+		background: var(--m-grouped-bg-2);
+		border-color: transparent;
+		border-radius: var(--m-radius-card);
+		box-shadow: none;
+		padding: 0 0.25rem 0.25rem;
+	}
+	:root[data-design="modern"] :is(.module, .faceplate) .code-block {
+		background: var(--m-grouped-bg-3);
+	}
+	:root[data-design="modern"] .code-block .lcd {
+		background: transparent;
+	}
+	:root[data-design="modern"] .code-block-head {
+		padding-left: 0.75rem;
+	}
+
+	/* Disclosure: a tinted label with a chevron that turns down. */
+	:root[data-design="modern"] .disclosure > summary {
+		gap: 0.45rem;
+		color: var(--color-accent-ink);
+		font-weight: 500;
+		border-radius: var(--radius-tight);
+	}
+	:root[data-design="modern"] .disclosure > summary::before {
+		width: 0.42rem;
+		height: 0.42rem;
+		margin-inline: 0.1rem 0.15rem;
+		border: 0;
+		border-right: 2px solid currentColor;
+		border-bottom: 2px solid currentColor;
+		transform: rotate(-45deg);
+		transition: transform var(--m-dur-control) var(--ease-spring);
+	}
+	:root[data-design="modern"] .disclosure[open] > summary::before {
+		transform: rotate(45deg);
+	}
+	:root[data-design="modern"] .disclosure > summary:hover {
+		color: var(--color-accent-ink);
+		opacity: 0.8;
+	}
+
+	/* Tags: small capsules. */
+	:root[data-design="modern"] .tag {
+		padding: 0.2rem 0.6rem;
+		border: 0;
+		border-radius: var(--m-radius-capsule);
+		background: var(--m-fill);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: var(--ios-caption1-size);
+		letter-spacing: 0;
+		text-transform: none;
+		color: var(--color-muted);
+	}
+	:root[data-design="modern"] .tag-lit {
+		background: var(--m-tint-fill);
+		color: var(--color-accent-ink);
+	}
+
+	/* Spec sheet: grouped rows with inset separators. */
+	:root[data-design="modern"] .spec > div {
+		border-top-color: var(--color-line);
+	}
+	:root[data-design="modern"] .spec dt {
+		font-weight: 600;
+	}
+
+	/* Code */
+	:root[data-design="modern"] :is(.code-inline, .prose :not(pre) > code) {
+		background: var(--m-fill);
+		border-radius: var(--radius-tight);
+	}
+	:root[data-design="modern"] .kbd {
+		border-radius: var(--radius-tight);
+		border-bottom-width: 1px;
+		background: var(--m-grouped-bg-2);
+	}
+
+	/* Long-form content */
+	:root[data-design="modern"] .prose {
+		line-height: 1.6;
+	}
+	:root[data-design="modern"] .prose :is(h1, h2, h3, h4) {
+		font-weight: 700;
+		letter-spacing: -0.015em;
+	}
+	:root[data-design="modern"] .prose h2 {
+		border-top: 0;
+		padding-top: 0;
+	}
+	:root[data-design="modern"] .prose a:not(:is(h1, h2, h3, h4) a) {
+		color: var(--color-accent-ink);
+		text-decoration-color: color-mix(in oklab, var(--color-accent-ink) 40%, transparent);
+		text-decoration-thickness: 1px;
+	}
+	:root[data-design="modern"] .prose ul {
+		list-style: disc;
+	}
+	:root[data-design="modern"] .prose blockquote {
+		border-left-color: var(--color-accent);
+		border-radius: 2px;
+	}
+	:root[data-design="modern"] .prose pre {
+		background: var(--m-grouped-bg-2) !important;
+		border-radius: var(--m-radius-card);
+		box-shadow: none;
+	}
+	:root[data-design="modern"] .prose img {
+		border-radius: var(--m-radius-card);
+	}
+	:root[data-design="modern"] .prose th {
+		font-family: var(--font-sans);
+		letter-spacing: 0;
+	}
+}
+
+/* Mermaid pan/zoom panel: a grouped surface. */
+:root[data-design="modern"] .mmd-panel {
+	background: var(--m-grouped-bg-2);
+	border-color: transparent;
+	border-radius: var(--m-radius-card);
+	box-shadow: none;
+}
+:root[data-design="modern"] .mmd-viewport {
+	border-radius: calc(var(--m-radius-card) - 0.5rem);
+	background:
+		radial-gradient(color-mix(in oklab, var(--color-ink) 9%, transparent) 0.7px, transparent 1px) 0 0 / 14px 14px,
+		var(--m-grouped-bg-3);
+	box-shadow: none;
+}
+
+/* ---------- Liquid Glass ----------
+ * .glass: translucent material for chrome (nav bar, toolbars, player card, floating panels).
+ * .glass-card / .glass-card-lg: the app's explicit glass shapes (16 / 28). Use glass sparingly: content
+ * cards stay on the grouped surfaces. Only meaningful under Modern (the tokens exist only there).
+ */
+@utility glass {
+	background: var(--glass-specular), var(--glass-bg);
+	-webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+	backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+	border: 1px solid var(--glass-border);
+	box-shadow: inset 0 1px 0 var(--glass-highlight), var(--glass-shadow);
+	@media (prefers-reduced-transparency: reduce) {
+		background: var(--glass-solid);
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		background: var(--glass-solid);
+	}
+}
+@utility glass-card {
+	border-radius: var(--m-radius-card);
+}
+@utility glass-card-lg {
+	border-radius: var(--m-radius-card-lg);
+}
+@utility capsule {
+	border-radius: var(--m-radius-capsule, 999px);
+}
+
+/* Continuous (squircle) corners where supported: progressive enhancement for cards, not capsules. */
+@supports (corner-shape: squircle) {
+	:root[data-design="modern"] :is(.module, .faceplate, .module-blank, .code-block, .lcd, .well, .mmd-panel, .glass-card, .glass-card-lg, .prose pre) {
+		corner-shape: squircle;
+	}
+}
+
+/* ---------- Motion (Modern only) ----------
+ * Response motion in the iOS idiom. Retro is untouched: every rule is scoped to [data-design=modern].
+ * Reduced motion: app.css makes all transitions/animations instant; page and theme crossfades are skipped
+ * in script (+layout.svelte, ThemeSegmented, DesignToggle).
+ */
+
+/* Cover tints blend: the --tint-* roles are registered as colours, so a section that switches cover
+ * classes (or gets new values from coverTint.ts) can transition them (transition-property: --tint-...;
+ * duration --m-tint-dur). Registration alone changes nothing: without a transition they switch instantly. */
+@property --tint-primary {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-on-primary {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-container {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-on-container {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-secondary-container {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-on-secondary-container {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-tertiary {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-vivid {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-surface {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-surface-high {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-ink {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-muted {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+@property --tint-outline {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: transparent;
+}
+
+/* Disclosures (any <details>, incl. .disclosure, the docs TOC and download disclosures): the content
+ * grows and fades in. Needs ::details-content + interpolate-size (Chromium); elsewhere it just opens. */
+@supports selector(::details-content) {
+	:root[data-design="modern"] details {
+		interpolate-size: allow-keywords;
+	}
+	:root[data-design="modern"] details::details-content {
+		block-size: 0;
+		opacity: 0;
+		overflow-y: clip;
+		transition:
+			block-size var(--m-dur-panel) var(--m-ease-out),
+			opacity var(--m-dur-panel) var(--m-ease-out),
+			content-visibility var(--m-dur-panel) allow-discrete;
+	}
+	:root[data-design="modern"] details[open]::details-content {
+		block-size: auto;
+		opacity: 1;
+	}
+}
+
+/* Floating glass panels (menus, popovers, the TOC sheet): scale and fade in from their anchor. Set
+ * transform-origin on the panel. */
+@keyframes m-pop-in {
+	from {
+		opacity: 0;
+		transform: scale(0.92) translateY(-0.25rem);
+	}
+}
+@keyframes m-fade-in {
+	from {
+		opacity: 0;
+	}
+}
+@keyframes m-rise-in {
+	from {
+		opacity: 0;
+		transform: translateY(0.375rem);
+	}
+}
+@utility m-pop-in {
+	animation: m-pop-in var(--m-dur-panel) var(--m-ease-spring-soft) both;
+}
+@utility m-fade-in {
+	animation: m-fade-in var(--m-dur-panel) var(--m-ease-out) both;
+}
+@utility m-rise-in {
+	animation: m-rise-in var(--m-dur-panel) var(--m-ease-out) both;
+}
+
+/* Page changes (View Transitions, started from +layout.svelte only on Modern): a short iOS-like push.
+ * The glass nav bar has its own name, so it stays put while the page moves under it. */
+:root[data-design="modern"] .m-header .bar {
+	view-transition-name: m-nav;
+}
+:root[data-design="modern"]::view-transition-group(m-nav) {
+	animation-duration: 0s;
+}
+:root[data-design="modern"]::view-transition-old(root) {
+	animation: m-page-out var(--m-dur-page) var(--m-ease-out) both;
+}
+:root[data-design="modern"]::view-transition-new(root) {
+	animation: m-page-in var(--m-dur-page) var(--m-ease-out) both;
+}
+/* Theme/design switches: a plain crossfade (set by the controls via the .m-vt-fade class). */
+:root.m-vt-fade::view-transition-old(root),
+:root.m-vt-fade::view-transition-new(root) {
+	animation: m-fade-in var(--m-dur-page) var(--m-ease-in-out) both;
+}
+:root.m-vt-fade::view-transition-old(root) {
+	animation-name: m-fade-out;
+}
+@keyframes m-page-out {
+	to {
+		opacity: 0;
+		transform: translateX(-1.5rem);
+	}
+}
+@keyframes m-page-in {
+	from {
+		opacity: 0;
+		transform: translateX(2.5rem);
+	}
+}
+@keyframes m-fade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+/* ---------- Hardware-only decoration: none of it exists in Modern (all aria-hidden) ---------- */
+:root[data-design="modern"] :is(.screw, .vents, .led, .jack, .model, .power) {
+	display: none !important;
+}
+
+/* ---------- Phase 1 overrides for scoped Retro component styles ----------
+ * These components still render under Modern until Phase 2 gives them Modern variants. Unlayered and
+ * one specificity step above Svelte's scoped selectors. Delete each block with its component's variant.
+ */
+/* Displays drawn by scoped styles (the share player, until it has a Modern variant): flat surface, no glow.
+ * Header, ThemeToggle, Footer, the home page and the 404 have their Modern variants (designs/modern/*). */
+:root[data-design="modern"] .lcd.screen {
+	background: var(--color-lcd);
+}
+:root[data-design="modern"] :is(.module, .faceplate) .lcd.screen {
+	background: var(--m-grouped-bg-3);
+}
+:root[data-design="modern"] .lcd * {
+	text-shadow: none !important;
+}

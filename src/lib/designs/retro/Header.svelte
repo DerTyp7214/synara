@@ -4,20 +4,16 @@
     import Menu from '@lucide/svelte/icons/menu';
     import X from '@lucide/svelte/icons/x';
     import Logo_LONG from '$lib/components/Logo_LONG.svelte';
-    import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+    import ThemeToggle from '$lib/designs/retro/ThemeToggle.svelte';
+    import DesignToggle from '$lib/designs/DesignToggle.svelte';
+    import { isActiveLink, mainLinks } from '$lib/nav';
 
-    const links = [
-        { href: '/#features', label: 'Features' },
-        { href: '/docs/', label: 'Docs' },
-        { href: '/server/', label: 'Server' },
-        { href: '/download/', label: 'Download' }
-    ];
+    const links = mainLinks;
 
     let open = $state(false);
 
     function isActive(href: string) {
-        if (href.includes('#')) return false;
-        return page.url.pathname === href || page.url.pathname.startsWith(href);
+        return isActiveLink(href, page.url.pathname);
     }
 
     afterNavigate(() => (open = false));
@@ -51,6 +47,7 @@
         </nav>
 
         <div class="ml-auto flex items-center gap-2">
+            <DesignToggle/>
             <ThemeToggle/>
             <span class="power hidden sm:inline-flex" aria-hidden="true"><span class="led ok"></span>Power</span>
             <button

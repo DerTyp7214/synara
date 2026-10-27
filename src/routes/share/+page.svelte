@@ -4,6 +4,8 @@
     import ExternalLink from '@lucide/svelte/icons/external-link';
     import Logo_LONG from '$lib/components/Logo_LONG.svelte';
     import PlatformIcon from '$lib/components/share/PlatformIcon.svelte';
+    import ShareModern from '$lib/designs/modern/pages/ShareModern.svelte';
+    import { design } from '$lib/designs/design.svelte';
     import {
         parseShareParams,
         resolveShare,
@@ -63,6 +65,13 @@
         empty ? 'Shared music | Synara' : `${title}${artists ? ` by ${artists}` : ''} | Synara`,
     );
     let hasIds = $derived(!!(params.mbid || params.isrc || params.barcode));
+    let idRows = $derived(
+        [
+            { label: 'MBID', value: params.mbid },
+            { label: 'ISRC', value: params.isrc },
+            { label: 'Barcode', value: params.barcode },
+        ].filter((r): r is { label: string; value: string } => !!r.value),
+    );
 </script>
 
 <svelte:head>
@@ -70,6 +79,26 @@
     <meta name="robots" content="noindex" />
 </svelte:head>
 
+<!-- /share/ is client-only (ssr = false), so the design can pick the markup without a hydration mismatch. -->
+{#if design.isModern}
+    <ShareModern
+        {empty}
+        {loading}
+        kind={kindLabel[params.type]}
+        {title}
+        {artists}
+        album={params.type === 'song' && meta.album && meta.album !== title ? meta.album : undefined}
+        durationLabel={durationMs ? formatDuration(durationMs) : null}
+        {cover}
+        round={params.type === 'artist'}
+        {initials}
+        {links}
+        {deeplink}
+        {mbLink}
+        ids={idRows}
+        onCoverFailed={() => (coverFailed = true)}
+    />
+{:else}
 <div class="share">
     <header class="top">
         <a href="/" class="brand" aria-label="Synara home">
@@ -184,6 +213,7 @@
         {#if !empty}<a href="/download/" class="link meta">Don’t have Synara? Get the app</a>{/if}
     </footer>
 </div>
+{/if}
 
 <style>
     .share {

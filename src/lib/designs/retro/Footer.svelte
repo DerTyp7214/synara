@@ -1,18 +1,10 @@
 <script lang="ts">
     import Logo from '$lib/components/Logo.svelte';
     import Logo_TEXT from '$lib/components/Logo_TEXT.svelte';
+    import { siteLinks, sourceLinks } from '$lib/nav';
 
-    const source = [
-        { href: 'https://github.com/DerTyp7214/synara-api', label: 'Server source' },
-        { href: 'https://github.com/DerTyp7214/SynaraDesktop', label: 'Desktop app source' },
-        { href: 'https://github.com/DerTyp7214/Synara', label: 'Releases' }
-    ];
-    const site = [
-        { href: '/docs/', label: 'Docs' },
-        { href: '/server/', label: 'Run a server' },
-        { href: '/download/', label: 'Download' },
-        { href: '/privacy/', label: 'Privacy' }
-    ];
+    const source = sourceLinks;
+    const site = siteLinks;
     const year = new Date().getFullYear();
 </script>
 

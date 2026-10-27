@@ -1,0 +1,120 @@
+/*
+ * Modern home page (designs/modern/home/*): section rhythm and the inset-grouped list idiom (iOS Settings
+ * rows with leading icon tiles). Prefixed `mh-` and only used by markup inside `.design-modern`, so it
+ * cannot reach Retro. See DESIGN.md, "Modern > Component idioms".
+ */
+
+.mh-section {
+	padding-block: clamp(2.5rem, 4.5vw, 4.5rem);
+}
+
+/* Inset-grouped section: a grouped card at the group radius. Rows are separated by hairlines that start
+ * at the text, not at the card edge (the iOS inset separator). */
+.mh-group {
+	background: var(--m-grouped-bg-2);
+	border-radius: var(--m-radius-group);
+	overflow: hidden;
+}
+/* Continuous corners where supported (progressive enhancement; never on capsules). */
+@supports (corner-shape: squircle) {
+	.mh-group,
+	.mh-squircle {
+		corner-shape: squircle;
+	}
+}
+.mh-group-h {
+	padding: 0 1rem 0.5rem;
+	font-size: var(--ios-footnote-size);
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--color-muted);
+}
+.mh-row {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.875rem;
+	padding: 0.875rem 1rem;
+}
+.mh-row + .mh-row::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: calc(1rem + var(--mh-tile) + 0.875rem);
+	border-top: 1px solid var(--color-line);
+}
+.mh-group.plain .mh-row + .mh-row::before {
+	left: 1rem;
+}
+
+/* Leading icon tile: a 30 px rounded square with a line glyph, tonal like the app's colour roles. */
+.mh-tile {
+	--mh-tile: 1.875rem;
+	display: inline-grid;
+	place-items: center;
+	flex-shrink: 0;
+	width: var(--mh-tile);
+	height: var(--mh-tile);
+	border-radius: 0.5rem;
+	background: var(--m-fill);
+	color: var(--color-ink);
+}
+.mh-row {
+	--mh-tile: 1.875rem;
+}
+@supports (corner-shape: squircle) {
+	.mh-tile {
+		corner-shape: squircle;
+		border-radius: 0.625rem;
+	}
+}
+.mh-tile svg {
+	width: 1.125rem;
+	height: 1.125rem;
+	stroke-width: 2;
+}
+.mh-tile.lg {
+	--mh-tile: 2.75rem;
+	border-radius: 0.75rem;
+}
+.mh-tile.lg svg {
+	width: 1.5rem;
+	height: 1.5rem;
+	stroke-width: 1.75;
+}
+.mh-tile-primary {
+	background: var(--m-primary-container);
+	color: var(--m-on-primary-container);
+}
+.mh-tile-secondary {
+	background: var(--m-secondary-container);
+	color: var(--m-on-secondary-container);
+}
+.mh-tile-tertiary {
+	background: var(--m-tertiary-container);
+	color: var(--m-on-tertiary-container);
+}
+.mh-tile-neutral {
+	background: var(--m-fill);
+	color: var(--color-muted);
+}
+.mh-row .mh-tile {
+	margin-top: 0.0625rem;
+}
+
+/* Row text: a headline over a subheadline summary (the app's SettingLabel). */
+.mh-title {
+	font-size: var(--ios-body-size);
+	line-height: var(--ios-body-leading);
+	font-weight: 600;
+	letter-spacing: var(--ios-body-tracking);
+	color: var(--color-ink);
+}
+.mh-sub {
+	margin-top: 0.125rem;
+	font-size: var(--ios-subheadline-size);
+	line-height: 1.4;
+	letter-spacing: var(--ios-subheadline-tracking);
+	color: var(--color-muted);
+}

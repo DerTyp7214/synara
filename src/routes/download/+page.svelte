@@ -5,6 +5,7 @@
     import AndroidDownload from '$lib/components/download/AndroidDownload.svelte';
     import AppleCard from '$lib/components/download/AppleCard.svelte';
     import ServerImage from '$lib/components/download/ServerImage.svelte';
+    import DownloadModern from '$lib/designs/modern/pages/DownloadModern.svelte';
     import {
         detectOs,
         fetchAndroidInfo,
@@ -44,6 +45,7 @@
     />
 </svelte:head>
 
+<div class="design-retro">
 <section class="pt-10 pb-10 md:pt-16 md:pb-12" aria-labelledby="download-h">
     <div class="shell">
         <h1 id="download-h" class="h-display">{intro.title}</h1>
@@ -68,6 +70,11 @@
             <ServerImage {channel}/>
         </div>
     </div>
+</div>
+</div>
+
+<div class="design-modern">
+    <DownloadModern bind:channel {os} {desktopUpdated} {android} recommended={recommendedDesktopFile(os)}/>
 </div>
 
 <style>

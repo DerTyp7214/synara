@@ -2,7 +2,7 @@
     import CodeBlock from '$lib/components/CodeBlock.svelte';
     import Inline from '$lib/components/content/Inline.svelte';
     import { minimalCompose } from '$lib/releases';
-    import { sections, setupSteps } from './content';
+    import { sections, setupSteps } from '$lib/components/home/content';
 
     const compose = minimalCompose('stable');
 </script>
