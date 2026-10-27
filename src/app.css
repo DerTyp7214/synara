@@ -1,36 +1,1081 @@
+/*
+ * Synara design system: "SR-1", a hi-fi component.
+ * The site is the front panel of a piece of audio equipment and its owner's manual.
+ * Hardware styling (faceplates, keys, LEDs, the amber display, meters) is for chrome and
+ * interactive surfaces. Reading text stays a calm, high-contrast column.
+ *
+ * Tokens live in @theme (Tailwind utilities are generated from them: bg-bg, bg-surface,
+ * text-ink, text-muted, border-line, font-label, font-lcd, ...).
+ * Component classes live in @layer components, so plain utilities can override them.
+ * See DESIGN.md for usage rules.
+ */
 @import "tailwindcss";
 
-@import "@skeletonlabs/skeleton";
-@import "@skeletonlabs/skeleton/themes/modern";
-@import "@skeletonlabs/skeleton/themes/hamlindigo";
-@import "@skeletonlabs/skeleton/themes/wintry";
-@import "@skeletonlabs/skeleton/themes/rocket";
-@import "@skeletonlabs/skeleton/themes/sahara";
-@import "@skeletonlabs/skeleton/themes/vintage";
-@import "@skeletonlabs/skeleton/themes/seafoam";
-@import "@skeletonlabs/skeleton/themes/crimson";
-@import "@skeletonlabs/skeleton/themes/catppuccin";
-@import "@skeletonlabs/skeleton/themes/cerberus";
-@import "@skeletonlabs/skeleton/themes/concord";
-@import "@skeletonlabs/skeleton/themes/fennec";
-@import "@skeletonlabs/skeleton/themes/legacy";
-@import "@skeletonlabs/skeleton/themes/mint";
-@import "@skeletonlabs/skeleton/themes/mona";
-@import "@skeletonlabs/skeleton/themes/nosh";
-@import "@skeletonlabs/skeleton/themes/nouveau";
-@import "@skeletonlabs/skeleton/themes/pine";
-@import "@skeletonlabs/skeleton/themes/rose";
-@import "@skeletonlabs/skeleton/themes/reign";
-@import "@skeletonlabs/skeleton/themes/terminus";
-@import "@skeletonlabs/skeleton/themes/vox";
-
-@import "@skeletonlabs/skeleton-svelte";
-
-@keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* ---------- Fonts (self-hosted, SIL OFL 1.1, latin subset from Fontsource) ---------- */
+@font-face {
+	font-family: "Barlow";
+	src: url("/fonts/Barlow-400.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
 }
-.animate-gradient {
-    animation: gradient 6s ease infinite;
+@font-face {
+	font-family: "Barlow";
+	src: url("/fonts/Barlow-400-italic.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Barlow";
+	src: url("/fonts/Barlow-500.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Barlow";
+	src: url("/fonts/Barlow-600.woff2") format("woff2");
+	font-weight: 600 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Barlow Condensed";
+	src: url("/fonts/BarlowCondensed-500.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Barlow Condensed";
+	src: url("/fonts/BarlowCondensed-600.woff2") format("woff2");
+	font-weight: 600 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "IBM Plex Mono";
+	src: url("/fonts/IBMPlexMono-400.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "IBM Plex Mono";
+	src: url("/fonts/IBMPlexMono-500.woff2") format("woff2");
+	font-weight: 500 700;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: "Doto";
+	src: url("/fonts/Doto-var.woff2") format("woff2");
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+/* ---------- Theme switching ----------
+ * Dark is default. Light applies when the OS prefers light and no explicit choice is stored,
+ * or when <html data-theme="light">. data-theme="dark" forces dark.
+ */
+@custom-variant light {
+	&:where([data-theme="light"], [data-theme="light"] *) {
+		@slot;
+	}
+	@media (prefers-color-scheme: light) {
+		&:where(:root:not([data-theme="dark"]), :root:not([data-theme="dark"]) *) {
+			@slot;
+		}
+	}
+}
+@custom-variant dark {
+	&:where([data-theme="dark"], [data-theme="dark"] *) {
+		@slot;
+	}
+	@media not (prefers-color-scheme: light) {
+		&:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+			@slot;
+		}
+	}
+}
+
+/* ---------- Tokens ---------- */
+@theme {
+	/* Only Synara colours exist. Tailwind's default palette is removed on purpose. */
+	--color-*: initial;
+	--color-white: #ffffff;
+	--color-black: #000000;
+
+	/* Dark (default): graphite anodised aluminium. Overridden for light below. */
+	--color-bg: #1c1c1e; /* the shelf the gear sits on: page background */
+	--color-surface: #26262a; /* faceplates, modules */
+	--color-raised: #313136; /* key caps, hover fills */
+	--color-recess: #141416; /* wells, slots, code, rear panel */
+	--color-ink: #edece7; /* silk-screen white: primary text */
+	--color-muted: #aaa9a3; /* secondary text */
+	--color-faint: #94938d; /* tertiary text, legends on dark */
+	--color-line: rgb(255 255 255 / 0.085);
+	--color-line-strong: rgb(255 255 255 / 0.17);
+	--color-accent: #ff5f1f; /* indicator orange: lit LEDs, the primary key, cables */
+	--color-accent-ink: #ff9b5e; /* accent as readable text */
+	--color-on-accent: #170b04;
+	--color-ok: #73d996;
+	--color-warn: #f5c04a;
+	--color-led-off: #3d3d42;
+
+	/* The amber display. Identical in both themes: it is a lit panel, not paper. */
+	--color-lcd: #130c05;
+	--color-lcd-ink: #ffb547;
+	--color-lcd-dim: #c58a3c;
+	--color-lcd-ghost: rgb(255 181 71 / 0.09);
+
+	--font-sans: "Barlow", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-label: "Barlow Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	--font-lcd: "Doto", "IBM Plex Mono", ui-monospace, monospace;
+
+	/* Radii by hierarchy: plate (faceplates, modules) > key (keys, wells, displays) > tight (inline). */
+	--radius-plate: 0.4375rem;
+	--radius-key: 0.25rem;
+	--radius-tight: 0.1875rem;
+
+	--ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+	--ease-in-out-soft: cubic-bezier(0.6, 0, 0.3, 1);
+
+	--breakpoint-xs: 26rem;
+}
+
+@layer theme {
+	:root {
+		/* Faceplate finish: hairline horizontal brushing on top of the surface colour. */
+		--brush: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.014) 0 1px, transparent 1px 3px);
+		--plate-shade: linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(0 0 0 / 0.06));
+		--plate-edge: inset 0 1px 0 rgb(255 255 255 / 0.07), inset 0 -1px 0 rgb(0 0 0 / 0.45);
+		--plate-drop: 0 1px 0 rgb(0 0 0 / 0.5), 0 18px 30px -22px rgb(0 0 0 / 0.75);
+		--well: inset 0 1px 3px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(0 0 0 / 0.35), 0 1px 0 rgb(255 255 255 / 0.05);
+
+		--key-top: #3b3b40;
+		--key-bottom: #2d2d31;
+		--key-edge: #0d0d0f;
+		--key-hl: rgb(255 255 255 / 0.1);
+		--key-drop: #09090a;
+		--key-ink: var(--color-ink);
+
+		/* Scrollbars: a slim thumb in faceplate colours; amber on the displays (see Base). */
+		--scroll-thumb: rgb(255 255 255 / 0.2);
+		--scroll-thumb-hover: rgb(255 255 255 / 0.32);
+		--scroll-track: transparent;
+
+		--section-space: clamp(4rem, 8vw, 7.5rem);
+		--gutter: 1rem;
+		--header-h: 3.75rem;
+		--dur-ui: 140ms;
+		--dur-reveal: 480ms;
+		color-scheme: dark;
+	}
+	@media (min-width: 40rem) {
+		:root {
+			--gutter: 2rem;
+		}
+	}
+	:root[data-theme="light"] {
+		--color-bg: #e6e5e0;
+		--color-surface: #f2f1ed;
+		--color-raised: #fbfaf7;
+		--color-recess: #d7d6d0;
+		--color-ink: #1b1b1a;
+		--color-muted: #54534d;
+		--color-faint: #5b5a54;
+		--color-line: rgb(0 0 0 / 0.1);
+		--color-line-strong: rgb(0 0 0 / 0.2);
+		--color-accent: #ee5a16;
+		--color-accent-ink: #a53b05;
+		--color-on-accent: #170b04;
+		--color-ok: #1b7c43;
+		--color-warn: #8a5800;
+		--color-led-off: #bebdb6;
+		--brush: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.012) 0 1px, transparent 1px 3px);
+		--plate-shade: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.025));
+		--plate-edge: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 -1px 0 rgb(0 0 0 / 0.08);
+		--plate-drop: 0 1px 0 rgb(0 0 0 / 0.12), 0 18px 30px -24px rgb(40 36 30 / 0.45);
+		--well: inset 0 1px 3px rgb(0 0 0 / 0.18), inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 0 rgb(255 255 255 / 0.8);
+		--key-top: #ffffff;
+		--key-bottom: #eceae5;
+		--key-edge: #a6a59e;
+		--key-hl: rgb(255 255 255 / 0.95);
+		--key-drop: #9b9a93;
+		--scroll-thumb: rgb(0 0 0 / 0.24);
+		--scroll-thumb-hover: rgb(0 0 0 / 0.38);
+		color-scheme: light;
+	}
+	@media (prefers-color-scheme: light) {
+		:root:not([data-theme="dark"]) {
+			--color-bg: #e6e5e0;
+			--color-surface: #f2f1ed;
+			--color-raised: #fbfaf7;
+			--color-recess: #d7d6d0;
+			--color-ink: #1b1b1a;
+			--color-muted: #54534d;
+			--color-faint: #5b5a54;
+			--color-line: rgb(0 0 0 / 0.1);
+			--color-line-strong: rgb(0 0 0 / 0.2);
+			--color-accent: #ee5a16;
+			--color-accent-ink: #a53b05;
+			--color-on-accent: #170b04;
+			--color-ok: #1b7c43;
+			--color-warn: #8a5800;
+			--color-led-off: #bebdb6;
+			--brush: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.012) 0 1px, transparent 1px 3px);
+			--plate-shade: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(0 0 0 / 0.025));
+			--plate-edge: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 -1px 0 rgb(0 0 0 / 0.08);
+			--plate-drop: 0 1px 0 rgb(0 0 0 / 0.12), 0 18px 30px -24px rgb(40 36 30 / 0.45);
+			--well: inset 0 1px 3px rgb(0 0 0 / 0.18), inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 0 rgb(255 255 255 / 0.8);
+			--key-top: #ffffff;
+			--key-bottom: #eceae5;
+			--key-edge: #a6a59e;
+			--key-hl: rgb(255 255 255 / 0.95);
+			--key-drop: #9b9a93;
+			--scroll-thumb: rgb(0 0 0 / 0.24);
+			--scroll-thumb-hover: rgb(0 0 0 / 0.38);
+			color-scheme: light;
+		}
+	}
+}
+
+/* ---------- Base ---------- */
+@layer base {
+	html {
+		background: var(--color-bg);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: 100%;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		text-rendering: optimizeLegibility;
+		scroll-padding-top: calc(var(--header-h) + 1rem);
+		-webkit-tap-highlight-color: transparent;
+	}
+	body {
+		min-height: 100dvh;
+		background: var(--color-bg);
+		color: var(--color-ink);
+		font-size: 1.0625rem;
+		line-height: 1.6;
+	}
+	::selection {
+		background: color-mix(in oklab, var(--color-accent) 38%, transparent);
+		color: var(--color-ink);
+	}
+	:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 3px;
+		border-radius: var(--radius-tight);
+	}
+	h1,
+	h2,
+	h3,
+	h4 {
+		text-wrap: balance;
+	}
+	p {
+		text-wrap: pretty;
+	}
+	/* Scrollbars. Standard properties for Firefox and current Chromium; ::-webkit-scrollbar for Safari
+	 * and older Chromium (current Chromium ignores those once scrollbar-color is set). */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+	}
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+		background: var(--scroll-track);
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--scroll-thumb);
+		border-radius: 999px;
+		border: 2px solid transparent;
+		background-clip: padding-box;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background-color: var(--scroll-thumb-hover);
+	}
+	::-webkit-scrollbar-button {
+		display: none;
+	}
+	::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+	/* On the amber displays: a recessed dark track with an amber thumb, in both themes. */
+	.lcd,
+	.lcd * {
+		--scroll-thumb: var(--color-lcd-dim);
+		--scroll-thumb-hover: var(--color-lcd-ink);
+		--scroll-track: rgb(0 0 0 / 0.45);
+	}
+	/* Code wells in the docs: a track one step darker than the well. */
+	.prose pre {
+		--scroll-track: color-mix(in oklab, var(--color-recess) 85%, #000);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}
+
+/* ---------- Components ---------- */
+@layer components {
+	/* Layout */
+	.shell {
+		width: 100%;
+		max-width: 76rem;
+		margin-inline: auto;
+		padding-inline: var(--gutter);
+	}
+	.shell-narrow {
+		width: 100%;
+		max-width: 46rem;
+		margin-inline: auto;
+		padding-inline: var(--gutter);
+	}
+	.section {
+		padding-block: var(--section-space);
+	}
+	.section-ruled {
+		border-top: 1px solid var(--color-line);
+	}
+
+	/* Type scale: Barlow throughout, sized by role. No display serif. */
+	.h-display {
+		font-weight: 600;
+		font-size: clamp(2.25rem, 1.55rem + 2.9vw, 3.75rem);
+		line-height: 1.02;
+		letter-spacing: -0.022em;
+	}
+	.h-section {
+		font-weight: 600;
+		font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+		line-height: 1.08;
+		letter-spacing: -0.018em;
+	}
+	.h-title {
+		font-weight: 600;
+		font-size: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+		line-height: 1.2;
+		letter-spacing: -0.01em;
+	}
+	.h-sub {
+		font-weight: 600;
+		font-size: 1.0625rem;
+		line-height: 1.35;
+	}
+	.lead {
+		font-size: clamp(1.125rem, 1.07rem + 0.25vw, 1.25rem);
+		line-height: 1.55;
+		color: var(--color-muted);
+		max-width: 38rem;
+	}
+	.meta {
+		font-size: 0.9375rem;
+		line-height: 1.5;
+		color: var(--color-muted);
+	}
+	/* Sentence-case small label (form labels, captions). */
+	.label {
+		font-size: 0.875rem;
+		font-weight: 500;
+		line-height: 1.3;
+		color: var(--color-muted);
+	}
+	/* Silk-screened faceplate legend: condensed caps. Only on hardware (modules, keys, switches, meters). */
+	.legend {
+		font-family: var(--font-label);
+		font-weight: 600;
+		font-size: 0.75rem;
+		line-height: 1.2;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-faint);
+	}
+	.readout {
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		letter-spacing: 0.01em;
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* Links in running text */
+	.link {
+		color: var(--color-ink);
+		text-decoration: underline;
+		text-decoration-color: color-mix(in oklab, var(--color-accent) 75%, transparent);
+		text-decoration-thickness: 1.5px;
+		text-underline-offset: 0.2em;
+		transition: color var(--dur-ui) var(--ease-out-soft);
+	}
+	.link:hover {
+		color: var(--color-accent-ink);
+		text-decoration-color: currentColor;
+	}
+
+	/* ---- Faceplates and modules ---- */
+	.faceplate {
+		position: relative;
+		background: var(--plate-shade), var(--brush), var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-plate);
+		box-shadow: var(--plate-edge), var(--plate-drop);
+	}
+	/* A module is a faceplate with a legend strip on top. */
+	.module {
+		position: relative;
+		background: var(--plate-shade), var(--brush), var(--color-surface);
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-plate);
+		box-shadow: var(--plate-edge), var(--plate-drop);
+	}
+	.module-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.6rem 1.25rem;
+		border-bottom: 1px solid var(--color-line);
+	}
+	.module-body {
+		padding: 1.25rem;
+	}
+	/* The module's name, silk-screened in its head strip. Use on the h2/h3 of a module. */
+	.module-title {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-family: var(--font-label);
+		font-weight: 600;
+		font-size: 1.1875rem;
+		line-height: 1.2;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--color-ink);
+	}
+	.module-title > svg {
+		color: var(--color-faint);
+	}
+	@media (min-width: 48rem) {
+		.module-head {
+			padding-inline: 1.75rem;
+		}
+		.module-body {
+			padding: 1.75rem;
+		}
+	}
+	/* Selected / "yours": the module whose indicator is lit. */
+	.module.is-selected {
+		border-color: color-mix(in oklab, var(--color-accent) 55%, transparent);
+	}
+	.module.is-selected .module-head {
+		border-bottom-color: color-mix(in oklab, var(--color-accent) 30%, var(--color-line));
+	}
+	/* Blanking plate: an empty rack slot (coming soon). */
+	.module-blank {
+		position: relative;
+		border: 1px dashed var(--color-line-strong);
+		border-radius: var(--radius-plate);
+		background: color-mix(in oklab, var(--color-recess) 55%, transparent);
+	}
+
+	/* Recessed well (slots, inset readouts). */
+	.well {
+		background: var(--color-recess);
+		border-radius: var(--radius-key);
+		box-shadow: var(--well);
+	}
+
+	/* Screw head. Absolutely position it with utilities (top-2 left-2 ...). */
+	.screw {
+		position: absolute;
+		width: 0.625rem;
+		height: 0.625rem;
+		border-radius: 50%;
+		background: radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.35), transparent 55%),
+			color-mix(in oklab, var(--color-surface) 70%, var(--color-ink) 18%);
+		box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.35), 0 1px 0 rgb(255 255 255 / 0.06);
+	}
+	.screw::after {
+		content: "";
+		position: absolute;
+		left: 18%;
+		right: 18%;
+		top: calc(50% - 0.5px);
+		height: 1px;
+		background: rgb(0 0 0 / 0.55);
+		transform: rotate(var(--screw-angle, 35deg));
+	}
+
+	/* Vent slots, a decorative strip. */
+	.vents {
+		height: 0.5rem;
+		background: repeating-linear-gradient(
+			90deg,
+			var(--color-recess) 0 1.5rem,
+			transparent 1.5rem 2rem
+		);
+		border-radius: 2px;
+		box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.25);
+		opacity: 0.9;
+	}
+
+	/* ---- Indicators ---- */
+	.led {
+		display: inline-block;
+		flex-shrink: 0;
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--color-led-off);
+		box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.4);
+		transition: background-color var(--dur-ui), box-shadow var(--dur-ui);
+	}
+	.led.on,
+	.led-on {
+		background: radial-gradient(circle at 40% 35%, #ffd2b0 0 18%, var(--color-accent) 55%);
+		box-shadow: 0 0 0.45rem color-mix(in oklab, var(--color-accent) 75%, transparent), 0 0 0 1px rgb(0 0 0 / 0.25);
+	}
+	.led.ok {
+		background: radial-gradient(circle at 40% 35%, #e3ffe9 0 18%, var(--color-ok) 55%);
+		box-shadow: 0 0 0.45rem color-mix(in oklab, var(--color-ok) 70%, transparent), 0 0 0 1px rgb(0 0 0 / 0.2);
+	}
+
+	/* ---- Keys (buttons). .key + optional .key-primary / .key-quiet and a size. ---- */
+	.key {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.55rem;
+		min-height: 2.75rem;
+		padding: 0.5rem 1.15rem;
+		border-radius: var(--radius-key);
+		border: 1px solid var(--key-edge);
+		background: linear-gradient(180deg, var(--key-top), var(--key-bottom));
+		box-shadow: inset 0 1px 0 var(--key-hl), 0 2px 0 var(--key-drop), 0 3px 6px -3px rgb(0 0 0 / 0.5);
+		color: var(--key-ink);
+		font-family: var(--font-label);
+		font-weight: 600;
+		font-size: 1rem;
+		line-height: 1;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		white-space: nowrap;
+		cursor: pointer;
+		user-select: none;
+		transition:
+			transform 70ms ease-out,
+			box-shadow 70ms ease-out,
+			filter var(--dur-ui);
+	}
+	.key:hover {
+		filter: brightness(1.07);
+	}
+	.key:active {
+		transform: translateY(2px);
+		box-shadow: inset 0 1px 0 var(--key-hl), 0 0 0 var(--key-drop), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+	}
+	.key:disabled,
+	.key[aria-disabled="true"] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	.key-primary {
+		--key-top: #ff7c40;
+		--key-bottom: #ef561a;
+		--key-edge: #8f2e06;
+		--key-hl: rgb(255 220 190 / 0.6);
+		--key-drop: #7a2604;
+		--key-ink: var(--color-on-accent);
+	}
+	/* A key without the cap: for tertiary actions inside modules (copy, menu, theme). */
+	.key-quiet {
+		background: transparent;
+		border-color: transparent;
+		box-shadow: none;
+		color: var(--color-muted);
+	}
+	.key-quiet:hover {
+		filter: none;
+		color: var(--color-ink);
+		background: color-mix(in oklab, var(--color-ink) 7%, transparent);
+	}
+	.key-quiet:active {
+		box-shadow: none;
+	}
+	.key-sm {
+		min-height: 2.25rem;
+		padding: 0.375rem 0.85rem;
+		font-size: 0.875rem;
+	}
+	.key-lg {
+		min-height: 3.25rem;
+		padding: 0.75rem 1.5rem;
+		font-size: 1.0625rem;
+	}
+	.key-icon {
+		min-height: 0;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+	}
+	.key .led {
+		width: 0.4375rem;
+		height: 0.4375rem;
+	}
+
+	/* ---- Selector switch (e.g. Stable / Dev, Minimal / Full). ----
+	 * A recessed slot of buttons. The selected one has aria-pressed="true" and a lit LED.
+	 */
+	.selector {
+		display: inline-flex;
+		gap: 2px;
+		padding: 3px;
+		border-radius: calc(var(--radius-key) + 2px);
+		background: var(--color-recess);
+		box-shadow: var(--well);
+	}
+	.selector > button,
+	.selector > a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 2.25rem;
+		padding: 0.375rem 0.95rem 0.375rem 0.8rem;
+		border-radius: var(--radius-key);
+		border: 1px solid transparent;
+		font-family: var(--font-label);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+		cursor: pointer;
+		transition: color var(--dur-ui), background-color var(--dur-ui);
+	}
+	.selector > :is(button, a)::before {
+		content: "";
+		width: 0.4375rem;
+		height: 0.4375rem;
+		border-radius: 50%;
+		background: var(--color-led-off);
+		box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.4);
+	}
+	.selector > :is(button, a):hover {
+		color: var(--color-ink);
+	}
+	.selector > [aria-pressed="true"],
+	.selector > [aria-selected="true"],
+	.selector > [aria-current="true"] {
+		color: var(--color-ink);
+		border-color: var(--key-edge);
+		background: linear-gradient(180deg, var(--key-top), var(--key-bottom));
+		box-shadow: inset 0 1px 0 var(--key-hl), 0 1px 2px rgb(0 0 0 / 0.35);
+	}
+	.selector > [aria-pressed="true"]::before,
+	.selector > [aria-selected="true"]::before,
+	.selector > [aria-current="true"]::before {
+		background: radial-gradient(circle at 40% 35%, #ffd2b0 0 18%, var(--color-accent) 55%);
+		box-shadow: 0 0 0.4rem color-mix(in oklab, var(--color-accent) 75%, transparent);
+	}
+
+	/* ---- The amber display ---- */
+	.lcd {
+		position: relative;
+		background:
+			linear-gradient(160deg, rgb(255 255 255 / 0.045) 0%, transparent 38%),
+			radial-gradient(120% 90% at 50% 0%, #1f1408 0%, var(--color-lcd) 70%);
+		color: var(--color-lcd-ink);
+		border-radius: var(--radius-key);
+		box-shadow:
+			inset 0 2px 10px rgb(0 0 0 / 0.85),
+			inset 0 0 0 1px rgb(0 0 0 / 0.7),
+			0 0 0 3px color-mix(in oklab, var(--color-recess) 80%, #000),
+			0 1px 0 3px rgb(255 255 255 / 0.05);
+		font-family: var(--font-mono);
+		font-variant-numeric: tabular-nums;
+		text-shadow: 0 0 0.5rem rgb(255 160 50 / 0.35);
+	}
+	.lcd ::selection {
+		background: var(--color-lcd-ink);
+		color: var(--color-lcd);
+	}
+	.lcd-dim {
+		color: var(--color-lcd-dim);
+	}
+	.lcd-dots {
+		font-family: var(--font-lcd);
+		font-weight: 700;
+		letter-spacing: 0.02em;
+	}
+
+	/* ---- Disclosure: <details class="disclosure"><summary>…</summary>…</details> ---- */
+	.disclosure > summary {
+		list-style: none;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
+		font-size: 0.9375rem;
+		color: var(--color-muted);
+		border-radius: var(--radius-tight);
+	}
+	.disclosure > summary::-webkit-details-marker {
+		display: none;
+	}
+	.disclosure > summary::before {
+		content: "";
+		width: 0;
+		height: 0;
+		border-left: 0.36rem solid currentColor;
+		border-top: 0.26rem solid transparent;
+		border-bottom: 0.26rem solid transparent;
+		transition: transform var(--dur-ui) var(--ease-out-soft);
+	}
+	.disclosure[open] > summary::before {
+		transform: rotate(90deg);
+	}
+	.disclosure > summary:hover {
+		color: var(--color-ink);
+	}
+
+	/* ---- Status tag (Coming soon, Your system) ---- */
+	.tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.2rem 0.5rem;
+		border-radius: var(--radius-tight);
+		border: 1px solid var(--color-line-strong);
+		font-family: var(--font-label);
+		font-weight: 600;
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		line-height: 1.2;
+		color: var(--color-muted);
+		white-space: nowrap;
+	}
+	.tag-lit {
+		color: var(--color-accent-ink);
+		border-color: color-mix(in oklab, var(--color-accent) 50%, transparent);
+	}
+
+	/* ---- Spec sheet: <dl class="spec"><div><dt/><dd/></div>…</dl> ---- */
+	.spec > div {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.25rem 2rem;
+		padding-block: 1rem;
+		border-top: 1px solid var(--color-line);
+	}
+	.spec > div:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+	.spec dt {
+		font-weight: 600;
+		color: var(--color-ink);
+	}
+	.spec dd {
+		color: var(--color-muted);
+	}
+	@media (min-width: 48rem) {
+		.spec > div {
+			grid-template-columns: 15rem minmax(0, 1fr);
+		}
+	}
+
+	/* ---- Code ---- */
+	/* Inline code reads as part of the sentence: tight padding, no margin, no border, inherited line height. */
+	.code-inline,
+	:where(.prose) :not(pre) > code {
+		margin: 0;
+		padding: 0.1em 0.3em;
+		border: 0;
+		border-radius: var(--radius-tight);
+		background: color-mix(in oklab, var(--color-recess) 70%, transparent);
+		color: var(--color-ink);
+		font-family: var(--font-mono);
+		font-size: 0.88em;
+		line-height: inherit;
+		-webkit-box-decoration-break: clone;
+		box-decoration-break: clone;
+		overflow-wrap: anywhere;
+	}
+	.kbd {
+		font-family: var(--font-mono);
+		font-size: 0.8125em;
+		padding: 0.1em 0.45em;
+		border-radius: var(--radius-tight);
+		border: 1px solid var(--color-line-strong);
+		border-bottom-width: 2px;
+	}
+	/* Terminal module: an amber display with a legend strip and a copy key. Use CodeBlock.svelte. */
+	.code-block {
+		min-width: 0;
+		max-width: 100%;
+		border-radius: var(--radius-plate);
+		background: var(--plate-shade), var(--brush), var(--color-surface);
+		border: 1px solid var(--color-line);
+		box-shadow: var(--plate-edge), var(--plate-drop);
+		padding: 0 0.625rem 0.625rem;
+	}
+	.code-block-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		min-height: 2.5rem;
+		padding: 0.25rem 0 0.25rem 0.375rem;
+	}
+	.code-block pre {
+		margin: 0;
+		max-width: 100%;
+		padding: 0.9rem 1rem;
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		line-height: 1.7;
+		tab-size: 2;
+	}
+
+	/* ---- Long-form content (docs, privacy). <article class="prose"> ---- */
+	.prose {
+		max-width: 70ch;
+		font-size: 1.0625rem;
+		line-height: 1.65;
+		color: color-mix(in oklab, var(--color-ink) 90%, var(--color-muted));
+	}
+	.prose > * + * {
+		margin-top: 1.1em;
+	}
+	.prose h1 {
+		font-weight: 600;
+		font-size: clamp(2rem, 1.5rem + 2vw, 2.875rem);
+		line-height: 1.08;
+		letter-spacing: -0.02em;
+		color: var(--color-ink);
+		margin-bottom: 0.4em;
+	}
+	.prose h2 {
+		font-weight: 600;
+		font-size: 1.625rem;
+		line-height: 1.2;
+		letter-spacing: -0.012em;
+		color: var(--color-ink);
+		margin-top: 2.3em;
+		padding-top: 1.1em;
+		border-top: 1px solid var(--color-line);
+	}
+	.prose h3 {
+		font-weight: 600;
+		font-size: 1.25rem;
+		line-height: 1.3;
+		color: var(--color-ink);
+		margin-top: 1.9em;
+	}
+	.prose h4 {
+		font-weight: 600;
+		font-size: 1.0625rem;
+		color: var(--color-ink);
+		margin-top: 1.6em;
+	}
+	.prose h2 + *,
+	.prose h3 + *,
+	.prose h4 + * {
+		margin-top: 0.6em;
+	}
+	.prose :is(h1, h2, h3, h4) > a[aria-hidden="true"],
+	.prose :is(h1, h2, h3, h4) a.anchor {
+		color: inherit;
+		text-decoration: none;
+	}
+	.prose a:not(:is(h1, h2, h3, h4) a) {
+		color: var(--color-ink);
+		text-decoration: underline;
+		text-decoration-color: color-mix(in oklab, var(--color-accent) 75%, transparent);
+		text-decoration-thickness: 1.5px;
+		text-underline-offset: 0.2em;
+	}
+	.prose a:not(:is(h1, h2, h3, h4) a):hover {
+		color: var(--color-accent-ink);
+	}
+	.prose strong {
+		color: var(--color-ink);
+		font-weight: 600;
+	}
+	.prose ul,
+	.prose ol {
+		padding-left: 1.35em;
+	}
+	.prose ul {
+		list-style: square;
+	}
+	.prose ol {
+		list-style: decimal;
+	}
+	.prose li + li {
+		margin-top: 0.35em;
+	}
+	.prose li::marker {
+		color: var(--color-faint);
+	}
+	.prose blockquote {
+		padding-left: 1.1em;
+		border-left: 3px solid var(--color-accent);
+		color: var(--color-muted);
+	}
+	.prose hr {
+		border: 0;
+		border-top: 1px solid var(--color-line);
+		margin-block: 2.5em;
+	}
+	.prose img {
+		border-radius: var(--radius-key);
+	}
+	.prose pre {
+		max-width: 100%;
+		padding: 1rem 1.125rem;
+		border-radius: var(--radius-key);
+		background: var(--color-recess) !important;
+		box-shadow: var(--well);
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: 0.8125rem;
+		line-height: 1.7;
+	}
+	.prose table {
+		display: block;
+		width: 100%;
+		overflow-x: auto;
+		border-collapse: collapse;
+		font-size: 0.9375rem;
+	}
+	.prose th,
+	.prose td {
+		padding: 0.6em 0.9em;
+		border-bottom: 1px solid var(--color-line);
+		text-align: left;
+		vertical-align: top;
+	}
+	.prose th {
+		font-family: var(--font-label);
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		color: var(--color-ink);
+		border-bottom-color: var(--color-line-strong);
+	}
+}
+
+/* Mermaid pan/zoom panel ($lib/docs/zoom.ts). Built at runtime, so these are global. */
+.mmd-panel {
+	border-radius: var(--radius-plate);
+	border: 1px solid var(--color-line);
+	background: var(--plate-shade), var(--brush), var(--color-surface);
+	box-shadow: var(--plate-edge), var(--plate-drop);
+	padding: 0 0.5rem 0.5rem;
+	font-family: var(--font-sans);
+}
+.mmd-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0.75rem;
+	min-height: 2.75rem;
+	padding: 0.3rem 0.25rem;
+}
+.mmd-readout {
+	color: var(--color-muted);
+	min-width: 3.5ch;
+}
+.mmd-keys {
+	display: inline-flex;
+	gap: 0.375rem;
+	margin-left: auto;
+}
+.mmd-key {
+	min-height: 2rem;
+	min-width: 2.25rem;
+	padding: 0.25rem 0.6rem;
+	font-size: 0.8125rem;
+}
+.mmd-viewport {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--radius-key);
+	background:
+		radial-gradient(color-mix(in oklab, var(--color-ink) 7%, transparent) 0.7px, transparent 1px) 0 0 / 14px 14px,
+		var(--color-bg);
+	box-shadow: var(--well);
+	cursor: grab;
+	touch-action: pan-y;
+	user-select: none;
+}
+.mmd-viewport.grabbing {
+	cursor: grabbing;
+}
+.mmd-stage {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform-origin: 0 0;
+	will-change: transform;
+}
+.mmd-stage svg {
+	display: block;
+	max-width: none !important;
+}
+.mmd-dialog {
+	width: 100vw;
+	height: 100dvh;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	padding: 0.75rem;
+	border: 0;
+	background: var(--color-bg);
+	color: var(--color-ink);
+}
+.mmd-dialog::backdrop {
+	background: rgb(0 0 0 / 0.6);
+}
+.mmd-dialog .mmd-panel {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+.mmd-dialog .mmd-viewport {
+	flex: 1;
+	touch-action: none;
+}
+
+/* Shiki dual themes: @shikijs/rehype with { themes: { light, dark }, defaultColor: false }. */
+.shiki,
+.shiki span {
+	color: var(--shiki-dark);
+}
+:root[data-theme="light"] :is(.shiki, .shiki span) {
+	color: var(--shiki-light);
+}
+@media (prefers-color-scheme: light) {
+	:root:not([data-theme="dark"]) :is(.shiki, .shiki span) {
+		color: var(--shiki-light);
+	}
 }

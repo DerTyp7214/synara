@@ -1,10 +1,8 @@
 <script lang="ts">
-    let className = "";
-    export { className as class };
-    export let color: string = "";
+    let { class: className = '', color = '' }: { class?: string; color?: string } = $props();
 </script>
 
-<svg role="img"
+<svg role="img" aria-hidden="true"
      class={className}
      style={color ? `color: ${color}` : ""}
      fill="currentColor"

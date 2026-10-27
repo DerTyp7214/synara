@@ -1,28 +1,27 @@
 <script lang="ts">
     import '../app.css';
-    import { browser } from '$app/environment';
-    import { themeStore } from '$lib/stores/theme';
-    import { onMount } from 'svelte';
-
-    export const prerender = true;
-    export const ssr = false;
-    export const trailingSlash = 'always';
+    import { page } from '$app/state';
+    import Header from '$lib/components/Header.svelte';
+    import Footer from '$lib/components/Footer.svelte';
 
     let { children } = $props();
 
-    onMount(() => {
-        if (browser) {
-            const html = document.documentElement;
-            html.setAttribute('data-theme', themeStore.theme);
-            if (themeStore.mode === 'dark') {
-                html.classList.remove('light');
-                html.classList.add('dark');
-            } else {
-                html.classList.remove('dark');
-                html.classList.add('light');
-            }
-        }
-    });
+    let bare = $derived(page.url.pathname.startsWith('/share'));
 </script>
 
-{@render children()}
+<svelte:head>
+    <title>Synara</title>
+</svelte:head>
+
+{#if bare}
+    {@render children()}
+{:else}
+    <a href="#main" class="key key-primary key-sm fixed top-3 left-3 z-[60] -translate-y-20 focus:translate-y-0">Skip to content</a>
+    <div class="flex min-h-dvh flex-col">
+        <Header/>
+        <main id="main" class="flex-1">
+            {@render children()}
+        </main>
+        <Footer/>
+    </div>
+{/if}

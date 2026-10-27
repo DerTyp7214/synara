@@ -27,3 +27,9 @@ vite.config.ts.timestamp-*
 .vscode
 /.idea/
 /.vscode/
+
+# Fetched synara-api docs
+.docs-src/
+
+# Raw app screenshots (source material for /apps/)
+/shots/

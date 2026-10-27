@@ -2,12 +2,11 @@
     import Logo from "$lib/components/Logo.svelte";
     import Logo_TEXT from "$lib/components/Logo_TEXT.svelte";
 
-    let className = "";
-    export { className as class };
-    export let color: string = "";
+    let { class: className = '', color = '' }: { class?: string; color?: string } = $props();
 </script>
 
-<div class="flex flex-row items-center gap-3 {className}" style="color: {color}">
-    <Logo class="h-10 w-auto"/>
-    <Logo_TEXT class="h-4 w-auto"/>
-</div>
+<span class="inline-flex flex-row items-center gap-2.5 {className}" style={color ? `color: ${color}` : undefined}>
+    <Logo class="h-[2.1em] w-auto shrink-0"/>
+    <Logo_TEXT class="h-[0.85em] w-auto"/>
+    <span class="sr-only">Synara</span>
+</span>

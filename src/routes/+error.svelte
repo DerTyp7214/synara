@@ -1,42 +1,57 @@
 <script lang="ts">
-    import {page} from "$app/state";
-    $: errorMessage = page?.error?.message || "Something went wrong on our end.";
-    $: status = page?.status || 500;
+    import { page } from '$app/state';
+
+    let notFound = $derived(page.status === 404);
 </script>
 
-<div class="h-screen w-full bg-surface-50-950 flex flex-col justify-center items-center text-center p-4 space-y-8 relative overflow-hidden">
+<svelte:head>
+    <title>{notFound ? 'Page not found' : 'Something went wrong'} | Synara</title>
+    <meta name="robots" content="noindex" />
+</svelte:head>
 
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-500/40 rounded-full blur-[128px] animate-pulse mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
-
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/3 -translate-y-1/3 w-[500px] h-[500px] bg-secondary-500/40 rounded-full blur-[128px] animate-pulse delay-1000 mix-blend-multiply dark:mix-blend-screen pointer-events-none"></div>
-
-    <div class="relative z-10 space-y-2 max-w-md text-surface-950-50">
-
-        <h1 class="h1 font-bold text-6xl md:text-8xl bg-gradient-to-r from-primary-600 via-secondary-500 to-primary-600 dark:from-primary-400 dark:via-secondary-400 dark:to-primary-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-            {status}
-        </h1>
-
-        <h2 class="h2 font-bold">
-            {#if status === 404}
-                Track Not Found
-            {:else}
-                System Glitch
-            {/if}
-        </h2>
-
-        <p class="text-lg opacity-70">
-            {#if status === 404}
-                Whoops! It looks like this page has been skipped or removed from the playlist.
-            {:else}
-                {errorMessage}
-            {/if}
-        </p>
+<section class="pt-10 pb-(--section-space) md:pt-16">
+    <div class="shell grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
+        <div class="lcd screen order-first lg:order-last" aria-hidden="true">
+            <div class="flex justify-between text-[0.75rem] tracking-[0.06em] lcd-dim">
+                <span>INPUT</span><span>ERR {page.status}</span>
+            </div>
+            <p class="lcd-dots big">{notFound ? 'NO SIGNAL' : 'FAULT'}</p>
+            <div class="flex justify-between text-[0.75rem] tracking-[0.06em] lcd-dim">
+                <span>--:--</span><span>{notFound ? 'CHECK ADDRESS' : 'RETRY'}</span>
+            </div>
+        </div>
+        <div>
+            <h1 class="h-display">{notFound ? 'This page isn’t here.' : 'Something went wrong.'}</h1>
+            <p class="lead mt-5">
+                {notFound
+                    ? 'The address may be mistyped, or the page has moved. Try one of these instead.'
+                    : (page.error?.message ?? 'Try reloading the page, or head back to the start.')}
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3">
+                <a href="/" class="key key-primary">Home</a>
+                <a href="/docs/" class="key">Docs</a>
+                <a href="/download/" class="key">Download</a>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="relative z-10 flex gap-4">
-        <a href="/" class="btn preset-tonal-primary font-bold shadow-lg shadow-primary-500/20">
-            Return Home
-        </a>
-    </div>
-
-</div>
+<style>
+    .screen {
+        padding: 1rem 1.25rem;
+    }
+    .big {
+        margin-block: 1.25rem;
+        font-size: clamp(2.75rem, 2rem + 4vw, 4rem);
+        line-height: 1;
+        text-shadow: 0 0 1rem rgb(255 160 50 / 0.45);
+        animation: flicker 1.6s steps(1) 4;
+    }
+    @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.35; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .big { animation: none; }
+    }
+</style>
