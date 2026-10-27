@@ -1,55 +1,171 @@
-<!DOCTYPE html>
-<html lang="en" class="dark" data-theme="nosh">
-	<head>
-		<meta charset="utf-8" >
-		<meta name="viewport" content="width=device-width, initial-scale=1" >
+<!doctype html>
+<html lang="en" data-design="modern">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <link rel="icon" type="image/svg" href="/favicon.svg" />
-        <title>Synara</title>
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f1f1" media="(prefers-color-scheme: light)" />
 
-		<style>
-			html, body {
-				margin: 0;
-				padding: 0;
-				background-color: #1a1a1a;
-			}
-			html.dark {
-				background-color: #1a1a1a;
-			}
-			html:not(.dark) {
-				background-color: #ffffff;
-			}
-		</style>
-		
-		<link rel="modulepreload" href="/internal/immutable/entry/start.Bm9DJ0jO.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/bEYoiibm.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/CgnSgLBE.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/DrYadHCt.js">
-		<link rel="modulepreload" href="/internal/immutable/entry/app.Ctitnbrc.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/wCrsGsgo.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/Ef8ZlAtV.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/Dbxn2rUy.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/zjC-2IgM.js">
-		<link rel="modulepreload" href="/internal/immutable/chunks/CCzaKJ42.js">
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">
+    <script>
+      // Before first paint: apply the stored theme ("light" | "dark" | absent = follow the system) and
+      // design ("modern" | "retro" | absent = Modern). ?design=modern|retro applies and saves a design.
+      // The HTML ships with data-design="modern"; Retro is expressed by removing it.
+      // Colours: design x theme, keep in sync with $lib/theme.ts (META_COLOR) and the style below.
+      ;(function () {
+        var d = document.documentElement,
+          t = null,
+          g = null,
+          q = null
+        try {
+          t = localStorage.getItem('synara-theme')
+          g = localStorage.getItem('synara-design')
+        } catch (e) {}
+        try {
+          q = new URLSearchParams(location.search).get('design')
+        } catch (e) {}
+        if (q === 'modern' || q === 'retro') {
+          g = q
+          try {
+            localStorage.setItem('synara-design', q)
+          } catch (e) {}
+        }
+        var modern = g !== 'retro'
+        if (!modern) d.removeAttribute('data-design')
+        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t)
+        var c = modern
+          ? { light: '#f1f1f1', dark: '#0e0e0e' }
+          : { light: '#e6e5e0', dark: '#1c1c1e' }
+        if (!modern || t === 'light' || t === 'dark') {
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            var k =
+              t === 'light' || t === 'dark'
+                ? t
+                : m.getAttribute('media').indexOf('light') >= 0
+                  ? 'light'
+                  : 'dark'
+            m.setAttribute('content', c[k])
+          })
+        }
+        // Preload only the active design's fonts. Modern sets type in SF on Apple platforms and in
+        // self-hosted Inter elsewhere; Retro uses Barlow and Barlow Condensed.
+        var fonts = modern
+          ? /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+            ? []
+            : ['Inter-var']
+          : ['Barlow-400', 'BarlowCondensed-600']
+        fonts.forEach(function (f) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.href = '/fonts/' + f + '.woff2'
+          l.as = 'font'
+          l.type = 'font/woff2'
+          l.crossOrigin = 'anonymous'
+          document.head.appendChild(l)
+        })
+      })()
+    </script>
+    <style>
+      html {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']) {
+          background-color: #e6e5e0;
+          color: #1b1b1a;
+          color-scheme: light;
+        }
+      }
+      html[data-theme='light'] {
+        background-color: #e6e5e0;
+        color: #1b1b1a;
+        color-scheme: light;
+      }
+      html[data-theme='dark'] {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      html[data-design='modern'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+      @media (prefers-color-scheme: light) {
+        html[data-design='modern']:not([data-theme='dark']) {
+          background-color: #f1f1f1;
+          color: #201a17;
+        }
+      }
+      html[data-design='modern'][data-theme='light'] {
+        background-color: #f1f1f1;
+        color: #201a17;
+      }
+      html[data-design='modern'][data-theme='dark'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+    </style>
+
+    <meta
+      name="description"
+      content="Synara is a self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Synara" />
+    <meta property="og:title" content="Synara" />
+    <meta
+      property="og:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta property="og:image" content="https://synara.audio/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Synara ribbon logo next to the words: your music, bit for bit."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Synara" />
+    <meta
+      name="twitter:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta name="twitter:image" content="https://synara.audio/og.png" />
+
+    
+		<link rel="modulepreload" href="/internal/immutable/entry/start.ZGwwYrzZ.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/DNpxTNuS.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/CePLiJTx.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/y9Sl5bMM.js">
+		<link rel="modulepreload" href="/internal/immutable/entry/app.DMIzLkDz.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/PPVm8Dsz.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/DsnmJJEf.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/B7aqIt7k.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/CYooVA3G.js">
+		<link rel="modulepreload" href="/internal/immutable/chunks/gPZRW6-w.js">
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">
 			<script>
 				{
-					__sveltekit_tut6oj = {
+					__sveltekit_3zbfyr = {
 						base: ""
 					};
 
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/internal/immutable/entry/start.Bm9DJ0jO.js"),
-						import("/internal/immutable/entry/app.Ctitnbrc.js")
+						import("/internal/immutable/entry/start.ZGwwYrzZ.js"),
+						import("/internal/immutable/entry/app.DMIzLkDz.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
 				}
 			</script>
 		</div>
-	</body>
+  </body>
 </html>

@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en" data-design="modern">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f1f1" media="(prefers-color-scheme: light)" />
+
+    <script>
+      // Before first paint: apply the stored theme ("light" | "dark" | absent = follow the system) and
+      // design ("modern" | "retro" | absent = Modern). ?design=modern|retro applies and saves a design.
+      // The HTML ships with data-design="modern"; Retro is expressed by removing it.
+      // Colours: design x theme, keep in sync with $lib/theme.ts (META_COLOR) and the style below.
+      ;(function () {
+        var d = document.documentElement,
+          t = null,
+          g = null,
+          q = null
+        try {
+          t = localStorage.getItem('synara-theme')
+          g = localStorage.getItem('synara-design')
+        } catch (e) {}
+        try {
+          q = new URLSearchParams(location.search).get('design')
+        } catch (e) {}
+        if (q === 'modern' || q === 'retro') {
+          g = q
+          try {
+            localStorage.setItem('synara-design', q)
+          } catch (e) {}
+        }
+        var modern = g !== 'retro'
+        if (!modern) d.removeAttribute('data-design')
+        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t)
+        var c = modern
+          ? { light: '#f1f1f1', dark: '#0e0e0e' }
+          : { light: '#e6e5e0', dark: '#1c1c1e' }
+        if (!modern || t === 'light' || t === 'dark') {
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            var k =
+              t === 'light' || t === 'dark'
+                ? t
+                : m.getAttribute('media').indexOf('light') >= 0
+                  ? 'light'
+                  : 'dark'
+            m.setAttribute('content', c[k])
+          })
+        }
+        // Preload only the active design's fonts. Modern sets type in SF on Apple platforms and in
+        // self-hosted Inter elsewhere; Retro uses Barlow and Barlow Condensed.
+        var fonts = modern
+          ? /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+            ? []
+            : ['Inter-var']
+          : ['Barlow-400', 'BarlowCondensed-600']
+        fonts.forEach(function (f) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.href = '/fonts/' + f + '.woff2'
+          l.as = 'font'
+          l.type = 'font/woff2'
+          l.crossOrigin = 'anonymous'
+          document.head.appendChild(l)
+        })
+      })()
+    </script>
+    <style>
+      html {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']) {
+          background-color: #e6e5e0;
+          color: #1b1b1a;
+          color-scheme: light;
+        }
+      }
+      html[data-theme='light'] {
+        background-color: #e6e5e0;
+        color: #1b1b1a;
+        color-scheme: light;
+      }
+      html[data-theme='dark'] {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      html[data-design='modern'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+      @media (prefers-color-scheme: light) {
+        html[data-design='modern']:not([data-theme='dark']) {
+          background-color: #f1f1f1;
+          color: #201a17;
+        }
+      }
+      html[data-design='modern'][data-theme='light'] {
+        background-color: #f1f1f1;
+        color: #201a17;
+      }
+      html[data-design='modern'][data-theme='dark'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+    </style>
+
+    <meta
+      name="description"
+      content="Synara is a self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Synara" />
+    <meta property="og:title" content="Synara" />
+    <meta
+      property="og:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta property="og:image" content="https://synara.audio/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Synara ribbon logo next to the words: your music, bit for bit."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Synara" />
+    <meta
+      name="twitter:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta name="twitter:image" content="https://synara.audio/og.png" />
+
+    
+		<link href="../../internal/immutable/assets/0.BNQnLckt.css" rel="stylesheet">
+		<link href="../../internal/immutable/assets/2.CRsa_cPd.css" rel="stylesheet">
+		<link href="../../internal/immutable/assets/DocView.dpH5X4Sp.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../internal/immutable/entry/start.ZGwwYrzZ.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DNpxTNuS.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CePLiJTx.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/y9Sl5bMM.js">
+		<link rel="modulepreload" href="../../internal/immutable/entry/app.DMIzLkDz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/PPVm8Dsz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DsnmJJEf.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/B7aqIt7k.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CYooVA3G.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/gPZRW6-w.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/0.DZac87Gf.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DiYe1c4J.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Z02Du5iI.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/ebLNhQ_I.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DSjgm90S.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/D4E3Eq-t.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BRKCcKFl.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CkFSaI46.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Ce9QgSdz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/C-iAWfLw.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/D0l9Ew2l.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BEnBgVf7.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/2.CkwINS6A.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Ct-AiNBt.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/6.B4-jVo-W.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Cb7zuFE7.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BdFwG2mz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BZUgcN-i.js"><!--12qhfyh--><!----><!--dre9m0--><meta name="description" content="Architecture: Synara server and API documentation."/><!----><title>Architecture | Synara Docs</title>
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[--><!----><!--[!--><a href="#main" class="key key-primary key-sm fixed top-3 left-3 z-[60] -translate-y-20 focus:translate-y-0">Skip to content</a> <div class="flex min-h-dvh flex-col"><div class="design-retro contents"><header class="strip sticky top-0 z-50 svelte-39r4fj"><div class="shell flex h-(--header-h) items-center gap-4 md:gap-6"><a href="/" class="flex shrink-0 items-center gap-3 rounded-sm text-[0.95rem] text-ink" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s1--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s1)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----> <span class="model svelte-39r4fj" aria-hidden="true">SR-1</span></a> <nav aria-label="Main" class="hidden min-[54rem]:block"><ul class="bank svelte-39r4fj"><!--[--><li><a href="/#features" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Features</a></li><li><a href="/apps/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Apps</a></li><li><a href="/docs/" aria-current="page" class="svelte-39r4fj"><span class="led on svelte-39r4fj" aria-hidden="true"></span> Docs</a></li><li><a href="/server/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Server</a></li><li><a href="/download/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Download</a></li><!--]--></ul></nav> <div class="ml-auto flex items-center gap-2"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <button type="button" class="switch  svelte-m6oq99" aria-label="Theme: System. Switch to light." title="Theme: System"><span class="legends svelte-m6oq99" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor size-2.5 on"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun size-2.5 "><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon size-2.5 "><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----></span> <span class="slot svelte-m6oq99" aria-hidden="true"><span class="lever svelte-m6oq99" style="transform: translateX(0%)"></span></span></button><!----> <span class="power hidden sm:inline-flex svelte-39r4fj" aria-hidden="true"><span class="led ok svelte-39r4fj"></span>Power</span> <button type="button" class="key key-icon min-[54rem]:hidden" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></header><!----></div> <div class="design-modern contents"><header class="m-header svelte-1y2ms2o"><div class="shell svelte-1y2ms2o"><div class="bar glass svelte-1y2ms2o"><a href="/" class="brand svelte-1y2ms2o" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s2--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s2)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <nav aria-label="Main" class="tabs svelte-1y2ms2o"><ul class="svelte-1y2ms2o"><!--[--><li><a href="/#features" class="tab svelte-1y2ms2o">Features</a></li><li><a href="/apps/" class="tab svelte-1y2ms2o">Apps</a></li><li><a href="/docs/" class="tab svelte-1y2ms2o" aria-current="page">Docs</a></li><li><a href="/server/" class="tab svelte-1y2ms2o">Server</a></li><li><a href="/download/" class="tab svelte-1y2ms2o">Download</a></li><!--]--></ul></nav> <div class="trailing svelte-1y2ms2o"><div class="appearance svelte-1y2ms2o"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <div role="radiogroup" aria-label="Appearance" class="seg   svelte-7qw6a6"><span class="thumb svelte-7qw6a6" aria-hidden="true"></span> <!--[--><button type="button" role="radio" aria-checked="true" tabindex="0" title="System" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor seg-icon" aria-hidden="true"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">System</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Light" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun seg-icon" aria-hidden="true"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Light</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Dark" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon seg-icon" aria-hidden="true"><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Dark</span></button><!--]--></div><!----></div> <button type="button" class="menu-btn svelte-1y2ms2o" aria-expanded="false" aria-controls="m-menu" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></div></header><!----></div> <main id="main" class="flex-1"><!--[--><!----><div class="shell docs-shell svelte-1bpnej"><button type="button" class="docs-menu-btn key key-sm svelte-1bpnej" aria-expanded="false" aria-controls="docs-nav"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-4" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--> <span class="truncate">Architecture</span></button> <nav id="docs-nav" class="docs-nav svelte-1bpnej" aria-label="Documentation"><!--[--><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Start</h2> <ul><!--[--><li><a href="/docs/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Overview</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Build a client</h2> <ul><!--[--><li><a href="/docs/client_getting_started/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Getting Started as a Client</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_kotlin_rpc/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Kotlin RPC Client Guide</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_rest/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">REST for Client Developers</span> <!--[!--><!--]--></a></li><li><a href="/docs/authentication/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Authentication</span> <!--[!--><!--]--></a></li><li><a href="/docs/streaming_and_playback/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Streaming and Playback</span> <!--[!--><!--]--></a></li><li><a href="/docs/api_versioning/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">API Versioning</span> <!--[!--><!--]--></a></li><li><a href="/docs/server_driven_ui/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Server-Driven UI</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_settings/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Client Settings</span> <!--[!--><!--]--></a></li><li><a href="/docs/mock_server/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Mock Server</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Reference</h2> <ul><!--[--><li><a href="/docs/rpc_services/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara RPC Services Documentation</span> <!--[!--><!--]--></a></li><li><a href="/docs/models/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Data Models</span> <!--[!--><!--]--></a></li><li><a href="/docs/permissions/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Permissions</span> <!--[!--><!--]--></a></li><li><a href="/docs/rest_api/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara REST API</span> <!--[!--><!--]--></a></li><li><a href="/docs/api_constants/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara API Constants</span> <!--[!--><!--]--></a></li><li><a href="/docs/environment_variables/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Environment Variables Documentation</span> <!--[!--><!--]--></a></li><li><a href="https://synara-insights.dertyp.dev/RELATION_MAP.html" target="_blank" rel="noopener" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Relation map</span> <!--[--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-external-link size-3.5 shrink-0" aria-hidden="true"><!--[--><!----><path d="M15 3h6v6"><!----></path><!----><!----><path d="M10 14 21 3"><!----></path><!----><!----><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"><!----></path><!----><!--]--><!----><!----></svg><!--]--></a></li><li><a href="https://synara-insights.dertyp.dev/STATS.html" target="_blank" rel="noopener" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Commit stats</span> <!--[--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-external-link size-3.5 shrink-0" aria-hidden="true"><!--[--><!----><path d="M15 3h6v6"><!----></path><!----><!----><path d="M10 14 21 3"><!----></path><!----><!----><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"><!----></path><!----><!--]--><!----><!----></svg><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Extend the server</h2> <ul><!--[--><li><a href="/docs/plugins/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Custom Plugins</span> <!--[!--><!--]--></a></li><li><a href="/docs/mcp/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara MCP (listen history)</span> <!--[!--><!--]--></a></li><li><a href="/docs/listen_backup/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Listen Backup</span> <!--[!--><!--]--></a></li><li><a href="/docs/credential_server/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Credential Server</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Work on the server</h2> <ul><!--[--><li><a href="/docs/architecture/" aria-current="page" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Architecture</span> <!--[!--><!--]--></a></li><li><a href="/docs/development/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Development</span> <!--[!--><!--]--></a></li><li><a href="/docs/deprecations/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Deprecations</span> <!--[!--><!--]--></a></li><!--]--></ul></section><!--]--></nav> <div class="docs-main svelte-1bpnej"><!----><div class="doc-grid svelte-dre9m0"><div class="doc-col svelte-dre9m0"><!--[--><details class="disclosure toc-inline svelte-dre9m0"><summary class="svelte-dre9m0">On this page</summary> <nav class="toc-inline-body svelte-dre9m0" aria-label="On this page"><div class="toc-body svelte-ffhs5h"><!--[!--><!--]--> <!--[!--><!--]--> <ul id="toc-inline-list" class="groups svelte-ffhs5h"><!--[--><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#modules"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Modules</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#request-flow" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Request flow</a> <span class="count svelte-ffhs5h" aria-label="2 sections">2</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#reverse-proxy" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Reverse proxy</a></li><li><a href="#wrapper-chain" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Wrapper chain</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#package-layout-serversrcmainkotlindevdertyp"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Package layout (server/src/main/kotlin/dev/dertyp/)</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#dependency-injection-and-service-lifecycle"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Dependency injection and service lifecycle</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#workers-and-task-logs"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Workers and task logs</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#migrations"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Migrations</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#images"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Images</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#search-and-redis"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Search and Redis</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#generators"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Generators</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#plugins"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Plugins</a><!--]--><!--]--></li><!--]--></ul></div><!----></nav></details><!--]--> <article class="prose" data-doc="ARCHITECTURE.md"><!----><h1 id="architecture"><a class="anchor" href="#architecture">Architecture</a></h1>
+<p>How the Synara server is put together: modules, request flow, package layout, and where background work and generated code fit in. For building a client against the server, start at <a href="/docs/">docs/README.md</a> instead.</p>
+<h2 id="modules"><a class="anchor" href="#modules">Modules</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>:server</code></td>
+<td>The Ktor application: RPC/REST routing, services, database access, workers.</td>
+</tr>
+<tr>
+<td><code>:common-rpc</code></td>
+<td>Multiplatform module shared with client apps: RPC interfaces, data models, doc annotations (<code>@RpcDoc</code>, <code>@RestGet</code>, ...). Git submodule, see <a href="/docs/development/#common-rpc-submodule-workflow">Common-rpc submodule</a>.</td>
+</tr>
+<tr>
+<td><code>:common-rpc:compiler</code></td>
+<td>KSP processor that generates the client-side service registry from the <code>common-rpc</code> interfaces.</td>
+</tr>
+<tr>
+<td><code>:common-rpc:doc-compiler</code></td>
+<td>KSP processor that reads the doc annotations and writes <a href="/docs/rpc_services/">RPC_SERVICES.md</a> and <a href="/docs/models/">MODELS.md</a>.</td>
+</tr>
+<tr>
+<td><code>:common-rpc:rest-compiler</code></td>
+<td>KSP processor that generates the REST route registration functions (<code>register&#x3C;Service>Rest</code>) into <code>dev.dertyp.routing.rest</code> during <code>:server:kspKotlin</code>, and writes <a href="/docs/rest_api/">REST_API.md</a>.</td>
+</tr>
+<tr>
+<td><code>:proxy</code> + <code>:common-proxy</code></td>
+<td>Standalone reverse proxy in front of one or more Synara servers, which dial out to it and receive kRPC websockets and plain HTTP (the REST API) through that connection; see <a href="#reverse-proxy">Reverse proxy</a>, <a href="/docs/development/#proxy-tunnel-protocol">Tunnel protocol</a>, <code>docker-compose.proxy.yml</code> and <code>Dockerfile.proxy</code>.</td>
+</tr>
+<tr>
+<td><code>:listen-backup</code> + <code>:common-listen-backup</code></td>
+<td>Standalone receiver that stores a copy of listening history; see <a href="/docs/listen_backup/">LISTEN_BACKUP.md</a>.</td>
+</tr>
+<tr>
+<td><code>:credential-server</code> + <code>:common-credentials</code></td>
+<td>Standalone server that holds secrets (importer logins, API keys, plugin credentials) for one or more Synara servers. See <a href="/docs/credential_server/">CREDENTIAL_SERVER.md</a>, <code>docker-compose.credentials.yml</code> and <code>Dockerfile.credentials</code>.</td>
+</tr>
+<tr>
+<td><code>:plugin-api</code></td>
+<td>Interfaces (<code>ISynaraPlugin</code>, <code>IImporter</code>, ...) third-party plugins implement; see <a href="/docs/plugins/">PLUGINS.md</a>.</td>
+</tr>
+<tr>
+<td><code>:mock-server</code></td>
+<td>Generates RPC and REST endpoints with dummy data for client development; see <a href="/docs/mock_server/">MOCK_SERVER.md</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>Three Python sidecars run alongside the server (see <code>docker-compose.yml</code>). Each is a small FastAPI/script service with its own <code>Dockerfile</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Sidecar</th>
+<th>What it does</th>
+<th>How the server talks to it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>transcriber/</code></td>
+<td>WhisperX-based lyrics/vocal transcription and alignment</td>
+<td>Over HTTP, from <code>services/LyricsService.kt</code> (<code>analysis.transcriber</code>, <code>TRANSCRIBER_URL</code>).</td>
+</tr>
+<tr>
+<td><code>audio-embed/</code></td>
+<td>Essentia MusiCNN audio embeddings for recommendations</td>
+<td>Over HTTP, from <code>services/AudioEmbeddingService.kt</code> (<code>analysis.audioEmbedding</code>, <code>AUDIO_EMBED_URL</code>).</td>
+</tr>
+<tr>
+<td><code>recsys/</code></td>
+<td>Word2Vec/K-Means-based recommendation model training</td>
+<td>No HTTP API: <code>services/RecommendationService.kt</code> writes the training data and a <code>request.ready</code> marker into the shared directory <code>recsys.dataDir</code> (<code>RECSYS_DATA_DIR</code>, mounted into both containers) and reads the embeddings back once <code>result.ready</code> appears.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="request-flow"><a class="anchor" href="#request-flow">Request flow</a></h2>
+<pre class="mermaid">flowchart LR
+    Client -->|"optional: kRPC and REST"| Proxy[":proxy"]
+    Proxy -.->|"tunnel opened by the server"| Ktor
+    Client --> Ktor["Ktor Application\n(Routing.kt)"]
+    Ktor -->|"/rpc/services"| RpcRegistry["RpcRegistry.kt\nregisterAuthenticatedServices"]
+    Ktor -->|"generated REST route"| RestRegistry["RestRegistry.kt\n+ generated dev.dertyp.routing.rest"]
+    RpcRegistry --> Wrap["wrapper chain\ncaching -> metrics -> clientCompat -> authorization -> logging"]
+    RestRegistry --> Wrap
+    Wrap --> Service["Rpc*Service / Service"]
+    Service --> Exposed[("Exposed / SQLite or PostgreSQL")]
+    Service --> Redis[("Redis: cache, search, blob cache")]
+    Service --> Files[("Files: audio, images, backups")]
+</pre>
+<p>Both <code>/rpc/services</code> (kRPC over CBOR, see <code>Routing.kt</code>) and the generated REST routes reach the same service instances and go through the same wrapper chain, so behavior (caching, metrics, client compatibility, authorization, logging) is identical regardless of transport. Authentication differs by where a route is registered:</p>
+<ul>
+<li><strong><code>/rpc</code> and <code>/rpc/auth</code></strong> (<code>registerPublicServices</code> in <code>routing/RpcRegistry.kt</code>) are unauthenticated: stats, auth/login, and the handshake.</li>
+<li><strong>Their REST counterpart</strong>, <code>registerPublicRestServices</code> (<code>routing/RestRegistry.kt</code>), is mounted inside an optional <code>synara-auth</code> scope (<code>authenticate("synara-auth", optional = true) { ... }</code> in <code>Routing.kt</code>): a bearer token is honoured when present, but only functions annotated <code>@RestPublic</code> (for example the image/cover-data endpoints) work without one — the rest of that block still requires a user to resolve.</li>
+<li><strong>Everything under <code>jwtService.authenticated { ... }</code></strong> (<code>registerAuthenticatedServices</code>/<code>registerAuthenticatedRestServices</code>) requires a valid JWT.</li>
+</ul>
+<h3 id="reverse-proxy"><a class="anchor" href="#reverse-proxy">Reverse proxy</a></h3>
+<p>The standalone <code>:proxy</code> does not connect to the servers behind it. Each server dials out to <code>/proxy/server</code> and keeps that websocket open (<code>services/ReverseProxyService.kt</code>), and the proxy assigns it an instance id. Clients reach the instance at <code>&#x3C;proxyHost>:&#x3C;port>/&#x3C;instanceId>/...</code>. A websocket upgrade is relayed as kRPC. A plain HTTP request is tunnelled over the same connection (<code>HttpTunnelRoute.kt</code> in <code>:proxy</code>) when the server registered with <code>http=1</code>, the frame format is in <a href="/docs/development/#proxy-tunnel-protocol">Tunnel protocol</a>.</p>
+<p>The server replays every tunnelled request against its own HTTP port on 127.0.0.1 (<code>services/ReverseProxyHttpGateway.kt</code>), so it passes through the same authentication, wrapper chain, <code>Range</code> handling, SSE and compression as a direct request. Sessions created this way record the address 127.0.0.1, as they do over proxied kRPC.</p>
+<p>Before it replays a request, <code>ReverseProxyRouteAllowlist</code> checks the method and path against the routes the generated code registers (<code>GeneratedRestRoutes.manifest</code>) plus the hand-written auth routes (<code>JwtService.HTTP_ROUTES</code>):</p>
+<ul>
+<li><code>OPTIONS</code> is allowed for any of those paths.</li>
+<li>Anything else, such as Swagger, <code>/api.json</code>, <code>/static</code>, the mirror, MCP, the radio stream routes and the Subsonic API, is answered with <code>404</code> and never reaches the router.</li>
+<li>A path with a trailing slash, a <code>?</code> or <code>#</code> inside the path, or a <code>.</code> or <code>..</code> segment after decoding is not allowed.</li>
+</ul>
+<h3 id="wrapper-chain"><a class="anchor" href="#wrapper-chain">Wrapper chain</a></h3>
+<p>Each authenticated service instance is wrapped, outermost first:</p>
+<ol>
+<li><code>withCaching</code> (<code>utils/Caching.kt</code>, <code>@Cached</code> annotation)</li>
+<li><code>withMetrics</code> (<code>utils/Metrics.kt</code>, records to <code>RpcMetricsCollector</code> when enabled)</li>
+<li><code>withClientCompat</code> (<code>utils/ClientCompat.kt</code>, reshapes responses per <code>CompatRule</code> in <code>utils/CompatRule.kt</code> based on the client's declared feature support)</li>
+<li><code>withAuthorization</code> (<code>utils/Authorization.kt</code>, enforces <code>@RequiresCapability</code>/<code>@RequiresAdmin</code> from <code>common-rpc</code>)</li>
+<li><code>withLogging</code> (<code>utils/Logging.kt</code>)</li>
+</ol>
+<p>All five are Java dynamic proxies over the service interface; read <code>RpcRegistry.wrap</code> for the exact composition.</p>
+<h2 id="package-layout-serversrcmainkotlindevdertyp"><a class="anchor" href="#package-layout-serversrcmainkotlindevdertyp">Package layout (<code>server/src/main/kotlin/dev/dertyp/</code>)</a></h2>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core/</code></td>
+<td>Cross-cutting helpers: <code>ClientInfo</code>, <code>ContentSniffer</code> (magic-byte image/video sniffing), <code>CustomMigration</code> base, HTTP/file/path utilities, resource objects.</td>
+</tr>
+<tr>
+<td><code>config/</code></td>
+<td><code>ServerConfig</code>, the typed view of <code>application.yaml</code>, and its Koin module.</td>
+</tr>
+<tr>
+<td><code>services/</code></td>
+<td>Business logic, one <code>Service</code> (or <code>Rpc*Service</code>) per domain. Subpackages: <code>audio/</code>, <code>cover/</code>, <code>credentials/</code> (local and remote credential providers), <code>gamdl/</code>, <code>hue/</code>, <code>import/</code>, <code>intake/</code>, <code>jobs/</code>, <code>metadata/</code>, <code>podcast/</code>, <code>recommendation/</code>, <code>release/</code>, <code>schedule/</code> (workers), <code>soundcloud/</code>, <code>subsonic/</code>, <code>sync/</code>, <code>ui/</code>, <code>youtube/</code>.</td>
+</tr>
+<tr>
+<td><code>routing/</code></td>
+<td><code>RpcRegistry.kt</code>, <code>RestRegistry.kt</code>, <code>rest/</code> (<code>RestCall</code>, <code>RestConvert</code>, <code>RestDefaults</code>, <code>RestFileProvider</code>, <code>RestRouteInfo</code> — support code the generated <code>register*Rest</code> functions build on), plus <code>RadioRoutes.kt</code>, <code>McpRoutes.kt</code>, <code>Mirror.kt</code>.</td>
+</tr>
+<tr>
+<td><code>db/</code></td>
+<td>Exposed <code>Table</code> objects, one file per table, plus <code>CustomMigrationTable.kt</code>, <code>MigrationBase.kt</code> and <code>MigrationBaseCheck.kt</code> (the startup check of the schema state) and <code>BackupSchemaCheck.kt</code> (the same rule for backups). The schema itself is SQL in <code>server/src/main/resources/db/migrations/</code>, see <a href="#migrations">Migrations</a>.</td>
+</tr>
+<tr>
+<td><code>migrations/custom/</code></td>
+<td>One-off data migrations (<code>@Migration("3.x")</code> classes extending <code>CustomMigration</code>), run by <code>services/CustomMigrationService.kt</code> after Flyway. The package is empty until the next data migration needs it.</td>
+</tr>
+<tr>
+<td><code>mcp/</code></td>
+<td>The read-only Model Context Protocol server, see <a href="/docs/mcp/">MCP.md</a>.</td>
+</tr>
+<tr>
+<td><code>plugins/</code></td>
+<td><code>PluginManager</code> (loads jars from <code>plugins/</code>), <code>JmDNSPlugin</code> (mDNS advertisement), <code>RedisCacheProvider</code>.</td>
+</tr>
+<tr>
+<td><code>serializers/</code></td>
+<td>Custom Gson type adapters (<code>OffsetDateTime</code>, <code>LocalDate</code>, <code>Duration</code>, ISO-8859-1 <code>ByteArray</code>) for the Gson instance <code>RedisCacheProvider</code> uses to serialize cached RPC/REST responses into Redis.</td>
+</tr>
+<tr>
+<td><code>utils/</code></td>
+<td>The wrapper chain, <code>CompatRule</code>s, and small helpers (<code>Barcodes</code>, <code>ColorUtils</code>, <code>HueColor</code>, <code>ImageUtils</code>, <code>UiComponentTree</code>, <code>UiSchemaCompat</code>).</td>
+</tr>
+<tr>
+<td><code>audio/</code></td>
+<td>Audio processing (e.g. <code>AtmosProcessor</code>, <code>Transcoder</code>, <code>LosslessFormat</code>).</td>
+</tr>
+<tr>
+<td><code>docs/</code></td>
+<td><code>ApiConstantsDocs</code>, the program behind <code>:server:generateApiConstantsDocs</code> that writes <a href="/docs/api_constants/">API_CONSTANTS.md</a>, and <code>MarkdownDocReferences</code>, which turns <code>@Service.member</code> references in its doc texts into links to the generated RPC and model docs and fails the generator on an unresolved one.</td>
+</tr>
+</tbody>
+</table>
+<p><code>Application.kt</code> is the Ktor entry point. It prints the startup banner (version, commit, build time, runtime), installs <code>CallLogging</code> and <code>JmDNSPlugin</code>, then installs Koin with <code>mainModule</code>, which only <code>includes(...)</code> one Koin module per domain: <code>coreModule</code>, <code>configModule</code>, <code>systemModule</code>, <code>authModule</code>, <code>libraryModule</code>, <code>listeningModule</code>, <code>audioModule</code>, <code>credentialsModule</code>, <code>metadataModule</code>, <code>releaseModule</code>, <code>importModule</code>, <code>intakeModule</code>, <code>podcastModule</code>, <code>coverModule</code>, <code>uiModule</code>, <code>scheduleModule</code>, <code>syncModule</code>, <code>hueModule</code>, <code>subsonicModule</code> and <code>mcpModule</code>. Each module lives next to the services it binds (<code>services/LibraryModule.kt</code>, <code>services/hue/HueModule.kt</code>, ...). <code>scheduleModule</code> binds every <code>@WorkerTask</code>-annotated class as a <code>Worker</code>, found by the <code>ClassGraph</code> scan in <code>services/schedule/WorkerTasks.kt</code>.</p>
+<p>After Koin the order is:</p>
+<ol>
+<li><code>configureHooks()</code> (<code>Hooks.kt</code>, subscribes every bound <code>HookSubscriber</code> before the database is ready)</li>
+<li><code>DatabaseManager.init()</code> (checks the schema state, runs Flyway and seeds the first admin, a refused database halts the process)</li>
+<li><code>configureCache()</code> (<code>HTTP.kt</code>)</li>
+<li>the optional first-start setup from a backup or a mirror (<code>setup.fromBackup</code>, <code>setup.fromMirror</code>)</li>
+<li><code>CustomMigrationService.runMigrations()</code> and the SQLite foreign key check launched in the background on <code>ApplicationScope</code></li>
+<li>the seeding of the scheduled task defaults and <code>ScheduleService</code></li>
+<li><code>configureHTTP()</code></li>
+<li><code>configureRouting()</code></li>
+<li><code>CoreUiContributions.register()</code></li>
+<li><code>ImporterResolvers.register(...)</code></li>
+<li><code>configureServices()</code> (<code>Services.kt</code>)</li>
+<li>finally <code>configureShutdown()</code>, which stops every started service, cancels <code>ApplicationScope</code> and kills child processes when the application stops.</li>
+</ol>
+<h2 id="dependency-injection-and-service-lifecycle"><a class="anchor" href="#dependency-injection-and-service-lifecycle">Dependency injection and service lifecycle</a></h2>
+<p>Services are plain classes extending <code>services/Service.kt</code> (<code>startService</code>/<code>stopService</code>, both no-ops by default) registered as Koin singletons in the domain modules that <code>mainModule</code> includes. <code>Services.kt</code> (<code>configureServices</code>) hands the services that run continuous background work to <code>ServiceLifecycle.start(...)</code>, in this order:</p>
+<ol>
+<li>the reverse proxy connection</li>
+<li>the local and the remote credential provider</li>
+<li>the plugin manager</li>
+<li>the importer state</li>
+<li>the import service</li>
+<li>storage</li>
+<li>cover asset packs</li>
+<li>cover generation</li>
+<li>the cover auto-trigger</li>
+<li>Hue</li>
+</ol>
+<p><code>SearchIndexWorker</code> is started only on PostgreSQL. <code>ServiceLifecycle</code> remembers every started service so <code>configureShutdown()</code> can stop them all. Most services are otherwise just called synchronously from RPC/REST handlers.</p>
+<h2 id="workers-and-task-logs"><a class="anchor" href="#workers-and-task-logs">Workers and task logs</a></h2>
+<p>Recurring jobs are <code>Worker</code> subclasses (<code>services/schedule/Worker.kt</code>) annotated with <code>@WorkerTask(key, name)</code> (<code>services/schedule/WorkerTask.kt</code>); keys are mirrored in <code>common-rpc</code>'s <code>data/TaskKeys.kt</code>. <code>Worker.run</code> guards against overlapping runs, logs start/finish, and dynamically shares CPU threads across concurrently active workers (<code>runParallel</code>, thread grants scaled by <code>workers.threadMultiplier</code>).</p>
+<ul>
+<li><code>ScheduledTaskConfigurationService</code> holds each task's schedule (cron or "after another task") and seeds <code>DEFAULTS</code> on startup.</li>
+<li><code>ScheduleService</code> triggers workers on schedule.</li>
+<li><code>ScheduledTaskLogService</code> records each run's progress and result for the admin UI.</li>
+</ul>
+<p>New periodic work should always be a <code>@WorkerTask</code>, never an ad hoc loop.</p>
+<h2 id="migrations"><a class="anchor" href="#migrations">Migrations</a></h2>
+<p>The schema starts from one frozen base per database type, <code>B1_109__Base.sql</code>, in <code>server/src/main/resources/db/migrations/postgres/</code> and <code>.../sqlite/</code>. It runs only on an empty database. Every schema change after it is a pair of SQL files, <code>V1_&#x3C;n>__Name.sql</code>, one per database type in the same two folders, applied by Flyway in <code>DatabaseManager.init()</code> on every startup. A released migration and the base are never edited. There are no Flyway Kotlin classes.</p>
+<p>Before Flyway runs, <code>MigrationBaseCheck</code> reads the migration history without writing anything.</p>
+<ul>
+<li><strong>Accepted:</strong> an empty database, one that holds nothing but an empty history table (a base run that failed and was rolled back), one created from the base and one that already ran the base's schema version with all custom migrations of 0.0.1.</li>
+<li><strong>Refused</strong> with one clear message and a non-zero exit: tables without a history, a failed migration, a schema older than the base, a migration the server does not contain, or custom migrations that never finished.</li>
+</ul>
+<p>A database from before the base has to be started once with the last <code>0.0.1</code> image first, see <a href="https://github.com/DerTyp7214/synara-api/blob/master/README.md#updating-from-001" rel="noopener">Updating from 0.0.1</a>.</p>
+<p>Data backfills and one-off cleanups that need Kotlin logic are <code>migrations/custom/</code> classes annotated <code>@Migration("3.x")</code>, extending <code>CustomMigration</code>, numbered from <code>3.33</code>. <code>CustomMigrationService.runMigrations()</code> discovers them, sorts by version, and runs the ones not yet recorded in <code>CustomMigrationTable</code>, after Flyway has run. Writing a schema migration is described in <a href="/docs/development/#schema-changes">DEVELOPMENT.md</a>.</p>
+<p>A backup records the schema version of the database it was made from, as its own <code>schema.version</code> entry and as a section of the database dump. A restore compares it before any table is cleared: a backup older than the base, one from a newer server, or one without a version whose custom migrations did not finish is refused and nothing is changed. This holds for the startup restore, <code>IBackupService.loadBackup</code> and <code>IDbManagementService.importData</code>.</p>
+<p>An import replaces the database in one transaction: <code>DbManagementService.importData</code> clears and fills every table of the dump inside a single <code>dbQuery</code> and restarts the entity change tracking as its last step. A failure at any point, such as a row that violates a constraint, rolls the whole import back, so every table including users and sessions and the tracking are as they were before.</p>
+<ul>
+<li><strong>Single attempt:</strong> the transaction is attempted once (<code>maxAttempts = 1</code>): an SQL error reaches the caller after the first rollback instead of after the three attempts Exposed makes by default, and a transaction the import was called in is not run again either once the import has started.</li>
+<li><strong>Pre-scan:</strong> the dump is spooled to a temporary file and scanned completely before the transaction opens, so a truncated dump is rejected before anything is touched.</li>
+<li><strong>One connection:</strong> the import runs on one connection for its whole duration, which on SQLite is the only connection of the pool: nothing called inside it may open a transaction of its own outside the coroutine of the import, and other database users wait until it has finished.</li>
+</ul>
+<p><code>BackupService.loadBackup</code> imports the database before it restores images, and it only adds image files that are missing.</p>
+<p>The database dump leaves out derived search data: the <code>search_vector</code> columns (every column of type <code>TsVectorColumnType</code>) and the work queue <code>search_index_queue</code>. An import ignores both in dumps that contain them. On PostgreSQL the insert triggers queue every restored song, album and artist in the transaction of the import, so the queue entries appear with its commit and vanish with a rollback, and <code>SearchIndexWorker</code> computes the vectors again.</p>
+<h2 id="images"><a class="anchor" href="#images">Images</a></h2>
+<p><code>services/ImageService.kt</code> stores cover art and generates blurhashes (<code>io.trbl.blurhash</code>) and thumbnails (Thumbnailator) on demand, with an optional Redis-backed blob cache (<code>RedisCacheProvider.Config</code>, <code>redis.cacheAnimatedImages</code> for animated covers) in front of the on-disk store. <code>core/ContentSniffer.kt</code> checks magic bytes so a failed fetch (e.g. a 404 page) is never cached or served as an image.</p>
+<h2 id="search-and-redis"><a class="anchor" href="#search-and-redis">Search and Redis</a></h2>
+<p>Redis is optional (<code>redis.host</code>); when configured it backs the RPC/REST response <code>SimpleCache</code> (<code>HTTP.kt</code>), the image blob cache, and <code>RedisSearchService</code>, which builds RediSearch indices (song/artist/... ) for ranked search when <code>redis.useSearch</code> is enabled. Without Redis, caching falls back to an in-memory cache and search falls back to database queries.</p>
+<h2 id="generators"><a class="anchor" href="#generators">Generators</a></h2>
+<p>These tasks generate checked-in files from source; never hand-edit their output. <code>./gradlew generateDocs</code> runs all of them:</p>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Generated by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/docs/rpc_services/">RPC_SERVICES.md</a>, <a href="/docs/models/">MODELS.md</a>, <a href="/docs/permissions/">PERMISSIONS.md</a></td>
+<td><code>:common-rpc:kspCommonMainKotlinMetadata</code> (the <code>doc-compiler</code> KSP processor)</td>
+</tr>
+<tr>
+<td><a href="/docs/rest_api/">REST_API.md</a>, plus the <code>register*Rest</code> functions used by <code>RestRegistry.kt</code></td>
+<td><code>:server:kspKotlin</code> (the <code>rest-compiler</code> KSP processor)</td>
+</tr>
+<tr>
+<td><a href="/docs/api_constants/">API_CONSTANTS.md</a></td>
+<td><code>:server:generateApiConstantsDocs</code></td>
+</tr>
+<tr>
+<td><a href="/docs/environment_variables/">ENVIRONMENT_VARIABLES.md</a>, <code>example.env</code></td>
+<td>root <code>generateEnvDocs</code> task</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="/docs/development/">DEVELOPMENT.md</a> for when each one runs and how to regenerate them.</p>
+<h2 id="plugins"><a class="anchor" href="#plugins">Plugins</a></h2>
+<p><code>plugins/PluginManager</code> loads jars from a <code>plugins/</code> directory and initializes each <code>ISynaraPlugin</code>, giving it a <code>PluginContext</code> to register importers, indexers, scheduled tasks, API-key scopes, server-driven UI, translations, intake handlers and jobs, to subscribe to server events through <code>hooks</code> and to store secrets through <code>credentials</code> without touching server source. See <a href="/docs/plugins/">PLUGINS.md</a> for the interface and capability marker interfaces.</p><!----></article> <footer class="doc-foot svelte-dre9m0"><a class="edit svelte-dre9m0" href="https://github.com/DerTyp7214/synara-api/blob/9e312cdbed8659eb53f53af5f0f3af6588f2fd31/docs/ARCHITECTURE.md" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-github size-4" aria-hidden="true"><!--[--><!----><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"><!----></path><!----><!----><path d="M9 18c-4.51 2-5-2-7-2"><!----></path><!----><!--]--><!----><!----></svg><!----> Edit on GitHub <span class="sha svelte-dre9m0">ARCHITECTURE.md @ 9e312cd</span></a> <nav class="pn svelte-dre9m0" aria-label="Previous and next"><!--[--><a href="/docs/credential_server/" class="prev svelte-dre9m0"><small class="legend svelte-dre9m0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-arrow-left size-3.5" aria-hidden="true"><!--[--><!----><path d="m12 19-7-7 7-7"><!----></path><!----><!----><path d="M19 12H5"><!----></path><!----><!--]--><!----><!----></svg><!----> Previous</small> <span class="svelte-dre9m0">Synara Credential Server</span></a><!--]--> <!--[--><a href="/docs/development/" class="next svelte-dre9m0"><small class="legend svelte-dre9m0">Next <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-arrow-right size-3.5" aria-hidden="true"><!--[--><!----><path d="M5 12h14"><!----></path><!----><!----><path d="m12 5 7 7-7 7"><!----></path><!----><!--]--><!----><!----></svg><!----></small> <span class="svelte-dre9m0">Development</span></a><!--]--></nav></footer></div> <!--[--><aside class="toc svelte-dre9m0" aria-label="On this page"><h2 class="legend svelte-dre9m0">On this page</h2> <div class="toc-scroll svelte-dre9m0"><div class="toc-body svelte-ffhs5h"><!--[!--><!--]--> <!--[!--><!--]--> <ul id="toc-side-list" class="groups svelte-ffhs5h"><!--[--><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#modules"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Modules</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#request-flow" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Request flow</a> <span class="count svelte-ffhs5h" aria-label="2 sections">2</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#reverse-proxy" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Reverse proxy</a></li><li><a href="#wrapper-chain" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Wrapper chain</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#package-layout-serversrcmainkotlindevdertyp"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Package layout (server/src/main/kotlin/dev/dertyp/)</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#dependency-injection-and-service-lifecycle"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Dependency injection and service lifecycle</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#workers-and-task-logs"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Workers and task logs</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#migrations"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Migrations</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#images"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Images</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#search-and-redis"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Search and Redis</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#generators"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Generators</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#plugins"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Plugins</a><!--]--><!--]--></li><!--]--></ul></div><!----></div></aside><!--]--></div><!----><!----></div></div><!----><!--]--><!----></main> <div class="design-retro contents"><footer class="rear mt-auto svelte-1kbsrt"><div class="shell py-12 md:py-16"><div class="vents svelte-1kbsrt" aria-hidden="true"></div> <div class="mt-10 grid gap-10 md:grid-cols-[1fr_1fr_minmax(0,1.35fr)] md:gap-12"><nav aria-labelledby="footer-source"><h2 id="footer-source" class="legend">On GitHub</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Server source</a></li><li><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Desktop app source</a></li><li><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Releases</a></li><!--]--></ul></nav> <nav aria-labelledby="footer-site"><h2 id="footer-site" class="legend">Synara</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="/apps/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Apps</a></li><li><a href="/docs/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Docs</a></li><li><a href="/server/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Run a server</a></li><li><a href="/download/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Download</a></li><li><a href="/privacy/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Privacy</a></li><!--]--></ul></nav> <div class="plate svelte-1kbsrt"><span class="screw top-2 left-2" aria-hidden="true"></span> <span class="screw top-2 right-2" style="--screw-angle: -20deg" aria-hidden="true"></span> <span class="screw bottom-2 left-2" style="--screw-angle: 80deg" aria-hidden="true"></span> <span class="screw right-2 bottom-2" aria-hidden="true"></span> <a href="/" class="inline-flex items-center gap-2.5 rounded-sm text-ink" aria-label="Synara home"><!--$s3--><svg width="100%" height="100%" class="h-7 w-auto" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s3)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-3 w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="model svelte-1kbsrt">Model SR-1</span></a> <p class="mt-4 text-[0.9375rem] text-muted">A music server you run yourself, with native apps that play your library bit for bit.</p> <dl class="ratings svelte-1kbsrt"><div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Server</dt> <dd class="svelte-1kbsrt">GPL-2.0</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Apps</dt> <dd class="svelte-1kbsrt">Free</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Made</dt> <dd class="svelte-1kbsrt">© 2026 Synara</dd></div></dl></div></div></div></footer><!----></div> <div class="design-modern contents"><footer class="m-footer mt-auto svelte-tqky0e"><div class="shell"><div class="cols svelte-tqky0e"><div class="about svelte-tqky0e"><a href="/" class="brand svelte-tqky0e" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s4--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s4)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <p class="tagline svelte-tqky0e">A music server you run yourself, with native apps that play your library bit for bit.</p></div> <nav aria-labelledby="m-footer-site"><h2 id="m-footer-site" class="group-h svelte-tqky0e">Synara</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="/apps/" class="svelte-tqky0e">Apps</a></li><li class="svelte-tqky0e"><a href="/docs/" class="svelte-tqky0e">Docs</a></li><li class="svelte-tqky0e"><a href="/server/" class="svelte-tqky0e">Run a server</a></li><li class="svelte-tqky0e"><a href="/download/" class="svelte-tqky0e">Download</a></li><li class="svelte-tqky0e"><a href="/privacy/" class="svelte-tqky0e">Privacy</a></li><!--]--></ul></nav> <nav aria-labelledby="m-footer-source"><h2 id="m-footer-source" class="group-h svelte-tqky0e">On GitHub</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="svelte-tqky0e">Server source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="svelte-tqky0e">Desktop app source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="svelte-tqky0e">Releases</a></li><!--]--></ul></nav></div> <div class="base svelte-tqky0e"><p>Server: GPL-2.0, apps free</p> <p>© 2026 Synara</p></div></div></footer><!----></div></div><!--]--><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_3zbfyr = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../internal/immutable/entry/start.ZGwwYrzZ.js"),
+						import("../../internal/immutable/entry/app.DMIzLkDz.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 6],
+							data: [null,{type:"data",data:{nav:[{title:"Start",items:[{title:"Overview",href:"/docs/"}]},{title:"Build a client",items:[{title:"Getting Started as a Client",href:"/docs/client_getting_started/",description:"The four API surfaces, picking one, and a first login-and-search call. Start here."},{title:"Kotlin RPC Client Guide",href:"/docs/client_kotlin_rpc/",description:"Using the common-rpc Kotlin/KMP SDK: BaseRpcServiceManager, login, services, streaming Flows."},{title:"REST for Client Developers",href:"/docs/client_rest/",description:"The HTTP/JSON surface for non-Kotlin clients: route derivation, parameter binding, authentication."},{title:"Authentication",href:"/docs/authentication/",description:"Logging in, JWTs and refresh tokens, API keys, and how each is presented over RPC and REST."},{title:"Streaming and Playback",href:"/docs/streaming_and_playback/",description:"Streaming audio, transcoding, queues and multi-device playback sync."},{title:"API Versioning",href:"/docs/api_versioning/",description:"The API-version and UI-schema-version headers and how the server adapts responses to older clients."},{title:"Server-Driven UI",href:"/docs/server_driven_ui/",description:"Rendering server-described UI (slots, pages, home cards, hooks), with the importer as a worked example."},{title:"Client Settings",href:"/docs/client_settings/",description:"Keeping client settings on the server, synced across devices or per device."},{title:"Synara Mock Server",href:"/docs/mock_server/",description:"Running a mock server that generates dummy RPC/REST responses for client development."}]},{title:"Reference",items:[{title:"Synara RPC Services Documentation",href:"/docs/rpc_services/",description:void 0},{title:"Synara Data Models",href:"/docs/models/",description:void 0},{title:"Synara Permissions",href:"/docs/permissions/",description:void 0},{title:"Synara REST API",href:"/docs/rest_api/",description:void 0},{title:"Synara API Constants",href:"/docs/api_constants/",description:void 0},{title:"Environment Variables Documentation",href:"/docs/environment_variables/",description:void 0},{title:"Relation map",href:"https://synara-insights.dertyp.dev/RELATION_MAP.html",description:void 0,external:true},{title:"Commit stats",href:"https://synara-insights.dertyp.dev/STATS.html",description:void 0,external:true}]},{title:"Extend the server",items:[{title:"Synara Custom Plugins",href:"/docs/plugins/",description:"Writing a plugin (ISynaraPlugin): importers, indexers, routes, scheduled tasks, server-driven UI."},{title:"Synara MCP (listen history)",href:"/docs/mcp/",description:"The read-only Model Context Protocol endpoint for querying listening history from an AI assistant."},{title:"Synara Listen Backup",href:"/docs/listen_backup/",description:"Running a standalone receiver that keeps a copy of listening history."},{title:"Synara Credential Server",href:"/docs/credential_server/",description:"Running a standalone server that hands third-party credentials to Synara servers and plugins."}]},{title:"Work on the server",items:[{title:"Architecture",href:"/docs/architecture/",description:"Module map, request flow, package layout, DI, workers, migrations, generators."},{title:"Development",href:"/docs/development/",description:"Cloning, running, testing, the common-rpc submodule workflow, adding an RPC method, troubleshooting."},{title:"Deprecations",href:"/docs/deprecations/",description:"Checklist of what to remove or change when an API, UI schema or plugin API version bump reaches a target version."}]}]},uses:{}},{type:"data",data:{title:"Architecture",path:"/docs/architecture/",hasMermaid:true,toc:[{id:"modules",text:"Modules",depth:2},{id:"request-flow",text:"Request flow",depth:2},{id:"reverse-proxy",text:"Reverse proxy",depth:3},{id:"wrapper-chain",text:"Wrapper chain",depth:3},{id:"package-layout-serversrcmainkotlindevdertyp",text:"Package layout (server/src/main/kotlin/dev/dertyp/)",depth:2},{id:"dependency-injection-and-service-lifecycle",text:"Dependency injection and service lifecycle",depth:2},{id:"workers-and-task-logs",text:"Workers and task logs",depth:2},{id:"migrations",text:"Migrations",depth:2},{id:"images",text:"Images",depth:2},{id:"search-and-redis",text:"Search and Redis",depth:2},{id:"generators",text:"Generators",depth:2},{id:"plugins",text:"Plugins",depth:2}],editUrl:"https://github.com/DerTyp7214/synara-api/blob/9e312cdbed8659eb53f53af5f0f3af6588f2fd31/docs/ARCHITECTURE.md",file:"ARCHITECTURE.md",sha:"9e312cd",prev:{title:"Synara Credential Server",href:"/docs/credential_server/"},next:{title:"Development",href:"/docs/development/"}},uses:{params:["slug"],parent:1}}],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

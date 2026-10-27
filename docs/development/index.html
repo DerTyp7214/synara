@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en" data-design="modern">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f1f1" media="(prefers-color-scheme: light)" />
+
+    <script>
+      // Before first paint: apply the stored theme ("light" | "dark" | absent = follow the system) and
+      // design ("modern" | "retro" | absent = Modern). ?design=modern|retro applies and saves a design.
+      // The HTML ships with data-design="modern"; Retro is expressed by removing it.
+      // Colours: design x theme, keep in sync with $lib/theme.ts (META_COLOR) and the style below.
+      ;(function () {
+        var d = document.documentElement,
+          t = null,
+          g = null,
+          q = null
+        try {
+          t = localStorage.getItem('synara-theme')
+          g = localStorage.getItem('synara-design')
+        } catch (e) {}
+        try {
+          q = new URLSearchParams(location.search).get('design')
+        } catch (e) {}
+        if (q === 'modern' || q === 'retro') {
+          g = q
+          try {
+            localStorage.setItem('synara-design', q)
+          } catch (e) {}
+        }
+        var modern = g !== 'retro'
+        if (!modern) d.removeAttribute('data-design')
+        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t)
+        var c = modern
+          ? { light: '#f1f1f1', dark: '#0e0e0e' }
+          : { light: '#e6e5e0', dark: '#1c1c1e' }
+        if (!modern || t === 'light' || t === 'dark') {
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            var k =
+              t === 'light' || t === 'dark'
+                ? t
+                : m.getAttribute('media').indexOf('light') >= 0
+                  ? 'light'
+                  : 'dark'
+            m.setAttribute('content', c[k])
+          })
+        }
+        // Preload only the active design's fonts. Modern sets type in SF on Apple platforms and in
+        // self-hosted Inter elsewhere; Retro uses Barlow and Barlow Condensed.
+        var fonts = modern
+          ? /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+            ? []
+            : ['Inter-var']
+          : ['Barlow-400', 'BarlowCondensed-600']
+        fonts.forEach(function (f) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.href = '/fonts/' + f + '.woff2'
+          l.as = 'font'
+          l.type = 'font/woff2'
+          l.crossOrigin = 'anonymous'
+          document.head.appendChild(l)
+        })
+      })()
+    </script>
+    <style>
+      html {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']) {
+          background-color: #e6e5e0;
+          color: #1b1b1a;
+          color-scheme: light;
+        }
+      }
+      html[data-theme='light'] {
+        background-color: #e6e5e0;
+        color: #1b1b1a;
+        color-scheme: light;
+      }
+      html[data-theme='dark'] {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      html[data-design='modern'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+      @media (prefers-color-scheme: light) {
+        html[data-design='modern']:not([data-theme='dark']) {
+          background-color: #f1f1f1;
+          color: #201a17;
+        }
+      }
+      html[data-design='modern'][data-theme='light'] {
+        background-color: #f1f1f1;
+        color: #201a17;
+      }
+      html[data-design='modern'][data-theme='dark'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+    </style>
+
+    <meta
+      name="description"
+      content="Synara is a self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Synara" />
+    <meta property="og:title" content="Synara" />
+    <meta
+      property="og:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta property="og:image" content="https://synara.audio/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Synara ribbon logo next to the words: your music, bit for bit."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Synara" />
+    <meta
+      name="twitter:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta name="twitter:image" content="https://synara.audio/og.png" />
+
+    
+		<link href="../../internal/immutable/assets/0.BNQnLckt.css" rel="stylesheet">
+		<link href="../../internal/immutable/assets/2.CRsa_cPd.css" rel="stylesheet">
+		<link href="../../internal/immutable/assets/DocView.dpH5X4Sp.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../internal/immutable/entry/start.ZGwwYrzZ.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DNpxTNuS.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CePLiJTx.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/y9Sl5bMM.js">
+		<link rel="modulepreload" href="../../internal/immutable/entry/app.DMIzLkDz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/PPVm8Dsz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DsnmJJEf.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/B7aqIt7k.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CYooVA3G.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/gPZRW6-w.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/0.DZac87Gf.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DiYe1c4J.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Z02Du5iI.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/ebLNhQ_I.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DSjgm90S.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/D4E3Eq-t.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BRKCcKFl.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CkFSaI46.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Ce9QgSdz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/C-iAWfLw.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/D0l9Ew2l.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BEnBgVf7.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/2.CkwINS6A.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Ct-AiNBt.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/6.B4-jVo-W.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Cb7zuFE7.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BdFwG2mz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BZUgcN-i.js"><!--12qhfyh--><!----><!--dre9m0--><meta name="description" content="Development: Synara server and API documentation."/><!----><title>Development | Synara Docs</title>
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[--><!----><!--[!--><a href="#main" class="key key-primary key-sm fixed top-3 left-3 z-[60] -translate-y-20 focus:translate-y-0">Skip to content</a> <div class="flex min-h-dvh flex-col"><div class="design-retro contents"><header class="strip sticky top-0 z-50 svelte-39r4fj"><div class="shell flex h-(--header-h) items-center gap-4 md:gap-6"><a href="/" class="flex shrink-0 items-center gap-3 rounded-sm text-[0.95rem] text-ink" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s1--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s1)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----> <span class="model svelte-39r4fj" aria-hidden="true">SR-1</span></a> <nav aria-label="Main" class="hidden min-[54rem]:block"><ul class="bank svelte-39r4fj"><!--[--><li><a href="/#features" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Features</a></li><li><a href="/apps/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Apps</a></li><li><a href="/docs/" aria-current="page" class="svelte-39r4fj"><span class="led on svelte-39r4fj" aria-hidden="true"></span> Docs</a></li><li><a href="/server/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Server</a></li><li><a href="/download/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Download</a></li><!--]--></ul></nav> <div class="ml-auto flex items-center gap-2"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <button type="button" class="switch  svelte-m6oq99" aria-label="Theme: System. Switch to light." title="Theme: System"><span class="legends svelte-m6oq99" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor size-2.5 on"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun size-2.5 "><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon size-2.5 "><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----></span> <span class="slot svelte-m6oq99" aria-hidden="true"><span class="lever svelte-m6oq99" style="transform: translateX(0%)"></span></span></button><!----> <span class="power hidden sm:inline-flex svelte-39r4fj" aria-hidden="true"><span class="led ok svelte-39r4fj"></span>Power</span> <button type="button" class="key key-icon min-[54rem]:hidden" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></header><!----></div> <div class="design-modern contents"><header class="m-header svelte-1y2ms2o"><div class="shell svelte-1y2ms2o"><div class="bar glass svelte-1y2ms2o"><a href="/" class="brand svelte-1y2ms2o" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s2--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s2)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <nav aria-label="Main" class="tabs svelte-1y2ms2o"><ul class="svelte-1y2ms2o"><!--[--><li><a href="/#features" class="tab svelte-1y2ms2o">Features</a></li><li><a href="/apps/" class="tab svelte-1y2ms2o">Apps</a></li><li><a href="/docs/" class="tab svelte-1y2ms2o" aria-current="page">Docs</a></li><li><a href="/server/" class="tab svelte-1y2ms2o">Server</a></li><li><a href="/download/" class="tab svelte-1y2ms2o">Download</a></li><!--]--></ul></nav> <div class="trailing svelte-1y2ms2o"><div class="appearance svelte-1y2ms2o"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <div role="radiogroup" aria-label="Appearance" class="seg   svelte-7qw6a6"><span class="thumb svelte-7qw6a6" aria-hidden="true"></span> <!--[--><button type="button" role="radio" aria-checked="true" tabindex="0" title="System" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor seg-icon" aria-hidden="true"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">System</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Light" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun seg-icon" aria-hidden="true"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Light</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Dark" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon seg-icon" aria-hidden="true"><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Dark</span></button><!--]--></div><!----></div> <button type="button" class="menu-btn svelte-1y2ms2o" aria-expanded="false" aria-controls="m-menu" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></div></header><!----></div> <main id="main" class="flex-1"><!--[--><!----><div class="shell docs-shell svelte-1bpnej"><button type="button" class="docs-menu-btn key key-sm svelte-1bpnej" aria-expanded="false" aria-controls="docs-nav"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-4" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--> <span class="truncate">Development</span></button> <nav id="docs-nav" class="docs-nav svelte-1bpnej" aria-label="Documentation"><!--[--><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Start</h2> <ul><!--[--><li><a href="/docs/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Overview</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Build a client</h2> <ul><!--[--><li><a href="/docs/client_getting_started/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Getting Started as a Client</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_kotlin_rpc/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Kotlin RPC Client Guide</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_rest/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">REST for Client Developers</span> <!--[!--><!--]--></a></li><li><a href="/docs/authentication/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Authentication</span> <!--[!--><!--]--></a></li><li><a href="/docs/streaming_and_playback/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Streaming and Playback</span> <!--[!--><!--]--></a></li><li><a href="/docs/api_versioning/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">API Versioning</span> <!--[!--><!--]--></a></li><li><a href="/docs/server_driven_ui/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Server-Driven UI</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_settings/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Client Settings</span> <!--[!--><!--]--></a></li><li><a href="/docs/mock_server/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Mock Server</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Reference</h2> <ul><!--[--><li><a href="/docs/rpc_services/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara RPC Services Documentation</span> <!--[!--><!--]--></a></li><li><a href="/docs/models/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Data Models</span> <!--[!--><!--]--></a></li><li><a href="/docs/permissions/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Permissions</span> <!--[!--><!--]--></a></li><li><a href="/docs/rest_api/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara REST API</span> <!--[!--><!--]--></a></li><li><a href="/docs/api_constants/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara API Constants</span> <!--[!--><!--]--></a></li><li><a href="/docs/environment_variables/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Environment Variables Documentation</span> <!--[!--><!--]--></a></li><li><a href="https://synara-insights.dertyp.dev/RELATION_MAP.html" target="_blank" rel="noopener" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Relation map</span> <!--[--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-external-link size-3.5 shrink-0" aria-hidden="true"><!--[--><!----><path d="M15 3h6v6"><!----></path><!----><!----><path d="M10 14 21 3"><!----></path><!----><!----><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"><!----></path><!----><!--]--><!----><!----></svg><!--]--></a></li><li><a href="https://synara-insights.dertyp.dev/STATS.html" target="_blank" rel="noopener" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Commit stats</span> <!--[--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-external-link size-3.5 shrink-0" aria-hidden="true"><!--[--><!----><path d="M15 3h6v6"><!----></path><!----><!----><path d="M10 14 21 3"><!----></path><!----><!----><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"><!----></path><!----><!--]--><!----><!----></svg><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Extend the server</h2> <ul><!--[--><li><a href="/docs/plugins/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Custom Plugins</span> <!--[!--><!--]--></a></li><li><a href="/docs/mcp/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara MCP (listen history)</span> <!--[!--><!--]--></a></li><li><a href="/docs/listen_backup/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Listen Backup</span> <!--[!--><!--]--></a></li><li><a href="/docs/credential_server/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Credential Server</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Work on the server</h2> <ul><!--[--><li><a href="/docs/architecture/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Architecture</span> <!--[!--><!--]--></a></li><li><a href="/docs/development/" aria-current="page" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Development</span> <!--[!--><!--]--></a></li><li><a href="/docs/deprecations/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Deprecations</span> <!--[!--><!--]--></a></li><!--]--></ul></section><!--]--></nav> <div class="docs-main svelte-1bpnej"><!----><div class="doc-grid svelte-dre9m0"><div class="doc-col svelte-dre9m0"><!--[--><details class="disclosure toc-inline svelte-dre9m0"><summary class="svelte-dre9m0">On this page</summary> <nav class="toc-inline-body svelte-dre9m0" aria-label="On this page"><div class="toc-body svelte-ffhs5h"><!--[!--><!--]--> <!--[!--><!--]--> <ul id="toc-inline-list" class="groups svelte-ffhs5h"><!--[--><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#clone"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Clone</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#prerequisites"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Prerequisites</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#configuration"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Configuration</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#running"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Running</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#git-hooks"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Git hooks</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#tests-and-goldens"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Tests and goldens</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#generated-files"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Generated files</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#common-rpc-submodule-workflow"><span class="led svelte-ffhs5h" aria-hidden="true"></span>common-rpc submodule workflow</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#adding-an-rpc-method-end-to-end"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Adding an RPC method end to end</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#conventions"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Conventions</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#schema-changes"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Schema changes</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#listen-sharing"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Listen sharing</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#lyrics-providers"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Lyrics providers</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#proxy-tunnel-protocol"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Proxy tunnel protocol</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#dependency-updates"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Dependency updates</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#troubleshooting"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Troubleshooting</a><!--]--><!--]--></li><!--]--></ul></div><!----></nav></details><!--]--> <article class="prose" data-doc="DEVELOPMENT.md"><!----><h1 id="development"><a class="anchor" href="#development">Development</a></h1>
+<p>Working on the Synara server itself: cloning, running, testing, and the workflows around generated files and the <code>common-rpc</code> submodule. For the module map and request flow, see <a href="/docs/architecture/">ARCHITECTURE.md</a>. For building a client, see <a href="/docs/">docs/README.md</a>.</p>
+<h2 id="clone"><a class="anchor" href="#clone">Clone</a></h2>
+<p><code>common-rpc</code> is a git submodule (<a href="https://github.com/DerTyp7214/synara-api/blob/master/.gitmodules" rel="noopener"><code>.gitmodules</code></a> → <code>synara-common-rpc</code>), shared with the client apps. Clone with:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">git</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> clone</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> --recurse-submodules</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583"> &#x3C;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">repo-ur</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">l</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">></span></span></code></pre>
+<p>If you already cloned without it: <code>git submodule update --init --recursive</code>. Forgetting <code>--recurse-submodules</code> is the most common bootstrap failure — the build fails with <code>common-rpc</code> sources missing.</p>
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites">Prerequisites</a></h2>
+<ul>
+<li>JDK 25 (the convention plugin <code>synara.kotlin-jvm</code> in <code>build-logic/src/main/kotlin/synara.kotlin-jvm.gradle.kts</code> sets <code>kotlin { jvmToolchain(25) }</code> for every JVM module; CI builds with Temurin 25).</li>
+<li>Docker and Docker Compose for the dev stack and for the PostgreSQL tests (Testcontainers).</li>
+</ul>
+<h2 id="configuration"><a class="anchor" href="#configuration">Configuration</a></h2>
+<p>Copy <a href="https://github.com/DerTyp7214/synara-api/blob/master/example.env" rel="noopener"><code>example.env</code></a> to <code>.env</code> and fill in the variables you need. <code>CLIENT_ID</code>/<code>CLIENT_SECRET</code> (<code>client.id</code>/<code>client.secret</code>) seed the first admin account on startup (<code>DatabaseManager.init()</code> in <code>server/src/main/kotlin/dev/dertyp/services/DatabaseManager.kt</code>, inserted with <code>insertIgnore</code> so only the first run against an empty database creates it); without them a fresh server has no user to log in with. See <a href="/docs/environment_variables/">ENVIRONMENT_VARIABLES.md</a> for the rest of the variables, what each one does, and its default.</p>
+<h2 id="running"><a class="anchor" href="#running">Running</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Command</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gradle</td>
+<td><code>./gradlew :server:run</code></td>
+<td>Runs the server alone against whatever <code>.env</code>/config you have set up.</td>
+</tr>
+<tr>
+<td><code>dev.sh</code></td>
+<td><code>./dev.sh</code></td>
+<td>Builds <code>:proxy:installDist</code> and <code>:server:installDist</code>, loads <code>.env</code>, then runs both the proxy and the server together; <code>Ctrl+C</code> stops both.</td>
+</tr>
+<tr>
+<td>Docker Compose (dev stack)</td>
+<td><code>docker compose up</code></td>
+<td><code>docker-compose.yml</code>: the <code>api</code> service is built from <code>Dockerfile.nobuild</code>, which copies a prebuilt <code>*.jar</code> from the repository root into the image and does not compile anything, so run <code>./gradlew :server:shadowJar</code> first and copy <code>server/build/libs/server-all.jar</code> to the repository root. The service uses <code>network_mode: host</code>, reads <code>.server.env</code> next to the compose file and mounts <code>/home/typ/Music</code> as <code>/data</code>, adjust the volume paths for your machine. The stack also starts PostgreSQL, the Redis cluster image, and the <code>transcriber</code>/<code>audio-embed</code>/<code>recsys</code> sidecars, which are built from source. The root <code>Dockerfile</code> is the image that compiles the server itself.</td>
+</tr>
+<tr>
+<td>Docker Compose (built images)</td>
+<td>see <code>docker-compose.server.yml</code> / <code>docker-compose-prod.yml</code></td>
+<td>Run the <code>ghcr.io/dertyp7214/synara*</code> images instead of building locally; <code>-server.yml</code> puts services on a <code>proxy</code> network for use behind <code>:proxy</code>, <code>-prod.yml</code> uses <code>network_mode: host</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="git-hooks"><a class="anchor" href="#git-hooks">Git hooks</a></h2>
+<p><code>./gradlew installGitHooks</code> points git at <code>.githooks</code> (<code>git config core.hooksPath .githooks</code>). The <code>pre-commit</code> hook runs <code>generateDocs</code> whenever a staged path starts with <code>common-rpc/</code>, <code>server/src/main/</code>, <code>plugin-api/src/main/</code> or <code>proxy/src/main/resources/application.yaml</code>, is <code>Dockerfile.nobuild</code>, the root <code>build.gradle.kts</code> or <code>server/build.gradle.kts</code>, or is the <code>common-rpc</code> submodule pointer itself, and stages every regenerated output (<code>docs/RPC_SERVICES.md</code>, <code>docs/MODELS.md</code>, <code>docs/REST_API.md</code>, <code>docs/PERMISSIONS.md</code>, <code>docs/API_CONSTANTS.md</code>, <code>docs/ENVIRONMENT_VARIABLES.md</code>, <code>example.env</code>). A failed <code>generateDocs</code> aborts the commit. Before that, the hook formats the staged Kotlin files with <code>ktlint --format</code> and the code style in <code>.editorconfig</code> (ktlint's <code>intellij_idea</code> style with the wrapping, signature, naming and import rules switched off, continuation indent 4) and restages them. IntelliJ reads the same <code>.editorconfig</code>. It skips files with unstaged changes and needs <code>ktlint</code> on the <code>PATH</code>. It never blocks a commit when ktlint is missing or reports findings it cannot fix. Facts a client needs — versions, features, auth constants, permissions — are generated: add them to the generator that produces the relevant doc, never to a hand-written guide.</p>
+<h2 id="tests-and-goldens"><a class="anchor" href="#tests-and-goldens">Tests and goldens</a></h2>
+<p><code>./gradlew test</code> runs the full suite with the Kover agent attached to every test JVM (CI additionally runs <code>koverXmlReport koverHtmlReport</code>). <code>-PwithoutCoverage=true</code> runs the tests without the agent, which takes about a tenth less time, and the Kover report tasks then have no coverage to report.</p>
+<ul>
+<li><strong>Docker:</strong> the PostgreSQL and Redis tests of the server use Testcontainers, so Docker must be reachable — CI sets <code>DOCKER_HOST=unix:///var/run/docker.sock</code>; locally, make sure your Docker daemon is running and <code>DOCKER_HOST</code> (if set) points at it. A container that does not start fails every test that needs it, with a message naming the container.</li>
+<li><strong>Without Docker:</strong> <code>-PwithoutContainers=true</code> is the deliberate way to run without Docker: the PostgreSQL and Redis tests are then skipped with a reason, and the SQLite cases still run, so a green result says nothing about PostgreSQL or Redis. CI never passes it.</li>
+<li><strong>Output:</strong> each test JVM ends with one line in the Gradle output, <code>TEST CONTAINERS: PostgreSQL 15.x (container postgres:15-alpine, port …), Redis 7.x (container …, port …), test JVM &#x3C;pid></code>, which names the servers that JVM ran its tests on and the host ports it reached them at, or <code>FAILED</code> or <code>not used</code>, and with <code>-PwithoutContainers=true</code> says that the PostgreSQL and Redis tests were skipped. A run prints as many of these lines as it has test JVMs.</li>
+</ul>
+<p><code>:server:test</code> runs its classes in several test JVMs at once (<code>maxParallelForks</code> in <code>server/build.gradle.kts</code>). The number is a quarter of the available processors, at most 4, and at most what the memory holds at 3 GB per test JVM once 7 GB are set aside for Gradle, the Kotlin daemon and the containers, so a full run leaves most of a machine free for other work. That gives 4 on a machine with 16 processors and 19 GB or more, and 1 on a GitHub runner with 4 processors, where CI passes <code>-PtestForks=2</code>. <code>-PtestForks=N</code> sets the number: a higher one makes the run faster as long as cores are free, and <code>-PtestForks=1</code> runs every class in one JVM. Gradle deals whole classes to the JVMs in turn, so the classes that share a JVM change with the number of JVMs and with every class that is added, and inside one JVM the classes still run one after the other. A test therefore:</p>
+<ul>
+<li>assumes nothing about the classes that ran before it in its JVM, and leaves no global state behind (static and object mocks, the Koin context, system properties),</li>
+<li>binds no fixed port: a server it starts listens on port 0 or behind a mapped container port,</li>
+<li>writes only to files and directories it created under a unique name (<code>createTempFile</code>, <code>createTempDirectory</code>, <code>@TempDir</code>), never to a fixed name in a shared directory,</li>
+<li>takes its database from <code>TestDatabase</code> and its Redis from <code>TestRedis</code>,</li>
+<li>waits for the event it expects instead of sleeping a fixed time, and takes the waits it needs from the durations it configured, because several JVMs make every step slower.</li>
+</ul>
+<p>The PostgreSQL container (<code>TestDatabase</code>) is built for speed, not for keeping data: <code>fsync</code>, <code>synchronous_commit</code> and <code>full_page_writes</code> are off, the data directory is a 2 GB tmpfs, and logins need no password (<code>POSTGRES_HOST_AUTH_METHOD=trust</code>).</p>
+<ul>
+<li><strong>Reuse:</strong> locally it is reused between runs when <code>~/.testcontainers.properties</code> has <code>testcontainers.reuse.enable=true</code>, and all test JVMs of a run share it: the first one creates it while it holds a lock on <code>synara-test-postgres.lock</code> in the system temp directory, the others find it afterwards. Without reuse, as in CI, every test JVM starts its own container and Testcontainers removes it when the JVM ends. A change to these settings makes Testcontainers start a new container and leaves the previous one running, remove that one with <code>docker rm -f -v &#x3C;name></code>.</li>
+<li><strong>Databases:</strong> every PostgreSQL case gets its own database, reached through a small connection pool that <code>TestDatabase.cleanUp()</code> closes before it drops the database. Databases are created (<code>STRATEGY FILE_COPY</code>) and dropped over one administrative connection per test JVM, which is closed when the JVM ends.</li>
+<li><strong>Tables:</strong> a test passes its tables to <code>TestDatabase.connect(dialect, name, tables...)</code>. On PostgreSQL the schema of each distinct table list is built once per test JVM in a template database (<code>template_&#x3C;jvm>_&#x3C;id></code>, found again by the hash of the DDL Exposed generates for the list) and every case gets a copy of it with <code>CREATE DATABASE ... TEMPLATE</code>, on SQLite the tables are created in the fresh file. Tables or raw DDL a single test needs on top are created in that test.</li>
+<li><strong>Migrated databases:</strong> <code>TestDatabase.connectMigrated(dialect, name)</code> and <code>TestDatabase.getMigratedPostgresDbUrl(name, upTo)</code> give a database that Flyway migrated from the base, on PostgreSQL again as a copy of a template that is migrated once. A test about applying the base to an empty database starts from <code>connect</code> without tables or <code>getPostgresDbUrl</code>.</li>
+<li><strong>Cleanup:</strong> templates accept no connections and are dropped when the test JVM ends.</li>
+</ul>
+<p>The Redis container (<code>TestRedis</code>, <code>redis/redis-stack-server:7.4.0-v8</code>) is a cluster of one node per test JVM, on a mapped host port and never reused. The node announces that host port (<code>cluster-announce-ip</code>, <code>cluster-announce-port</code>), so the cluster client is sent to an address it can reach, and <code>TestRedis.host</code> and <code>TestRedis.port</code> are what a test passes to <code>RedisCacheProvider.Config</code>. The tests start once the node reports <code>cluster_state:ok</code>.</p>
+<p>Search indexes need extra care. <code>FT.CREATE</code> scans the existing keys in the background and indexes a hash written before the scan passes it a second time. The first posting stays in the index until its garbage collection, the document frequency of the term then exceeds the number of documents, the default scorer (TFIDF) computes an IDF of 0 and every match scores 0, so the field weights no longer decide the order. A test that creates search indexes therefore calls <code>TestRedis.awaitSearchIndexes(jedis, indexPrefix)</code> after <code>RedisSearchService.initIndex()</code> and writes its documents only after that: it returns once no index of the prefix reports <code>indexing</code>.</p>
+<p>In the reports a database case is named <code>test name(DbDialect) [1] POSTGRES</code> or <code>… [2] SQLITE</code> (<code>junit.jupiter.params.displayname.default</code> in <code>server/src/test/resources/junit-platform.properties</code>).</p>
+<p>JUnit does not run a test method that returns a value, and reports nothing about it. A test written as an expression body (<code>= runBlocking { … }</code>) whose last expression has a value, such as <code>assertThrows</code> or <code>assertNotNull</code>, is such a method, so it gets <code>: Unit</code>. <code>TestMethodReturnTypeTest</code> fails for every test method of the server test sources that returns a value.</p>
+<p>REST route goldens live at <code>server/src/test/resources/rest/routes.golden</code> and <code>routes.openapi.golden</code>, checked by <code>RestRouteGoldenTest</code> (<code>server/src/test/kotlin/dev/dertyp/routing/rest/RestGoldenSupport.kt</code>). After a routing change, refresh them with:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">./gradlew</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> :server:test</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> -PupdateRestGolden=true</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> --tests</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> 'dev.dertyp.routing.rest.RestRouteGoldenTest'</span></span></code></pre>
+<p>then review the diff — this is what turns REST routing changes into an intentional, reviewed golden update instead of a silent behavior change.</p>
+<p>The generated Kotlin REST clients (see <a href="#generated-files">Generated files</a>) are tested against the same golden and against the real routes. <code>RestClientRouteGoldenTest</code> checks every generated client call (verb, path and parameters) against <code>routes.golden</code> and every URL builder against the request of its call, so it fails when a client and the server disagree about a route and is refreshed together with the golden above. <code>RestClientRoundTripTest</code> runs the clients against the generated server routes. It also fetches URLs that the builders returned. Both are in <code>server/src/test/kotlin/dev/dertyp/routing/rest/</code> and run with <code>./gradlew :server:test --tests 'dev.dertyp.routing.rest.RestClient*'</code>.</p>
+<p>The reverse proxy tunnel is covered on three levels:</p>
+<ul>
+<li><strong><code>common-proxy</code>:</strong> <code>ProtocolTest</code> and <code>HttpTunnelCreditTest</code> check the frame encoding and the credit windows.</li>
+<li><strong><code>proxy</code>:</strong> <code>ProxyHttpTunnelTest</code>, next to <code>ProxyApplicationTest</code>, runs the proxy routes against a fake server connection.</li>
+<li><strong><code>server</code>:</strong> <code>ReverseProxyRouteAllowlistTest</code> checks which method and path pairs the tunnel lets through, <code>ReverseProxyHttpGatewayTest</code> the replay against the loopback port, and <code>ReverseProxyRestEndToEndTest</code> runs the real proxy against the real generated routes.</li>
+</ul>
+<p><code>RestClientRouteGoldenTest</code> also checks the generated clients with a base URL that has a path prefix, as used behind the proxy. They run with <code>./gradlew :common-proxy:test :proxy:test</code> and <code>./gradlew :server:test --tests 'dev.dertyp.services.ReverseProxy*'</code>.</p>
+<p><code>python3 scripts/test-times.py</code> reads the JUnit XML reports of the last run and prints the test times per module, database type and class; <code>--json &#x3C;file></code> saves them and <code>--compare &#x3C;file></code> shows the change against such a file, for the classes both have a report for. Gradle keeps only the reports of the last run of a test task, so a run with <code>--tests</code> leaves the reports of those classes alone.</p>
+<p><code>python3 scripts/commit-stats.py</code> regenerates <a href="https://synara-insights.dertyp.dev/STATS.html" rel="noopener">STATS.html</a>, an interactive page of commit statistics to open in a browser, from the git history of this repository and of the sibling checkouts <code>synara-android</code> and <code>SynaraComposeMultiplatform</code>, when they exist next to it; <code>-o &#x3C;file></code> writes it elsewhere. It only reads from git, and unchanged history gives a byte-identical page. The pages workflow checks out this repository only, so the published page covers it alone.</p>
+<p>The build cache and the configuration cache are on (<code>org.gradle.caching</code> and <code>org.gradle.configuration-cache</code> in <code>gradle.properties</code>). A compile or test task whose inputs are unchanged does not run: the output says <code>UP-TO-DATE</code>, or <code>FROM-CACHE</code> when the result comes from <code>~/.gradle/caches/build-cache-1</code>, for example after <code>clean</code> or a switch back to a branch that was built before. This holds for tests too, so <code>./gradlew test</code> without a change runs no test, and <code>./gradlew test --rerun</code> runs them all. The KSP tasks declare the docs they write as outputs, so a generated doc that was edited or reverted by hand is written again by the next <code>generateDocs</code>.</p>
+<p>The server reports its build time and commit through <code>BuildInfo</code>, which reads <code>build-info.properties</code> from the classpath. Only <code>:server:shadowJar</code> puts that file into the jar, written by <code>:server:generateBuildInfo</code> on every jar build with the time of the build and <code>git rev-parse HEAD</code> (<code>unknown</code> without a git checkout). A server that does not run from the fat jar (<code>:server:run</code>, <code>installDist</code>, <code>dev.sh</code>, tests) reports <code>dev</code> for both, so compiling and testing do not depend on the time or the commit. The version stays the compile-time constant <code>BuildConfig.VERSION</code>.</p>
+<p>Never verify with <code>./gradlew assemble</code>; it also builds every <code>common-rpc</code> multiplatform target (iOS, tvOS, macOS, Windows, Linux, see <code>common-rpc/build.gradle.kts</code>), which needs toolchains most machines do not have. Verify with the JVM tasks CI runs instead: <code>./gradlew test</code>, <code>./gradlew :server:shadowJar</code>.</p>
+<h2 id="generated-files"><a class="anchor" href="#generated-files">Generated files</a></h2>
+<p>Never hand-edit these; regenerate them instead. CI fails the build if any of them is stale (the <code>build-artifact</code> job of <code>.github/workflows/build.yml</code> runs the generators together with the jars and then <code>git diff --exit-code</code> on their outputs). <code>./gradlew generateDocs</code> runs every generator below in one go.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Generated by</th>
+<th>Runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/docs/rpc_services/">RPC_SERVICES.md</a>, <a href="/docs/models/">MODELS.md</a>, <a href="/docs/permissions/">PERMISSIONS.md</a></td>
+<td><code>./gradlew :common-rpc:kspCommonMainKotlinMetadata</code></td>
+<td>As part of <code>generateDocs</code>, by the pre-commit hook, and by CI's docs-drift check.</td>
+</tr>
+<tr>
+<td><a href="/docs/rest_api/">REST_API.md</a>, and the <code>register*Rest</code> functions in <code>dev.dertyp.routing.rest</code></td>
+<td><code>./gradlew :server:kspKotlin</code></td>
+<td>Automatically as part of any <code>:server</code> compile; also as part of <code>generateDocs</code>, by the pre-commit hook, and by CI's docs-drift check.</td>
+</tr>
+<tr>
+<td><a href="/docs/api_constants/">API_CONSTANTS.md</a></td>
+<td><code>./gradlew :server:generateApiConstantsDocs</code></td>
+<td>As part of <code>generateDocs</code>, by the pre-commit hook, and by CI's docs-drift check.</td>
+</tr>
+<tr>
+<td><a href="/docs/environment_variables/">ENVIRONMENT_VARIABLES.md</a>, <a href="https://github.com/DerTyp7214/synara-api/blob/master/example.env" rel="noopener"><code>example.env</code></a></td>
+<td><code>./gradlew generateEnvDocs</code> (root <code>build.gradle.kts</code>)</td>
+<td>As part of <code>generateDocs</code>, by the pre-commit hook, and by CI's docs-drift check.</td>
+</tr>
+<tr>
+<td><a href="https://synara-insights.dertyp.dev/RELATION_MAP.html" rel="noopener">RELATION_MAP.html</a></td>
+<td><code>python3 scripts/relation-map/generate.py</code> (needs Graphviz)</td>
+<td>By hand for the file in <code>docs/</code>, not part of <code>generateDocs</code> or the build workflow. <code>.github/workflows/pages.yml</code> regenerates it on every push to master and publishes it to the <code>gh-pages</code> branch. The system, credentials, API surface, pipelines, workers, events, startup and build views are curated data in <code>scripts/relation-map/curated/</code>, update them by hand when a flow changes. The workers view groups the workers read from the <code>@WorkerTask</code> annotations, the packages and classes come from the Kotlin sources and the database from the base schema.</td>
+</tr>
+<tr>
+<td><a href="https://synara-insights.dertyp.dev/STATS.html" rel="noopener">STATS.html</a></td>
+<td><code>python3 scripts/commit-stats.py</code></td>
+<td>By hand for the file in <code>docs/</code>, not part of <code>generateDocs</code> or the build workflow. <code>.github/workflows/pages.yml</code> regenerates it on every push to master and publishes it to the <code>gh-pages</code> branch. The numbers change with every commit, so regenerate the file in <code>docs/</code> when they should be current.</td>
+</tr>
+</tbody>
+</table>
+<p>The Kotlin REST clients are generated too, but into a build directory and not into the repository. The Kotlin Multiplatform module <code>:common-rpc:rest-client</code> (<code>common-rpc/rest-client/build.gradle.kts</code>) holds the hand-written runtime in <code>common-rpc/rest-client/src/commonMain/kotlin/dev/dertyp/rpc/rest/client/</code> and runs the <code>rest-compiler</code> KSP processor in client mode, which writes one <code>Rest&#x3C;Name>Service</code> class per <code>@Rpc</code> interface to <code>common-rpc/rest-client/build/generated/ksp/metadata/commonMain/kotlin/dev/dertyp/rpc/rest/client/</code>. Each routed method <code>&#x3C;method></code> also gets a public <code>&#x3C;method>Url</code> builder and a private <code>&#x3C;method>Request</code> function that both use. An interface function named <code>&#x3C;method>Url</code> or <code>&#x3C;method>Request</code> next to a routed <code>&#x3C;method></code> is a KSP error. Which interfaces get a client is not configured there: <code>:common-rpc:compiler</code> writes the list as <code>rpc-interfaces.txt</code> into the build output of <code>:common-rpc</code> while it generates the service registry, and the client module reads that file. The processor takes these options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rest.mode</code></td>
+<td><code>server</code> (default) generates the server routes, <code>client</code> generates the client classes.</td>
+</tr>
+<tr>
+<td><code>rest.client.package</code></td>
+<td>The package of the generated client classes, required in <code>client</code> mode. The module sets <code>dev.dertyp.rpc.rest.client</code>.</td>
+</tr>
+<tr>
+<td><code>rest.interfacesFile</code></td>
+<td>A file with one fully qualified interface name per line that is processed in addition to the interfaces found by the other options. The module passes the <code>rpc-interfaces.txt</code> of <code>:common-rpc</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>The module compiles for the JVM and the same native targets as <code>common-rpc</code>, so verify it with <code>./gradlew :common-rpc:rest-client:compileKotlinJvm</code>. The native C bindings and static libraries of <code>common-rpc</code> no longer exist. A checkout that was built before that change must delete <code>common-rpc/build</code> once, because stale generated sources from the removed JVM KSP run break the compile.</p>
+<p><a href="https://synara-insights.dertyp.dev/" rel="noopener">index.html</a> is written by hand and links both pages. The pages workflow publishes it next to them as the start page and fills in the commit and date of the build.</p>
+<p>If a KSP task reports up-to-date but you know its output should change, touch one of its input source files — Gradle otherwise skips it.</p>
+<h2 id="common-rpc-submodule-workflow"><a class="anchor" href="#common-rpc-submodule-workflow"><code>common-rpc</code> submodule workflow</a></h2>
+<ol>
+<li>Make the interface/model change inside <code>common-rpc/</code> and commit it there first.</li>
+<li>Regenerate the docs and goldens affected by the change (see Generated files, and Tests and goldens above).</li>
+<li>Back in the server repo, stage the updated submodule pointer (<code>git add common-rpc</code>) and commit it together with the server-side change that depends on it and the regenerated docs — this combined commit is the "pointer bump".</li>
+</ol>
+<h2 id="adding-an-rpc-method-end-to-end"><a class="anchor" href="#adding-an-rpc-method-end-to-end">Adding an RPC method end to end</a></h2>
+<ol>
+<li>Declare the method on the service interface in <code>common-rpc/src/commonMain/kotlin</code>, documented with <code>@RpcDoc</code>/<code>@RpcParamDoc</code> (and, for REST, <code>@RestGet</code>/<code>@RestPost</code>/<code>@RestPut</code>/<code>@RestDelete</code>, <code>@RestPath</code>, <code>@RestPublic</code>, <code>@RestFileResponse</code> as needed — all in <code>common-rpc/src/commonMain/kotlin/dev/dertyp/rpc/annotations/Doc.kt</code>). Gate access with <code>@RequiresCapability</code>/<code>@RequiresAdmin</code> (<code>common-rpc/.../data/UserCapability.kt</code>) if it shouldn't be open to every authenticated user.</li>
+<li>Implement it in the server. Find the existing <code>Rpc*Service</code> pattern for the service you're extending with <code>grep -rl "class Rpc" server/src/main/kotlin/dev/dertyp/services</code>.</li>
+<li>Register the service factory in both <code>routing/RpcRegistry.kt</code> (<code>registerAuthenticatedServices</code>/<code>registerPublicServices</code>) and <code>routing/RestRegistry.kt</code> (<code>registerAuthenticatedRestServices</code>/<code>registerPublicRestServices</code>) if it's a new service; an added method on an already-registered service needs no registry change.</li>
+<li>Refresh the REST goldens (<code>-PupdateRestGolden=true</code>, see above) if the route set changed.</li>
+<li>Regenerate <code>RPC_SERVICES.md</code>/<code>MODELS.md</code> and <code>REST_API.md</code> (see Generated files).</li>
+<li>Commit inside the <code>common-rpc</code> submodule, then bump its pointer in the server repo (see the submodule workflow above).</li>
+</ol>
+<h2 id="conventions"><a class="anchor" href="#conventions">Conventions</a></h2>
+<ul>
+<li>Foreign keys are always Exposed <code>reference()</code> columns, never a hand-rolled <code>uuid</code>/<code>varchar</code> id column mirroring another table's id.</li>
+<li>Schema changes are a pair of generated SQL files, see <a href="#schema-changes">Schema changes</a>; data backfills and one-off fixes are custom migrations (<code>migrations/custom/</code>, <code>@Migration("3.33")</code> onward) — see <a href="/docs/architecture/#migrations">ARCHITECTURE.md</a>.</li>
+<li>Recurring/periodic work is a <code>@WorkerTask</code> worker (<code>services/schedule/</code>), never an ad hoc <code>while</code>/<code>delay</code> loop.</li>
+<li>Every write to a table behind a tracked entity (songs, albums, artists, playlists, collections and the per-user likes, follows and timecode tags) is announced through <code>EntityEventPublisher</code> in the same transaction as the write, or classified as bookkeeping in <code>server/src/test/resources/entity-change/write-sites.txt</code>. A write that reaches such a table through a helper rather than directly is listed in <code>indirect-write-sites.txt</code> in the same directory. <code>EntityChangeRecorder</code> subscribes to these announcements and records the change in that transaction. <code>EntityChangeCoverageTest</code> reads both files, enforces this and fails for a write that is neither.</li>
+<li>A custom migration that changes data clients can read announces the changed entities through <code>EntityEventPublisher</code> in the same transaction, like a service does. <code>EntityChangeRecorder.restartTracking()</code> is only for the cases that cannot name what they changed, such as a database restore.</li>
+<li>A reaction to an entity event is a subscriber, not a call a service places after its write. The class implements <code>HookSubscriber</code>, is bound in Koin with <code>bind&#x3C;HookSubscriber>()</code> and subscribes in <code>subscribe(hooks)</code>. <code>configureHooks()</code> (<code>Hooks.kt</code>) calls every bound subscriber before the database is ready, so <code>subscribe</code> and <code>init</code> only register and never read data. <code>HookSubscriberBindingTest</code> fails for a subscriber class that no production module binds as <code>HookSubscriber</code>. Services announce through <code>EntityEventPublisher</code> and do not know who listens.</li>
+<li>A subscriber runs in one of two phases. <code>HookService.inTransaction</code> registers an <code>EntityWriteSubscriber</code> that is called synchronously inside the transaction of the write, and is only for data that must commit or roll back with that write, as <code>EntityChangeRecorder</code> does. Everything else subscribes with <code>HookService.on</code> and runs asynchronously after the commit, with one event per kind and entity type for the whole transaction. Plugins get the after-commit phase only, through <code>HookService.forPlugin</code>, limited to the hook groups they declare (see <a href="/docs/plugins/#hooks">PLUGINS.md</a>).</li>
+<li>A new <code>HookEvent</code> gets its hook group in <code>HookEvent.hookGroup()</code>, or null when only the server reacts to it, as for <code>AlbumsLinkedToMusicBrainz</code>, and a sample in <code>PluginHooks</code>, and a line in <a href="/docs/plugins/#events">PLUGINS.md</a>. <code>PluginHooksTest</code> fails for an event without a sample.</li>
+<li><code>VersionGroupTrigger</code> rebuilds the album version groups after album events: after <code>VERSION_GROUP_REBUILD_QUIET_SECONDS</code> (1) without a further event, and at the latest <code>VERSION_GROUP_REBUILD_MAX_WAIT_SECONDS</code> (5) after the first one that is waiting. Both come from <code>VersionGroupConfig</code>, where a quiet period below one second counts as one second and a maximum wait below the quiet period counts as the quiet period. All commits of one operation therefore lead to one rebuild on complete data.
+<ul>
+<li>Code that changes what the grouping reads without an album event, such as <code>AlbumService.setMusicBrainzId</code> filling in the cached release group, calls <code>VersionGroupTrigger.requestRebuild()</code>, which joins the same wait.</li>
+<li>A caller that needs the groups rebuilt before it continues awaits <code>AlbumService.rebuildVersionGroups()</code> itself.</li>
+<li>A rebuild that is still waiting when the server stops is not run.</li>
+<li>Tests give the trigger shorter waits through <code>RecordedEntityEvents</code>.</li>
+</ul>
+</li>
+<li>REST routes are generated, not hand-written; control them through the <code>common-rpc</code> doc annotations, not by editing <code>routing/rest/</code>.</li>
+</ul>
+<h2 id="schema-changes"><a class="anchor" href="#schema-changes">Schema changes</a></h2>
+<p>The schema starts from a frozen base per database type, and a schema change is a pair of SQL files, one for PostgreSQL and one for SQLite, generated from the table objects.</p>
+<ol>
+<li>Change the table object in <code>server/src/main/kotlin/dev/dertyp/db/</code>.</li>
+<li>Run <code>./gradlew :server:generateMigration -Pname=AddSomething</code>. It needs Docker, or an existing PostgreSQL given with <code>-PpostgresUrl</code>, <code>-PpostgresUser</code> and <code>-PpostgresPassword</code>.</li>
+<li>Review both new files in <code>server/src/main/resources/db/migrations/postgres/</code> and <code>.../sqlite/</code>. Append by hand what Exposed cannot generate, such as search triggers, functions, GIN or expression indexes. Commit both files, even if one of them is empty.</li>
+<li>A released migration and the base (<code>B1_109__Base.sql</code>) are never edited. A correction is a new migration.</li>
+</ol>
+<p>The generator writes what Exposed proposes, and three kinds of change need a correction by hand before the files are committed:</p>
+<ul>
+<li>A renamed column is generated as <code>ADD</code> of the new column and <code>DROP COLUMN</code> of the old one, which deletes its data. Replace both statements by <code>ALTER TABLE ... RENAME COLUMN ... TO ...</code> in both files. The generator prints a warning for a table that gains and loses columns in the same run.</li>
+<li>A new <code>NOT NULL</code> column without a database default (<code>default(...)</code>, not <code>clientDefault</code>) fails on PostgreSQL once the table has rows and always on SQLite. The generator prints a warning for it.</li>
+<li>On SQLite, a changed type, default or nullability of an existing column and a new foreign key on an existing table produce no statement, so the SQLite file stays without them and <code>SchemaDriftTest</code> cannot see the difference on SQLite. The table rebuild (new table, copy, drop, rename) is written by hand.</li>
+</ul>
+<p><code>SchemaDriftTest</code> fails for a table change without a migration, and <code>MigrationFilesTest</code> for a file that exists for only one database type or for a Flyway Kotlin class. Data changes stay custom migrations in the package <code>dev.dertyp.migrations.custom</code>, which is created again with the next one.</p>
+<p>At startup <code>MigrationBaseCheck</code> refuses a database that is not at the base (see <a href="/docs/architecture/#migrations">ARCHITECTURE.md</a>), and the message names the <code>0.0.1-dev</code> image to start first, see <a href="https://github.com/DerTyp7214/synara-api/blob/master/README.md#updating-from-001" rel="noopener">Updating from 0.0.1</a>. Backups carry the schema version they were made at, and a restore applies the same rule before it changes anything, so a new migration needs no change to the backup code.</p>
+<h2 id="listen-sharing"><a class="anchor" href="#listen-sharing">Listen sharing</a></h2>
+<p>Two accounts can be linked so that each sees the other's listens. A link is a row in <code>listen_share</code> (<code>ListenShareTable</code>) with the two user ids stored as an ordered pair (<code>userA</code> &#x3C; <code>userB</code>) and a <code>useForRecommendations</code> flag. Links are pairwise and not transitive. <code>ListenShareService</code> holds the rules: an admin links any two users, a user links itself to another user only while both are linked to the same ListenBrainz account, and an admin or either member can unlink or toggle the flag at any time. A later change of the ListenBrainz link keeps existing links.</p>
+<p>Writes stay per user. Every play is recorded for the account that played it, and ingest, <code>ListenBrainzService</code>, <code>ListenBackupService</code> and the co-occurrence model of <code>RecommendationService</code> never look at links.</p>
+<p>Reads choose their owners through <code>listenOwnerPredicate(userId, scope)</code> in <code>db/ListenTable.kt</code>. It matches the listens of the owner users and of their linked ListenBrainz accounts. The scope has no default, so every query names one:</p>
+<ul>
+<li><code>OWN</code> is the user alone. Linked groups, <code>relinkSong</code> and <code>linkUnmatched</code> use it, because they write overrides and redirects for that user only.</li>
+<li><code>SHARED</code> adds every partner. Recent listens, artists and albums, listening stats and top songs, the MCP listen history and the Subsonic frequent and recent album lists use it.</li>
+<li><code>RECOMMENDATIONS</code> adds the partners of links with <code>useForRecommendations</code> on. <code>ListenService.recentSeedWeights</code> uses it for the listen part, while favourites and super likes stay per user.</li>
+</ul>
+<p><code>ListenService.listensChanged</code> notifies the partners of every affected user as well, so a partner's screens update live. Every link change notifies both members and invalidates the <code>core.listenshare.settings</code> and <code>core.listenshare.admin</code> UI contributions.</p>
+<p>Recent listens, stats and the MCP summary deduplicate plays by time across the merged stream (<code>ListenTable.DEDUP_WINDOW_MS</code>, 2 s). If both linked users play the same song within that window, the two plays count once.</p>
+<h2 id="lyrics-providers"><a class="anchor" href="#lyrics-providers">Lyrics providers</a></h2>
+<p>Every lyrics source is a candidate of the song. <code>LyricsCandidateService</code> (<code>services/lyrics/</code>) stores one row per song and provider in <code>lyrics_candidate</code> (<code>LyricsCandidateTable</code>): a found answer keeps its sync level, match, duration gap, CBOR encoded <code>SyncedLyrics</code> and plain text, a miss keeps only the time it was asked, and a failed lookup (a provider error or exception) is stored with status <code>ERROR</code> and the time it failed. <code>ERROR</code> rows are bookkeeping only: they are never a candidate, never ranked, never the default and never count for lyrics info, tag filters, lyrics search or <code>LyricsSyncWorker</code>.</p>
+<p>Three candidates are virtual and never stored:</p>
+<ul>
+<li><code>song</code> is <code>SongTable.lyrics</code> (parsed as LRC, so an LRC text is line synced).</li>
+<li><code>whisperx</code> is the transcription in <code>synced_lyrics</code>.</li>
+<li><code>manual</code> is a stored row written by <code>setSyncedLyrics</code> and <code>importSyncedLyrics</code>.</li>
+</ul>
+<p>Virtual candidate ids are the song id XORed with a mask derived from the provider id, so they stay stable without a row.</p>
+<p>Providers live in <code>services/lyrics/providers/</code> and implement <code>LyricsProvider</code>. <code>LyricsProviderRegistry</code> enables them in the order of <code>LYRICS_PROVIDERS</code> (<code>lyrics.providers</code> in <code>application.yaml</code>). Unknown ids are logged and skipped, and an empty list leaves only the sidecar reader. <code>LyricsHttp</code> applies the shared HTTP rules (401, 403, 404 and 410 are a miss, cross-host redirects are refused, bodies are capped at 512 KiB), and every request goes through <code>HttpClientQueueService</code>, which spaces requests per host. The provider hosts wait 2 s between requests, while <code>lrclib.net</code> keeps the default 250 ms because <code>LrcLibWorker</code> also uses it. Interactive lookups run at <code>HIGH</code> priority, the worker at <code>LOW</code>.</p>
+<p>Answers are parsed in <code>services/lyrics/parse/</code> (TTML, enhanced LRC, KRC, LyricsPlus JSON and Lyricsfile YAML) into <code>ParsedLyrics</code> by <code>LyricsAssembler</code>, which sanitises text, enforces the line and word limits and keeps word timing per line only when every word of the line is timed and the words spell the line text. <code>TrackMatcher</code> compares the title, artist and duration a provider reports with the song. A mismatch is stored as a miss.</p>
+<p>Ranking orders candidates by: <code>manual</code> first, then <code>sidecar</code>, then the rest, then sync level (word before line before plain, an instrumental answer counts as line), then <code>whisperx</code> after online candidates of the same level, then <code>VERIFIED</code> before <code>PROVIDER</code>, then the position in <code>LYRICS_PROVIDERS</code>, then the smaller duration gap. The default candidate is the one pinned through <code>SongTable.preferredLyricsCandidate</code>, otherwise the best ranked one. Ranks are written to the <code>rank</code> column after every change, and every write announces the song through <code>EntityEventPublisher</code>.</p>
+<p>An interactive lookup (<code>findLyrics</code>, <code>streamLyrics</code>, <code>findLyricsByQuery</code>) asks every provider in parallel with a 12 s timeout. Providers that have not answered by then are returned as <code>pending</code> and nothing is stored for them.</p>
+<p>A provider is asked again when:</p>
+<ul>
+<li>it was never asked,</li>
+<li>its error is older than 3 days,</li>
+<li>its miss is older than 14 days, or</li>
+<li>its line synced answer is older than 14 days (a later line answer only refreshes the time, a word answer replaces it).</li>
+</ul>
+<p>A failed lookup turns a missing row or a miss into an <code>ERROR</code> row and refreshes the time of an existing error, and a found answer stays unchanged with only a new fetch time. <code>refresh</code> asks every provider regardless. The sidecar reader is asked on every lookup: it reads <code>&#x3C;audio name>.lyricsfile.yaml</code>, <code>.ttml</code> and <code>.lrc</code> next to the audio file (in that order, at most 256 KiB), and a vanished sidecar file removes its candidate.</p>
+<p><code>LyricsProviderWorker</code> (nightly, <code>0 5 * * *</code>) takes the songs <code>LyricsCandidateService.songsDue</code> returns, which applies the same retry rules as a lookup, and calls <code>findLyrics</code> at <code>LOW</code> priority for each without the 12 s deadline, so every provider either answers or fails through its own HTTP timeout and gets a row. <code>LyricsSyncWorker</code> skips songs that already have a found word synced candidate. Song lists carry a <code>SongLyricsInfo</code> summary built by <code>lyricsInfoFor</code> in one grouped query per chunk, <code>searchByLyrics</code> also searches the plain text of found candidates, and Subsonic <code>getLyricsBySongId</code> serves the default candidate when it is synced. A remote mirror copies only the remote <code>song</code> candidate into <code>SongTable.lyrics</code>, written as LRC when it is synced.</p>
+<h2 id="proxy-tunnel-protocol"><a class="anchor" href="#proxy-tunnel-protocol">Proxy tunnel protocol</a></h2>
+<p>The standalone <code>:proxy</code> and the server share one binary protocol on the websocket that the server opens to <code>/proxy/server</code>. The code is in <code>common-proxy/src/main/kotlin/dev/dertyp/proxy/</code> (<code>Protocol.kt</code>, <code>HttpTunnel.kt</code>) and is used by <code>:proxy</code> (<code>Application.kt</code>, <code>HttpTunnelRoute.kt</code>) and by the server (<code>services/ReverseProxyService.kt</code>, <code>services/ReverseProxyHttpGateway.kt</code>). The request flow and the path scope are in <a href="/docs/architecture/#reverse-proxy">ARCHITECTURE.md</a>.</p>
+<p>Every frame is binary: <code>[u8 type][16-byte id][u8 subType][payload]</code>. The id is the client id of a kRPC connection or the stream id of an HTTP request. Numbers are big endian.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Message</th>
+<th>subType</th>
+<th>Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>NewClient</code></td>
+<td>0</td>
+<td>JSON <code>{uri, headers}</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>ClientFrame</code></td>
+<td>1 for a binary websocket frame, else 0</td>
+<td>the frame bytes</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>ClientDisconnected</code></td>
+<td>0</td>
+<td>none</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>AssignedId</code></td>
+<td>0</td>
+<td>the instance id as UTF-8 text</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>Ping</code></td>
+<td>0</td>
+<td>none</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>Pong</code></td>
+<td>0</td>
+<td>none</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>HttpRequest</code></td>
+<td>bit 0 set when the request has no body</td>
+<td><code>[u8 methodLength][method, ASCII][u32 uriLength][uri, UTF-8][headers]</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>HttpResponse</code></td>
+<td>bit 0 set when the response has no body</td>
+<td><code>[u16 status][headers]</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>HttpBody</code></td>
+<td>bit 0 set on the last chunk</td>
+<td>up to 65536 bytes of body</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>HttpReset</code></td>
+<td>the reason</td>
+<td>none</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>HttpWindow</code></td>
+<td>0</td>
+<td><code>[u32 increment]</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>headers</code> is <code>[u16 count]</code> followed by <code>count</code> entries of <code>[u16 nameLength][name][u32 valueLength][value]</code>. A name with several values is sent as several entries. The proxy removes hop-by-hop headers (<code>Connection</code> and the headers it names, <code>Keep-Alive</code>, <code>Transfer-Encoding</code>, <code>Upgrade</code> and the like) in both directions, and <code>Host</code>, <code>Expect</code> and <code>HTTP2-Settings</code> from requests. The <code>uri</code> is the request target without the instance id prefix. A frame that cannot be decoded is dropped.</p>
+<p>A header value travels in the frame as text with one character per byte of the header line, written as UTF-8. Netty reads header bytes that way, and the gateway converts on both sides of its loopback client, which reads and writes header text as UTF-8. A value whose bytes are valid UTF-8, plain ASCII included, therefore has the same bytes with and without the proxy, in requests and in responses. A value whose bytes are not valid UTF-8 is not byte-exact: in a request every byte from <code>0x80</code> on arrives at the server as the two bytes of its UTF-8 form, and in a response the bytes that are not UTF-8 reach the client as <code>?</code>. The file name in the <code>Content-Disposition</code> header of the file routes is not such a value: the header is plain ASCII, with the exact name percent-encoded in <code>filename*</code>, so it has the same bytes with and without the proxy. <code>ReverseProxyRestEndToEndTest</code> compares request header values and that file name header with direct access.</p>
+<p><code>HttpReset</code> reasons: <code>CANCEL</code> (0), <code>REFUSED</code> (1, no free stream), <code>INTERNAL</code> (2), <code>PROTOCOL</code> (3, a peer broke the rules of the protocol) and <code>HEAD_TOO_LARGE</code> (4). An unknown code reads as <code>INTERNAL</code>. The proxy turns <code>REFUSED</code> into <code>503</code>, <code>HEAD_TOO_LARGE</code> into <code>431</code> and every other reset before the response head into <code>502</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Value</th>
+<th>Constant in <code>HttpTunnel</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Body chunk</td>
+<td>65536 bytes</td>
+<td><code>BODY_CHUNK_SIZE</code></td>
+</tr>
+<tr>
+<td>Initial window per stream and direction</td>
+<td>262144 bytes</td>
+<td><code>INITIAL_WINDOW</code></td>
+</tr>
+<tr>
+<td>Window grant threshold</td>
+<td>65536 bytes</td>
+<td><code>WINDOW_GRANT_THRESHOLD</code></td>
+</tr>
+<tr>
+<td>Request head or response head</td>
+<td>65536 bytes</td>
+<td><code>MAX_HEAD_SIZE</code></td>
+</tr>
+<tr>
+<td>Open HTTP streams per tunnel</td>
+<td>128</td>
+<td><code>MAX_CONCURRENT_STREAMS</code></td>
+</tr>
+</tbody>
+</table>
+<p>Flow control is a credit per stream and per direction, so a slow reader of one response holds back only that stream. The sender of body bytes may send as many bytes as it has credit, starting with the initial window (<code>HttpSendWindow</code>). The receiver counts the bytes that arrived against its window (<code>HttpReceiveWindow</code>). A frame that exceeds the window is a protocol violation and resets the stream with <code>PROTOCOL</code>. Once the receiver has handed at least the grant threshold of bytes on to its consumer, it sends an <code>HttpWindow</code> frame with that number. A grant that would overflow the credit is a violation too. The head, the empty last <code>HttpBody</code> and the reset frames cost no credit. <code>kRPC</code> frames (<code>ClientFrame</code>) have no credit. The proxy queues them per client without a bound, so a kRPC client that stops reading costs memory on the proxy and does not delay the HTTP streams of the same instance.</p>
+<p>Capability: the server adds <code>http=1</code> to the query of its <code>/proxy/server</code> registration. A proxy that does not know the parameter ignores it and tunnels kRPC only. A proxy that knows it and receives a registration without it answers HTTP requests for that instance with <code>501</code>. A server never sends an HTTP frame unless the proxy sent one first, so an older server that does not know the types is not affected.</p>
+<p>Operational notes:</p>
+<ul>
+<li>A reverse proxy in front of the Synara proxy (nginx and similar) must not buffer responses, or SSE events are delayed.</li>
+<li>The proxy disconnects a client that reads nothing for 10 seconds while data is pending (the response write timeout of Netty).</li>
+<li>There is no environment variable for any of this.</li>
+</ul>
+<h2 id="dependency-updates"><a class="anchor" href="#dependency-updates">Dependency updates</a></h2>
+<p><code>check_updates.py</code> (repo root) reads <code>gradle/libs.versions.toml</code>, checks Maven Central and JitPack for newer compatible versions of each dependency, and prints <code>key=version</code> lines for anything outdated:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF"> check_updates.py</span></span></code></pre>
+<p>Review the output (redirect it to a file such as <code>updates.txt</code> if that's easier to work through) and apply the version bumps you want to <code>gradle/libs.versions.toml</code> by hand.</p>
+<h2 id="troubleshooting"><a class="anchor" href="#troubleshooting">Troubleshooting</a></h2>
+<ul>
+<li><strong>Build fails with <code>common-rpc</code> sources missing</strong>: the repo was cloned without submodules; run <code>git submodule update --init --recursive</code>.</li>
+<li><strong>CI fails on "Verify generated docs are current"</strong>: a change touched RPC interfaces, REST routes, or environment variables without regenerating the corresponding doc; run the generator locally (see Generated files) and commit the diff.</li>
+<li><strong>PostgreSQL-backed tests fail immediately with a container error</strong>: Testcontainers couldn't reach Docker; make sure Docker is running and <code>DOCKER_HOST</code> is unset or points at a working daemon (CI sets it to <code>unix:///var/run/docker.sock</code>).</li>
+<li><strong><code>./gradlew assemble</code> fails</strong>: it also builds every <code>common-rpc</code> native target (iOS, tvOS, macOS, Windows, Linux), which needs toolchains most machines do not have; use <code>./gradlew test</code> or <code>./gradlew :server:shadowJar</code> instead.</li>
+</ul><!----></article> <footer class="doc-foot svelte-dre9m0"><a class="edit svelte-dre9m0" href="https://github.com/DerTyp7214/synara-api/blob/9e312cdbed8659eb53f53af5f0f3af6588f2fd31/docs/DEVELOPMENT.md" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-github size-4" aria-hidden="true"><!--[--><!----><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"><!----></path><!----><!----><path d="M9 18c-4.51 2-5-2-7-2"><!----></path><!----><!--]--><!----><!----></svg><!----> Edit on GitHub <span class="sha svelte-dre9m0">DEVELOPMENT.md @ 9e312cd</span></a> <nav class="pn svelte-dre9m0" aria-label="Previous and next"><!--[--><a href="/docs/architecture/" class="prev svelte-dre9m0"><small class="legend svelte-dre9m0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-arrow-left size-3.5" aria-hidden="true"><!--[--><!----><path d="m12 19-7-7 7-7"><!----></path><!----><!----><path d="M19 12H5"><!----></path><!----><!--]--><!----><!----></svg><!----> Previous</small> <span class="svelte-dre9m0">Architecture</span></a><!--]--> <!--[--><a href="/docs/deprecations/" class="next svelte-dre9m0"><small class="legend svelte-dre9m0">Next <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-arrow-right size-3.5" aria-hidden="true"><!--[--><!----><path d="M5 12h14"><!----></path><!----><!----><path d="m12 5 7 7-7 7"><!----></path><!----><!--]--><!----><!----></svg><!----></small> <span class="svelte-dre9m0">Deprecations</span></a><!--]--></nav></footer></div> <!--[--><aside class="toc svelte-dre9m0" aria-label="On this page"><h2 class="legend svelte-dre9m0">On this page</h2> <div class="toc-scroll svelte-dre9m0"><div class="toc-body svelte-ffhs5h"><!--[!--><!--]--> <!--[!--><!--]--> <ul id="toc-side-list" class="groups svelte-ffhs5h"><!--[--><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#clone"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Clone</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#prerequisites"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Prerequisites</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#configuration"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Configuration</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#running"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Running</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#git-hooks"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Git hooks</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#tests-and-goldens"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Tests and goldens</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#generated-files"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Generated files</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#common-rpc-submodule-workflow"><span class="led svelte-ffhs5h" aria-hidden="true"></span>common-rpc submodule workflow</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#adding-an-rpc-method-end-to-end"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Adding an RPC method end to end</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#conventions"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Conventions</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#schema-changes"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Schema changes</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#listen-sharing"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Listen sharing</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#lyrics-providers"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Lyrics providers</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#proxy-tunnel-protocol"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Proxy tunnel protocol</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#dependency-updates"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Dependency updates</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#troubleshooting"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Troubleshooting</a><!--]--><!--]--></li><!--]--></ul></div><!----></div></aside><!--]--></div><!----><!----></div></div><!----><!--]--><!----></main> <div class="design-retro contents"><footer class="rear mt-auto svelte-1kbsrt"><div class="shell py-12 md:py-16"><div class="vents svelte-1kbsrt" aria-hidden="true"></div> <div class="mt-10 grid gap-10 md:grid-cols-[1fr_1fr_minmax(0,1.35fr)] md:gap-12"><nav aria-labelledby="footer-source"><h2 id="footer-source" class="legend">On GitHub</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Server source</a></li><li><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Desktop app source</a></li><li><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Releases</a></li><!--]--></ul></nav> <nav aria-labelledby="footer-site"><h2 id="footer-site" class="legend">Synara</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="/apps/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Apps</a></li><li><a href="/docs/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Docs</a></li><li><a href="/server/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Run a server</a></li><li><a href="/download/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Download</a></li><li><a href="/privacy/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Privacy</a></li><!--]--></ul></nav> <div class="plate svelte-1kbsrt"><span class="screw top-2 left-2" aria-hidden="true"></span> <span class="screw top-2 right-2" style="--screw-angle: -20deg" aria-hidden="true"></span> <span class="screw bottom-2 left-2" style="--screw-angle: 80deg" aria-hidden="true"></span> <span class="screw right-2 bottom-2" aria-hidden="true"></span> <a href="/" class="inline-flex items-center gap-2.5 rounded-sm text-ink" aria-label="Synara home"><!--$s3--><svg width="100%" height="100%" class="h-7 w-auto" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s3)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-3 w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="model svelte-1kbsrt">Model SR-1</span></a> <p class="mt-4 text-[0.9375rem] text-muted">A music server you run yourself, with native apps that play your library bit for bit.</p> <dl class="ratings svelte-1kbsrt"><div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Server</dt> <dd class="svelte-1kbsrt">GPL-2.0</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Apps</dt> <dd class="svelte-1kbsrt">Free</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Made</dt> <dd class="svelte-1kbsrt">© 2026 Synara</dd></div></dl></div></div></div></footer><!----></div> <div class="design-modern contents"><footer class="m-footer mt-auto svelte-tqky0e"><div class="shell"><div class="cols svelte-tqky0e"><div class="about svelte-tqky0e"><a href="/" class="brand svelte-tqky0e" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s4--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s4)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <p class="tagline svelte-tqky0e">A music server you run yourself, with native apps that play your library bit for bit.</p></div> <nav aria-labelledby="m-footer-site"><h2 id="m-footer-site" class="group-h svelte-tqky0e">Synara</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="/apps/" class="svelte-tqky0e">Apps</a></li><li class="svelte-tqky0e"><a href="/docs/" class="svelte-tqky0e">Docs</a></li><li class="svelte-tqky0e"><a href="/server/" class="svelte-tqky0e">Run a server</a></li><li class="svelte-tqky0e"><a href="/download/" class="svelte-tqky0e">Download</a></li><li class="svelte-tqky0e"><a href="/privacy/" class="svelte-tqky0e">Privacy</a></li><!--]--></ul></nav> <nav aria-labelledby="m-footer-source"><h2 id="m-footer-source" class="group-h svelte-tqky0e">On GitHub</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="svelte-tqky0e">Server source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="svelte-tqky0e">Desktop app source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="svelte-tqky0e">Releases</a></li><!--]--></ul></nav></div> <div class="base svelte-tqky0e"><p>Server: GPL-2.0, apps free</p> <p>© 2026 Synara</p></div></div></footer><!----></div></div><!--]--><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_3zbfyr = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../internal/immutable/entry/start.ZGwwYrzZ.js"),
+						import("../../internal/immutable/entry/app.DMIzLkDz.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 6],
+							data: [null,{type:"data",data:{nav:[{title:"Start",items:[{title:"Overview",href:"/docs/"}]},{title:"Build a client",items:[{title:"Getting Started as a Client",href:"/docs/client_getting_started/",description:"The four API surfaces, picking one, and a first login-and-search call. Start here."},{title:"Kotlin RPC Client Guide",href:"/docs/client_kotlin_rpc/",description:"Using the common-rpc Kotlin/KMP SDK: BaseRpcServiceManager, login, services, streaming Flows."},{title:"REST for Client Developers",href:"/docs/client_rest/",description:"The HTTP/JSON surface for non-Kotlin clients: route derivation, parameter binding, authentication."},{title:"Authentication",href:"/docs/authentication/",description:"Logging in, JWTs and refresh tokens, API keys, and how each is presented over RPC and REST."},{title:"Streaming and Playback",href:"/docs/streaming_and_playback/",description:"Streaming audio, transcoding, queues and multi-device playback sync."},{title:"API Versioning",href:"/docs/api_versioning/",description:"The API-version and UI-schema-version headers and how the server adapts responses to older clients."},{title:"Server-Driven UI",href:"/docs/server_driven_ui/",description:"Rendering server-described UI (slots, pages, home cards, hooks), with the importer as a worked example."},{title:"Client Settings",href:"/docs/client_settings/",description:"Keeping client settings on the server, synced across devices or per device."},{title:"Synara Mock Server",href:"/docs/mock_server/",description:"Running a mock server that generates dummy RPC/REST responses for client development."}]},{title:"Reference",items:[{title:"Synara RPC Services Documentation",href:"/docs/rpc_services/",description:void 0},{title:"Synara Data Models",href:"/docs/models/",description:void 0},{title:"Synara Permissions",href:"/docs/permissions/",description:void 0},{title:"Synara REST API",href:"/docs/rest_api/",description:void 0},{title:"Synara API Constants",href:"/docs/api_constants/",description:void 0},{title:"Environment Variables Documentation",href:"/docs/environment_variables/",description:void 0},{title:"Relation map",href:"https://synara-insights.dertyp.dev/RELATION_MAP.html",description:void 0,external:true},{title:"Commit stats",href:"https://synara-insights.dertyp.dev/STATS.html",description:void 0,external:true}]},{title:"Extend the server",items:[{title:"Synara Custom Plugins",href:"/docs/plugins/",description:"Writing a plugin (ISynaraPlugin): importers, indexers, routes, scheduled tasks, server-driven UI."},{title:"Synara MCP (listen history)",href:"/docs/mcp/",description:"The read-only Model Context Protocol endpoint for querying listening history from an AI assistant."},{title:"Synara Listen Backup",href:"/docs/listen_backup/",description:"Running a standalone receiver that keeps a copy of listening history."},{title:"Synara Credential Server",href:"/docs/credential_server/",description:"Running a standalone server that hands third-party credentials to Synara servers and plugins."}]},{title:"Work on the server",items:[{title:"Architecture",href:"/docs/architecture/",description:"Module map, request flow, package layout, DI, workers, migrations, generators."},{title:"Development",href:"/docs/development/",description:"Cloning, running, testing, the common-rpc submodule workflow, adding an RPC method, troubleshooting."},{title:"Deprecations",href:"/docs/deprecations/",description:"Checklist of what to remove or change when an API, UI schema or plugin API version bump reaches a target version."}]}]},uses:{}},{type:"data",data:{title:"Development",path:"/docs/development/",hasMermaid:false,toc:[{id:"clone",text:"Clone",depth:2},{id:"prerequisites",text:"Prerequisites",depth:2},{id:"configuration",text:"Configuration",depth:2},{id:"running",text:"Running",depth:2},{id:"git-hooks",text:"Git hooks",depth:2},{id:"tests-and-goldens",text:"Tests and goldens",depth:2},{id:"generated-files",text:"Generated files",depth:2},{id:"common-rpc-submodule-workflow",text:"common-rpc submodule workflow",depth:2},{id:"adding-an-rpc-method-end-to-end",text:"Adding an RPC method end to end",depth:2},{id:"conventions",text:"Conventions",depth:2},{id:"schema-changes",text:"Schema changes",depth:2},{id:"listen-sharing",text:"Listen sharing",depth:2},{id:"lyrics-providers",text:"Lyrics providers",depth:2},{id:"proxy-tunnel-protocol",text:"Proxy tunnel protocol",depth:2},{id:"dependency-updates",text:"Dependency updates",depth:2},{id:"troubleshooting",text:"Troubleshooting",depth:2}],editUrl:"https://github.com/DerTyp7214/synara-api/blob/9e312cdbed8659eb53f53af5f0f3af6588f2fd31/docs/DEVELOPMENT.md",file:"DEVELOPMENT.md",sha:"9e312cd",prev:{title:"Architecture",href:"/docs/architecture/"},next:{title:"Deprecations",href:"/docs/deprecations/"}},uses:{params:["slug"],parent:1}}],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

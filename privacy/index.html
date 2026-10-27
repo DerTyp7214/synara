@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en" data-design="modern">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f1f1" media="(prefers-color-scheme: light)" />
+
+    <script>
+      // Before first paint: apply the stored theme ("light" | "dark" | absent = follow the system) and
+      // design ("modern" | "retro" | absent = Modern). ?design=modern|retro applies and saves a design.
+      // The HTML ships with data-design="modern"; Retro is expressed by removing it.
+      // Colours: design x theme, keep in sync with $lib/theme.ts (META_COLOR) and the style below.
+      ;(function () {
+        var d = document.documentElement,
+          t = null,
+          g = null,
+          q = null
+        try {
+          t = localStorage.getItem('synara-theme')
+          g = localStorage.getItem('synara-design')
+        } catch (e) {}
+        try {
+          q = new URLSearchParams(location.search).get('design')
+        } catch (e) {}
+        if (q === 'modern' || q === 'retro') {
+          g = q
+          try {
+            localStorage.setItem('synara-design', q)
+          } catch (e) {}
+        }
+        var modern = g !== 'retro'
+        if (!modern) d.removeAttribute('data-design')
+        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t)
+        var c = modern
+          ? { light: '#f1f1f1', dark: '#0e0e0e' }
+          : { light: '#e6e5e0', dark: '#1c1c1e' }
+        if (!modern || t === 'light' || t === 'dark') {
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            var k =
+              t === 'light' || t === 'dark'
+                ? t
+                : m.getAttribute('media').indexOf('light') >= 0
+                  ? 'light'
+                  : 'dark'
+            m.setAttribute('content', c[k])
+          })
+        }
+        // Preload only the active design's fonts. Modern sets type in SF on Apple platforms and in
+        // self-hosted Inter elsewhere; Retro uses Barlow and Barlow Condensed.
+        var fonts = modern
+          ? /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+            ? []
+            : ['Inter-var']
+          : ['Barlow-400', 'BarlowCondensed-600']
+        fonts.forEach(function (f) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.href = '/fonts/' + f + '.woff2'
+          l.as = 'font'
+          l.type = 'font/woff2'
+          l.crossOrigin = 'anonymous'
+          document.head.appendChild(l)
+        })
+      })()
+    </script>
+    <style>
+      html {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']) {
+          background-color: #e6e5e0;
+          color: #1b1b1a;
+          color-scheme: light;
+        }
+      }
+      html[data-theme='light'] {
+        background-color: #e6e5e0;
+        color: #1b1b1a;
+        color-scheme: light;
+      }
+      html[data-theme='dark'] {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      html[data-design='modern'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+      @media (prefers-color-scheme: light) {
+        html[data-design='modern']:not([data-theme='dark']) {
+          background-color: #f1f1f1;
+          color: #201a17;
+        }
+      }
+      html[data-design='modern'][data-theme='light'] {
+        background-color: #f1f1f1;
+        color: #201a17;
+      }
+      html[data-design='modern'][data-theme='dark'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+    </style>
+
+    <meta
+      name="description"
+      content="Synara is a self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Synara" />
+    <meta property="og:title" content="Synara" />
+    <meta
+      property="og:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta property="og:image" content="https://synara.audio/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Synara ribbon logo next to the words: your music, bit for bit."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Synara" />
+    <meta
+      name="twitter:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta name="twitter:image" content="https://synara.audio/og.png" />
+
+    
+		<link href="../internal/immutable/assets/0.BNQnLckt.css" rel="stylesheet">
+		<link rel="modulepreload" href="../internal/immutable/entry/start.ZGwwYrzZ.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/DNpxTNuS.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/CePLiJTx.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/y9Sl5bMM.js">
+		<link rel="modulepreload" href="../internal/immutable/entry/app.DMIzLkDz.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/PPVm8Dsz.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/DsnmJJEf.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/B7aqIt7k.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/CYooVA3G.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/gPZRW6-w.js">
+		<link rel="modulepreload" href="../internal/immutable/nodes/0.DZac87Gf.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/DiYe1c4J.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/Z02Du5iI.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/ebLNhQ_I.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/DSjgm90S.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/D4E3Eq-t.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/BRKCcKFl.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/CkFSaI46.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/Ce9QgSdz.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/C-iAWfLw.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/D0l9Ew2l.js">
+		<link rel="modulepreload" href="../internal/immutable/chunks/BEnBgVf7.js">
+		<link rel="modulepreload" href="../internal/immutable/nodes/8.l2JEd3Xn.js"><!--12qhfyh--><!----><!--7ke6fz--><meta name="description" content="What data the Synara apps and this website process, and where it goes."/><!----><title>Privacy policy | Synara</title>
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[--><!----><!--[!--><a href="#main" class="key key-primary key-sm fixed top-3 left-3 z-[60] -translate-y-20 focus:translate-y-0">Skip to content</a> <div class="flex min-h-dvh flex-col"><div class="design-retro contents"><header class="strip sticky top-0 z-50 svelte-39r4fj"><div class="shell flex h-(--header-h) items-center gap-4 md:gap-6"><a href="/" class="flex shrink-0 items-center gap-3 rounded-sm text-[0.95rem] text-ink" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s1--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s1)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----> <span class="model svelte-39r4fj" aria-hidden="true">SR-1</span></a> <nav aria-label="Main" class="hidden min-[54rem]:block"><ul class="bank svelte-39r4fj"><!--[--><li><a href="/#features" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Features</a></li><li><a href="/apps/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Apps</a></li><li><a href="/docs/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Docs</a></li><li><a href="/server/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Server</a></li><li><a href="/download/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Download</a></li><!--]--></ul></nav> <div class="ml-auto flex items-center gap-2"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <button type="button" class="switch  svelte-m6oq99" aria-label="Theme: System. Switch to light." title="Theme: System"><span class="legends svelte-m6oq99" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor size-2.5 on"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun size-2.5 "><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon size-2.5 "><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----></span> <span class="slot svelte-m6oq99" aria-hidden="true"><span class="lever svelte-m6oq99" style="transform: translateX(0%)"></span></span></button><!----> <span class="power hidden sm:inline-flex svelte-39r4fj" aria-hidden="true"><span class="led ok svelte-39r4fj"></span>Power</span> <button type="button" class="key key-icon min-[54rem]:hidden" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></header><!----></div> <div class="design-modern contents"><header class="m-header svelte-1y2ms2o"><div class="shell svelte-1y2ms2o"><div class="bar glass svelte-1y2ms2o"><a href="/" class="brand svelte-1y2ms2o" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s2--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s2)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <nav aria-label="Main" class="tabs svelte-1y2ms2o"><ul class="svelte-1y2ms2o"><!--[--><li><a href="/#features" class="tab svelte-1y2ms2o">Features</a></li><li><a href="/apps/" class="tab svelte-1y2ms2o">Apps</a></li><li><a href="/docs/" class="tab svelte-1y2ms2o">Docs</a></li><li><a href="/server/" class="tab svelte-1y2ms2o">Server</a></li><li><a href="/download/" class="tab svelte-1y2ms2o">Download</a></li><!--]--></ul></nav> <div class="trailing svelte-1y2ms2o"><div class="appearance svelte-1y2ms2o"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <div role="radiogroup" aria-label="Appearance" class="seg   svelte-7qw6a6"><span class="thumb svelte-7qw6a6" aria-hidden="true"></span> <!--[--><button type="button" role="radio" aria-checked="true" tabindex="0" title="System" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor seg-icon" aria-hidden="true"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">System</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Light" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun seg-icon" aria-hidden="true"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Light</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Dark" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon seg-icon" aria-hidden="true"><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Dark</span></button><!--]--></div><!----></div> <button type="button" class="menu-btn svelte-1y2ms2o" aria-expanded="false" aria-controls="m-menu" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></div></header><!----></div> <main id="main" class="flex-1"><!--[!--><!----><section class="pt-10 pb-(--section-space) md:pt-16"><div class="shell-narrow"><h1 class="h-display">Privacy policy</h1> <p class="meta mt-4">Last updated: <span class="readout">2026-10-27</span></p> <article class="prose mt-10"><p>Synara is a client application for self-hosted Synara media servers. This policy describes
+        what data the Synara apps (iOS, iPadOS, watchOS, tvOS, macOS, Android, and the desktop app
+        for Linux, Windows and macOS, including CarPlay, widgets, the share extension and the
+        Android live wallpaper) process and where it goes.</p> <h2>This website</h2> <ul><li>This website has no analytics, no ads and no cookies.</li> <li>It stores your theme choice (<code>synara-theme</code>, in <code>localStorage</code>) and,
+          on the download page, a 10-minute cache of release info (in <code>sessionStorage</code>).
+          Neither leaves your device.</li> <li>The download page asks <code>api.github.com</code> for release info.</li> <li>The share page (<code>/share/</code>) makes requests from your browser to look up the
+          song, album or artist in a share link: <ul><li>It sends only the ISRC or UPC to <code>linkresolver.synara.audio</code> (Synara's link resolver).</li> <li>It sends the title and artist, or the ISRC/UPC, to <code>itunes.apple.com</code>.</li> <li>It sends the MusicBrainz ID to <code>musicbrainz.org</code>, only when the resolver
+              found no links.</li> <li>It loads cover art from the image host the lookup returns, such as Apple's CDN.</li> <li>Like any web request, these include your IP address.</li></ul></li> <li>The song details are part of the share link itself, so they are included when your browser
+          loads the page.</li> <li>The site is hosted on GitHub Pages, which may process your IP address in its server logs
+          under GitHub's own privacy policy.</li></ul> <h2>Summary</h2> <ul><li>Synara does not collect analytics, does not show ads, and does not track you across apps
+          or websites.</li> <li>The app communicates with the media server <strong>you</strong> configure. Your server's operator
+          controls all data stored on that server.</li> <li>Your account data, listening history, and library content are stored on your own media
+          server, not by the developer of Synara. The apps never send anything to the developer,
+          apart from the song identifier and your IP address reaching Synara's link resolver when
+          you open a share page.</li></ul> <h2>Data stored on your device</h2> <ul><li><strong>Server address and credentials</strong>: the host, port and login you enter are
+          stored on the device so you stay signed in. <ul><li>On Apple platforms, the session token and any scrobbling credentials (ListenBrainz,
+              Last.fm) are stored in the system Keychain.</li> <li>On Android and desktop they are stored in the app's private settings. On Android this
+              storage is included in Android's own device backup and transfer.</li></ul></li> <li><strong>Library cache</strong>: metadata (songs, albums, artists, playlists, cover art)
+          fetched from your server is cached locally for performance and offline use. On Apple
+          platforms, library items are also added to the on-device Spotlight index.</li> <li><strong>Offline downloads</strong>: songs you choose to download are stored in the app's
+          private storage. On macOS you can choose to also show them in your Music folder, and on
+          Android they can be opened from the system Files app.</li> <li><strong>Listening statistics</strong>: recent plays are buffered locally and sent to your
+          own server. They are also shown in widgets via a shared app group container on your
+          device, and on Apple Watch via the watch's own connection to your server and your iPhone.</li> <li><strong>Settings</strong>: playback, appearance and sync preferences.</li></ul> <p>Signing out removes your server session. Scrobbling credentials stay configured until you
+        remove them in Settings. The cached library, downloads and settings stay on the device until
+        you delete the app. Deleting the app removes its containers. On macOS you can also use
+        "Clear data" in Settings. On Apple platforms, sign out before deleting the app if you also
+        want the Keychain entry removed, as the system may keep Keychain items after an app is
+        deleted.</p> <h2>Data sent to your media server</h2> <p>Everything you do in the app (browsing, playing, searching, creating playlists, downloading,
+        listening history) is exchanged with the Synara server you configured. Podcast episodes are
+        also played through your server. Synara the app does not operate that server. Refer to your
+        server operator for how it handles your data.</p> <ul><li><strong>Settings sync</strong> (optional): if you turn it on, your app preferences are stored
+          on your server so your devices match. Scrobbling credentials are only included if you also turn
+          on secrets sync and set a passphrase. They are encrypted on your device with that passphrase
+          before upload.</li> <li><strong>ListenBrainz account link</strong> (optional): if you link a ListenBrainz account to
+          your server, your ListenBrainz username (and token, if you enter one) is stored on your server,
+          which then imports your ListenBrainz listens.</li> <li><strong>Server-side link resolver</strong> (operator option): if your server's operator
+          enables it, the server can send track and album identifiers and streaming links to
+          Synara's link resolver (<code>linkresolver.synara.audio</code>) to find matching streaming
+          links.</li></ul> <h2>Third-party services</h2> <p>The following connections are only made when you enable or use the corresponding feature:</p> <ul><li><strong>MusicBrainz</strong> (<code>musicbrainz.org</code>) and <strong>Cover Art Archive</strong> (<code>coverartarchive.org</code>): used to look up recordings, releases and artwork. This
+          happens when you: <ul><li>use the metadata or importer tools</li> <li>create or open a share link</li> <li>play tracks while ListenBrainz scrobbling is on, to identify them</li></ul> <p>Requests contain search terms (title, artist, album) or identifiers (MusicBrainz ID,
+            ISRC, barcode), plus the app name and version as a User-Agent.</p></li> <li><strong>ListenBrainz</strong> (<code>api.listenbrainz.org</code>): if you enable
+          ListenBrainz scrobbling and enter your own user token, the tracks you play (artist, title,
+          album, duration, MusicBrainz IDs, time) and what is playing now are submitted to your
+          ListenBrainz account.</li> <li><strong>Last.fm</strong> (<code>ws.audioscrobbler.com</code>): if you enable Last.fm
+          scrobbling, you enter your own API key and shared secret, and your Last.fm username and
+          password are sent to Last.fm once to get a session. The tracks you play (artist, title,
+          album, time) and what is playing now are then submitted to your Last.fm account.</li> <li><strong>Importer</strong> search: cover images in search results load directly from the music
+          service that provides them.</li> <li><strong>synara.audio</strong>: share links you create point to <code>https://synara.audio/share…</code> and redirect back into the app. A share link contains
+          the title, artists, duration and identifiers (ISRC, barcode, MusicBrainz ID) of what you share,
+          and nothing about you or your server. Opening a share link sends nothing to the developer apart
+          from the song identifier and your IP address reaching Synara's link resolver. See "This website"
+          above for the lookups the share page makes.</li> <li><strong>Discord</strong> (desktop app, off by default): if you turn on Discord rich presence,
+          the current track is sent to the Discord client running on your computer, which shows it on
+          your Discord profile. This includes the title, artist, album and playback time, plus a cover
+          image link if your server has an image cache configured.</li> <li><strong>Google ML Kit</strong> (Android app): the barcode scanner uses Google's ML Kit, which
+          reads the barcode on your device. Camera images are not uploaded. Google's SDK may send anonymous
+          usage and performance metrics to Google.</li></ul> <p>You can disable scrobbling at any time in Settings.</p> <p><strong>GitHub</strong> (Android app): the app checks <code>github.com</code> once a day for updates
+        by reading release metadata. You can change this or turn it off in Settings. The crash screen
+        also checks for a newer version. An update APK is downloaded only when you choose to install it.</p> <h2>Apple TV and Apple Watch sign-in</h2> <p>When you use the iPhone app to sign in an Apple TV, the phone creates a new session for your
+        account on your media server and transfers it to the Apple TV over the local network. This
+        only happens after you explicitly confirm the request on the iPhone. The Apple TV then talks
+        to your media server directly.</p> <p>If the Synara Watch app is installed, your iPhone creates a session for it on your media
+        server and sends it to the watch through Apple's watch connection.</p> <h2>Device permissions</h2> <p>On Apple platforms, permissions are requested only when you use the related feature. On
+        Android, notifications and local network access are requested when the app first starts.</p> <ul><li><strong>Local network / Bonjour</strong>: to discover and connect to Synara servers on
+          your network.</li> <li><strong>Camera</strong>: to scan barcodes when importing physical albums.</li> <li><strong>Photo library (add only)</strong>: to save generated album mosaics.</li> <li><strong>Calendar (full access, iOS and macOS, optional)</strong>: if you turn on Release
+          Calendar, Synara: <ul><li>creates its own "Synara Releases" calendar</li> <li>adds your server's upcoming releases to it and refreshes it daily in the background</li> <li>removes releases that are no longer upcoming</li></ul> <p>It only looks at other calendars to find a Synara calendar it created earlier, and
+            nothing from your calendars is sent anywhere. Turning the feature off deletes the Synara
+            calendar. Without it, "Add to Calendar" opens the system event editor, nothing is added
+            unless you save the event there, and no calendar access is needed.</p></li> <li><strong>Notifications</strong>: for listening recaps and, on Android, download, sync and
+          update notices. No push notification server is used.</li> <li><strong>Background audio / background refresh</strong>: for uninterrupted playback,
+          downloads, keeping your library in sync, recaps and, if you turned it on, the release
+          calendar.</li> <li><strong>Install apps (Android)</strong>: to install updates you download.</li> <li><strong>Music folder (macOS)</strong>: only if you choose to show downloads in your Music
+          folder.</li></ul> <h2>Children</h2> <p>Synara is not directed at children under 13 and does not knowingly collect data from them.</p> <h2>Changes</h2> <p>Updates to this policy are published in the app repository and at the URL where this policy
+        is hosted.</p> <h2>Contact</h2> <p>Questions about this policy can be sent through the project's GitHub repository: <a href="https://github.com/DerTyp7214/synara">github.com/dertyp7214/synara</a></p></article></div></section><!----><!--]--><!----></main> <div class="design-retro contents"><footer class="rear mt-auto svelte-1kbsrt"><div class="shell py-12 md:py-16"><div class="vents svelte-1kbsrt" aria-hidden="true"></div> <div class="mt-10 grid gap-10 md:grid-cols-[1fr_1fr_minmax(0,1.35fr)] md:gap-12"><nav aria-labelledby="footer-source"><h2 id="footer-source" class="legend">On GitHub</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Server source</a></li><li><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Desktop app source</a></li><li><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Releases</a></li><!--]--></ul></nav> <nav aria-labelledby="footer-site"><h2 id="footer-site" class="legend">Synara</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="/apps/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Apps</a></li><li><a href="/docs/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Docs</a></li><li><a href="/server/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Run a server</a></li><li><a href="/download/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Download</a></li><li><a href="/privacy/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Privacy</a></li><!--]--></ul></nav> <div class="plate svelte-1kbsrt"><span class="screw top-2 left-2" aria-hidden="true"></span> <span class="screw top-2 right-2" style="--screw-angle: -20deg" aria-hidden="true"></span> <span class="screw bottom-2 left-2" style="--screw-angle: 80deg" aria-hidden="true"></span> <span class="screw right-2 bottom-2" aria-hidden="true"></span> <a href="/" class="inline-flex items-center gap-2.5 rounded-sm text-ink" aria-label="Synara home"><!--$s3--><svg width="100%" height="100%" class="h-7 w-auto" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s3)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-3 w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="model svelte-1kbsrt">Model SR-1</span></a> <p class="mt-4 text-[0.9375rem] text-muted">A music server you run yourself, with native apps that play your library bit for bit.</p> <dl class="ratings svelte-1kbsrt"><div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Server</dt> <dd class="svelte-1kbsrt">GPL-2.0</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Apps</dt> <dd class="svelte-1kbsrt">Free</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Made</dt> <dd class="svelte-1kbsrt">© 2026 Synara</dd></div></dl></div></div></div></footer><!----></div> <div class="design-modern contents"><footer class="m-footer mt-auto svelte-tqky0e"><div class="shell"><div class="cols svelte-tqky0e"><div class="about svelte-tqky0e"><a href="/" class="brand svelte-tqky0e" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s4--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s4)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <p class="tagline svelte-tqky0e">A music server you run yourself, with native apps that play your library bit for bit.</p></div> <nav aria-labelledby="m-footer-site"><h2 id="m-footer-site" class="group-h svelte-tqky0e">Synara</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="/apps/" class="svelte-tqky0e">Apps</a></li><li class="svelte-tqky0e"><a href="/docs/" class="svelte-tqky0e">Docs</a></li><li class="svelte-tqky0e"><a href="/server/" class="svelte-tqky0e">Run a server</a></li><li class="svelte-tqky0e"><a href="/download/" class="svelte-tqky0e">Download</a></li><li class="svelte-tqky0e"><a href="/privacy/" class="svelte-tqky0e">Privacy</a></li><!--]--></ul></nav> <nav aria-labelledby="m-footer-source"><h2 id="m-footer-source" class="group-h svelte-tqky0e">On GitHub</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="svelte-tqky0e">Server source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="svelte-tqky0e">Desktop app source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="svelte-tqky0e">Releases</a></li><!--]--></ul></nav></div> <div class="base svelte-tqky0e"><p>Server: GPL-2.0, apps free</p> <p>© 2026 Synara</p></div></div></footer><!----></div></div><!--]--><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_3zbfyr = {
+						base: new URL("..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../internal/immutable/entry/start.ZGwwYrzZ.js"),
+						import("../internal/immutable/entry/app.DMIzLkDz.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 8],
+							data: [null,null],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

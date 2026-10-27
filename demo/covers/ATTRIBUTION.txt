@@ -1,0 +1,15 @@
+Cover art used as demo material on synara.audio.
+
+light-years.webp
+  Album:   Light Years (2013)
+  Artist:  Stellardrone
+  Source:  https://stellardrone.bandcamp.com/album/light-years
+  Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+  Changes: the embedded cover was resized to 600x600 and re-encoded as WebP.
+
+directionless.webp
+  Album:   Directionless EP (2011)
+  Artist:  Broke For Free
+  Source:  https://brokeforfree.bandcamp.com/album/directionless-ep
+  Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+  Changes: the embedded cover was resized to 600x600 and re-encoded as WebP.

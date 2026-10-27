@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en" data-design="modern">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1f1f1" media="(prefers-color-scheme: light)" />
+
+    <script>
+      // Before first paint: apply the stored theme ("light" | "dark" | absent = follow the system) and
+      // design ("modern" | "retro" | absent = Modern). ?design=modern|retro applies and saves a design.
+      // The HTML ships with data-design="modern"; Retro is expressed by removing it.
+      // Colours: design x theme, keep in sync with $lib/theme.ts (META_COLOR) and the style below.
+      ;(function () {
+        var d = document.documentElement,
+          t = null,
+          g = null,
+          q = null
+        try {
+          t = localStorage.getItem('synara-theme')
+          g = localStorage.getItem('synara-design')
+        } catch (e) {}
+        try {
+          q = new URLSearchParams(location.search).get('design')
+        } catch (e) {}
+        if (q === 'modern' || q === 'retro') {
+          g = q
+          try {
+            localStorage.setItem('synara-design', q)
+          } catch (e) {}
+        }
+        var modern = g !== 'retro'
+        if (!modern) d.removeAttribute('data-design')
+        if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t)
+        var c = modern
+          ? { light: '#f1f1f1', dark: '#0e0e0e' }
+          : { light: '#e6e5e0', dark: '#1c1c1e' }
+        if (!modern || t === 'light' || t === 'dark') {
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            var k =
+              t === 'light' || t === 'dark'
+                ? t
+                : m.getAttribute('media').indexOf('light') >= 0
+                  ? 'light'
+                  : 'dark'
+            m.setAttribute('content', c[k])
+          })
+        }
+        // Preload only the active design's fonts. Modern sets type in SF on Apple platforms and in
+        // self-hosted Inter elsewhere; Retro uses Barlow and Barlow Condensed.
+        var fonts = modern
+          ? /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent)
+            ? []
+            : ['Inter-var']
+          : ['Barlow-400', 'BarlowCondensed-600']
+        fonts.forEach(function (f) {
+          var l = document.createElement('link')
+          l.rel = 'preload'
+          l.href = '/fonts/' + f + '.woff2'
+          l.as = 'font'
+          l.type = 'font/woff2'
+          l.crossOrigin = 'anonymous'
+          document.head.appendChild(l)
+        })
+      })()
+    </script>
+    <style>
+      html {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      @media (prefers-color-scheme: light) {
+        html:not([data-theme='dark']) {
+          background-color: #e6e5e0;
+          color: #1b1b1a;
+          color-scheme: light;
+        }
+      }
+      html[data-theme='light'] {
+        background-color: #e6e5e0;
+        color: #1b1b1a;
+        color-scheme: light;
+      }
+      html[data-theme='dark'] {
+        background-color: #1c1c1e;
+        color: #edece7;
+        color-scheme: dark;
+      }
+      html[data-design='modern'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+      @media (prefers-color-scheme: light) {
+        html[data-design='modern']:not([data-theme='dark']) {
+          background-color: #f1f1f1;
+          color: #201a17;
+        }
+      }
+      html[data-design='modern'][data-theme='light'] {
+        background-color: #f1f1f1;
+        color: #201a17;
+      }
+      html[data-design='modern'][data-theme='dark'] {
+        background-color: #0e0e0e;
+        color: #ece0da;
+      }
+    </style>
+
+    <meta
+      name="description"
+      content="Synara is a self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Synara" />
+    <meta property="og:title" content="Synara" />
+    <meta
+      property="og:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta property="og:image" content="https://synara.audio/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Synara ribbon logo next to the words: your music, bit for bit."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Synara" />
+    <meta
+      name="twitter:description"
+      content="A self-hosted lossless music server with native apps for Android and desktop."
+    />
+    <meta name="twitter:image" content="https://synara.audio/og.png" />
+
+    
+		<link href="../../internal/immutable/assets/0.BNQnLckt.css" rel="stylesheet">
+		<link href="../../internal/immutable/assets/2.CRsa_cPd.css" rel="stylesheet">
+		<link href="../../internal/immutable/assets/DocView.dpH5X4Sp.css" rel="stylesheet">
+		<link rel="modulepreload" href="../../internal/immutable/entry/start.ZGwwYrzZ.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DNpxTNuS.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CePLiJTx.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/y9Sl5bMM.js">
+		<link rel="modulepreload" href="../../internal/immutable/entry/app.DMIzLkDz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/PPVm8Dsz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DsnmJJEf.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/B7aqIt7k.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CYooVA3G.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/gPZRW6-w.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/0.DZac87Gf.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DiYe1c4J.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Z02Du5iI.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/ebLNhQ_I.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/DSjgm90S.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/D4E3Eq-t.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BRKCcKFl.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/CkFSaI46.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Ce9QgSdz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/C-iAWfLw.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/D0l9Ew2l.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BEnBgVf7.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/2.CkwINS6A.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Ct-AiNBt.js">
+		<link rel="modulepreload" href="../../internal/immutable/nodes/6.B4-jVo-W.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/Cb7zuFE7.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BdFwG2mz.js">
+		<link rel="modulepreload" href="../../internal/immutable/chunks/BZUgcN-i.js"><!--12qhfyh--><!----><!--dre9m0--><meta name="description" content="Server-Driven UI: Synara server and API documentation."/><!----><title>Server-Driven UI | Synara Docs</title>
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents"><!--[--><!--[--><!----><!--[!--><a href="#main" class="key key-primary key-sm fixed top-3 left-3 z-[60] -translate-y-20 focus:translate-y-0">Skip to content</a> <div class="flex min-h-dvh flex-col"><div class="design-retro contents"><header class="strip sticky top-0 z-50 svelte-39r4fj"><div class="shell flex h-(--header-h) items-center gap-4 md:gap-6"><a href="/" class="flex shrink-0 items-center gap-3 rounded-sm text-[0.95rem] text-ink" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s1--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s1)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----> <span class="model svelte-39r4fj" aria-hidden="true">SR-1</span></a> <nav aria-label="Main" class="hidden min-[54rem]:block"><ul class="bank svelte-39r4fj"><!--[--><li><a href="/#features" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Features</a></li><li><a href="/apps/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Apps</a></li><li><a href="/docs/" aria-current="page" class="svelte-39r4fj"><span class="led on svelte-39r4fj" aria-hidden="true"></span> Docs</a></li><li><a href="/server/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Server</a></li><li><a href="/download/" class="svelte-39r4fj"><span class="led  svelte-39r4fj" aria-hidden="true"></span> Download</a></li><!--]--></ul></nav> <div class="ml-auto flex items-center gap-2"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <button type="button" class="switch  svelte-m6oq99" aria-label="Theme: System. Switch to light." title="Theme: System"><span class="legends svelte-m6oq99" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor size-2.5 on"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun size-2.5 "><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon size-2.5 "><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----></span> <span class="slot svelte-m6oq99" aria-hidden="true"><span class="lever svelte-m6oq99" style="transform: translateX(0%)"></span></span></button><!----> <span class="power hidden sm:inline-flex svelte-39r4fj" aria-hidden="true"><span class="led ok svelte-39r4fj"></span>Power</span> <button type="button" class="key key-icon min-[54rem]:hidden" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></header><!----></div> <div class="design-modern contents"><header class="m-header svelte-1y2ms2o"><div class="shell svelte-1y2ms2o"><div class="bar glass svelte-1y2ms2o"><a href="/" class="brand svelte-1y2ms2o" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s2--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s2)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <nav aria-label="Main" class="tabs svelte-1y2ms2o"><ul class="svelte-1y2ms2o"><!--[--><li><a href="/#features" class="tab svelte-1y2ms2o">Features</a></li><li><a href="/apps/" class="tab svelte-1y2ms2o">Apps</a></li><li><a href="/docs/" class="tab svelte-1y2ms2o" aria-current="page">Docs</a></li><li><a href="/server/" class="tab svelte-1y2ms2o">Server</a></li><li><a href="/download/" class="tab svelte-1y2ms2o">Download</a></li><!--]--></ul></nav> <div class="trailing svelte-1y2ms2o"><div class="appearance svelte-1y2ms2o"><div role="radiogroup" aria-label="Design" class="dsw  svelte-1usdid"><!--[--><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Design: Retro" class="opt opt-retro svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-boom-box icon" aria-hidden="true"><!--[--><!----><path d="M4 9V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"><!----></path><!----><!----><path d="M8 8v1"><!----></path><!----><!----><path d="M12 8v1"><!----></path><!----><!----><path d="M16 8v1"><!----></path><!----><!----><rect width="20" height="12" x="2" y="9" rx="2"><!----></rect><!----><!----><circle cx="8" cy="15" r="2"><!----></circle><!----><!----><circle cx="16" cy="15" r="2"><!----></circle><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Retro</span></button><button type="button" role="radio" aria-checked="true" tabindex="0" title="Design: Modern" class="opt opt-modern svelte-1usdid"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-smartphone icon" aria-hidden="true"><!--[--><!----><rect width="14" height="20" x="5" y="2" rx="2" ry="2"><!----></rect><!----><!----><path d="M12 18h.01"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="txt svelte-1usdid">Modern</span></button><!--]--> <span class="slot svelte-1usdid" aria-hidden="true"><span class="lever svelte-1usdid"></span></span></div><!----> <div role="radiogroup" aria-label="Appearance" class="seg   svelte-7qw6a6"><span class="thumb svelte-7qw6a6" aria-hidden="true"></span> <!--[--><button type="button" role="radio" aria-checked="true" tabindex="0" title="System" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-monitor seg-icon" aria-hidden="true"><!--[--><!----><rect width="20" height="14" x="2" y="3" rx="2"><!----></rect><!----><!----><line x1="8" x2="16" y1="21" y2="21"><!----></line><!----><!----><line x1="12" x2="12" y1="17" y2="21"><!----></line><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">System</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Light" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-sun seg-icon" aria-hidden="true"><!--[--><!----><circle cx="12" cy="12" r="4"><!----></circle><!----><!----><path d="M12 2v2"><!----></path><!----><!----><path d="M12 20v2"><!----></path><!----><!----><path d="m4.93 4.93 1.41 1.41"><!----></path><!----><!----><path d="m17.66 17.66 1.41 1.41"><!----></path><!----><!----><path d="M2 12h2"><!----></path><!----><!----><path d="M20 12h2"><!----></path><!----><!----><path d="m6.34 17.66-1.41 1.41"><!----></path><!----><!----><path d="m19.07 4.93-1.41 1.41"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Light</span></button><button type="button" role="radio" aria-checked="false" tabindex="-1" title="Dark" class="seg-opt svelte-7qw6a6"><!----><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-moon seg-icon" aria-hidden="true"><!--[--><!----><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"><!----></path><!----><!--]--><!----><!----></svg><!----> <span class="sr-only svelte-7qw6a6">Dark</span></button><!--]--></div><!----></div> <button type="button" class="menu-btn svelte-1y2ms2o" aria-expanded="false" aria-controls="m-menu" aria-label="Open menu"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-5" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--></button></div></div> <!--[!--><!--]--></div></header><!----></div> <main id="main" class="flex-1"><!--[--><!----><div class="shell docs-shell svelte-1bpnej"><button type="button" class="docs-menu-btn key key-sm svelte-1bpnej" aria-expanded="false" aria-controls="docs-nav"><!--[!--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-menu size-4" aria-hidden="true"><!--[--><!----><path d="M4 5h16"><!----></path><!----><!----><path d="M4 12h16"><!----></path><!----><!----><path d="M4 19h16"><!----></path><!----><!--]--><!----><!----></svg><!--]--> <span class="truncate">Server-Driven UI</span></button> <nav id="docs-nav" class="docs-nav svelte-1bpnej" aria-label="Documentation"><!--[--><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Start</h2> <ul><!--[--><li><a href="/docs/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Overview</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Build a client</h2> <ul><!--[--><li><a href="/docs/client_getting_started/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Getting Started as a Client</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_kotlin_rpc/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Kotlin RPC Client Guide</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_rest/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">REST for Client Developers</span> <!--[!--><!--]--></a></li><li><a href="/docs/authentication/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Authentication</span> <!--[!--><!--]--></a></li><li><a href="/docs/streaming_and_playback/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Streaming and Playback</span> <!--[!--><!--]--></a></li><li><a href="/docs/api_versioning/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">API Versioning</span> <!--[!--><!--]--></a></li><li><a href="/docs/server_driven_ui/" aria-current="page" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Server-Driven UI</span> <!--[!--><!--]--></a></li><li><a href="/docs/client_settings/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Client Settings</span> <!--[!--><!--]--></a></li><li><a href="/docs/mock_server/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Mock Server</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Reference</h2> <ul><!--[--><li><a href="/docs/rpc_services/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara RPC Services Documentation</span> <!--[!--><!--]--></a></li><li><a href="/docs/models/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Data Models</span> <!--[!--><!--]--></a></li><li><a href="/docs/permissions/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Permissions</span> <!--[!--><!--]--></a></li><li><a href="/docs/rest_api/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara REST API</span> <!--[!--><!--]--></a></li><li><a href="/docs/api_constants/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara API Constants</span> <!--[!--><!--]--></a></li><li><a href="/docs/environment_variables/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Environment Variables Documentation</span> <!--[!--><!--]--></a></li><li><a href="https://synara-insights.dertyp.dev/RELATION_MAP.html" target="_blank" rel="noopener" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Relation map</span> <!--[--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-external-link size-3.5 shrink-0" aria-hidden="true"><!--[--><!----><path d="M15 3h6v6"><!----></path><!----><!----><path d="M10 14 21 3"><!----></path><!----><!----><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"><!----></path><!----><!--]--><!----><!----></svg><!--]--></a></li><li><a href="https://synara-insights.dertyp.dev/STATS.html" target="_blank" rel="noopener" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Commit stats</span> <!--[--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-external-link size-3.5 shrink-0" aria-hidden="true"><!--[--><!----><path d="M15 3h6v6"><!----></path><!----><!----><path d="M10 14 21 3"><!----></path><!----><!----><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"><!----></path><!----><!--]--><!----><!----></svg><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Extend the server</h2> <ul><!--[--><li><a href="/docs/plugins/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Custom Plugins</span> <!--[!--><!--]--></a></li><li><a href="/docs/mcp/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara MCP (listen history)</span> <!--[!--><!--]--></a></li><li><a href="/docs/listen_backup/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Listen Backup</span> <!--[!--><!--]--></a></li><li><a href="/docs/credential_server/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Synara Credential Server</span> <!--[!--><!--]--></a></li><!--]--></ul></section><section class="svelte-1bpnej"><h2 class="legend svelte-1bpnej">Work on the server</h2> <ul><!--[--><li><a href="/docs/architecture/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Architecture</span> <!--[!--><!--]--></a></li><li><a href="/docs/development/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Development</span> <!--[!--><!--]--></a></li><li><a href="/docs/deprecations/" class="svelte-1bpnej"><span class="led svelte-1bpnej" aria-hidden="true"></span> <span class="flex-1">Deprecations</span> <!--[!--><!--]--></a></li><!--]--></ul></section><!--]--></nav> <div class="docs-main svelte-1bpnej"><!----><div class="doc-grid svelte-dre9m0"><div class="doc-col svelte-dre9m0"><!--[--><details class="disclosure toc-inline svelte-dre9m0"><summary class="svelte-dre9m0">On this page</summary> <nav class="toc-inline-body svelte-dre9m0" aria-label="On this page"><div class="toc-body svelte-ffhs5h"><!--[!--><!--]--> <!--[!--><!--]--> <ul id="toc-inline-list" class="groups svelte-ffhs5h"><!--[--><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#concepts"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Concepts</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#headers-and-handshake"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Headers and handshake</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#the-vocabulary" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>The vocabulary</a> <span class="count svelte-ffhs5h" aria-label="4 sections">4</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#containers" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Containers</a></li><li><a href="#leaves" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Leaves</a></li><li><a href="#form-fields" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Form fields</a></li><li><a href="#icons" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Icons</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#actions"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Actions</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#portals"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Portals</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#reading-and-subscribing" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Reading and subscribing</a> <span class="count svelte-ffhs5h" aria-label="2 sections">2</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#live-values" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Live values</a></li><li><a href="#pages-and-the-toolbar" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Pages and the toolbar</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#intake"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Intake</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#home-cards"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Home cards</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#hooks"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Hooks</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#worked-example-the-importer-screen" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Worked example: the importer screen</a> <span class="count svelte-ffhs5h" aria-label="8 sections">8</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#1-library-entry" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>1. Library entry</a></li><li><a href="#2-open-the-page" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>2. Open the page</a></li><li><a href="#3-stream-the-log" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>3. Stream the log</a></li><li><a href="#4-submit-the-form" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>4. Submit the form</a></li><li><a href="#5-queue-sheet" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>5. Queue sheet</a></li><li><a href="#6-log-in-and-importer-settings" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>6. Log in and importer settings</a></li><li><a href="#7-share-intent" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>7. Share intent</a></li><li><a href="#checklist-for-a-client" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Checklist for a client</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#evolving-the-schema"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Evolving the schema</a><!--]--><!--]--></li><!--]--></ul></div><!----></nav></details><!--]--> <article class="prose" data-doc="SERVER_DRIVEN_UI.md"><!----><h1 id="server-driven-ui"><a class="anchor" href="#server-driven-ui">Server-Driven UI</a></h1>
+<p>Synara can describe parts of the user interface on the server. The server and its plugins send <strong>component trees</strong> that clients render with their own native widgets, already translated into the user's language. Plugins extend every client at once without client releases, and clients keep their native look because the vocabulary is semantic (a <code>Card</code>, a <code>Stat</code>, a <code>Button</code>), never visual (no colors, pixels or HTML).</p>
+<p>This document is for client implementers. Plugin authors should read the <a href="/docs/plugins/#server-driven-ui">plugin guide</a> as well. The full RPC reference is in <a href="/docs/rpc_services/">RPC_SERVICES.md</a> under <code>IUiService</code>.</p>
+<h2 id="concepts"><a class="anchor" href="#concepts">Concepts</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Contribution</strong></td>
+<td>One unit of server UI with an id like <code>core.importer</code> or <code>musicbrainz.settings</code>. Kinds: <code>SLOT</code>, <code>PAGE</code>, <code>HOME_CARD</code>.</td>
+</tr>
+<tr>
+<td><strong>Slot</strong></td>
+<td>A named hole in a native screen that the client fills with <code>renderSlot(slot)</code>. Known slots live in <code>UiSlots</code>: <code>library</code>, <code>settings</code>, <code>admin.dashboard</code>, <code>home</code>, <code>importer</code>, <code>album.detail</code>, <code>artist.detail</code>, <code>song.detail</code>, <code>song.menu</code>, <code>playlist.detail</code>, <code>collection.detail</code>.</td>
+</tr>
+<tr>
+<td><strong>Page</strong></td>
+<td>A whole screen owned by a contribution, opened through <code>UiAction.OpenPage(pageId)</code>.</td>
+</tr>
+<tr>
+<td><strong>Home card</strong></td>
+<td>A contribution the user can pin to the home screen; pin state is stored per user on the server.</td>
+</tr>
+<tr>
+<td><strong>Portal</strong></td>
+<td>A <code>Native</code> component: a hole inside a server tree that the <em>client</em> fills with native UI (<code>barcodeScanner</code>, <code>externalSearch</code>).</td>
+</tr>
+<tr>
+<td><strong>Hook</strong></td>
+<td>An app-level event (a shared URL or text) the client forwards to the server, which answers with the contributions offering to handle it.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="headers-and-handshake"><a class="anchor" href="#headers-and-handshake">Headers and handshake</a></h2>
+<p>Send these headers on every request, including the websocket upgrade for <code>/rpc</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>X-Ui-Schema-Version</code></td>
+<td><code>UiSchemaVersion.CURRENT</code> of the <code>common-rpc</code> you compiled against (see <a href="/docs/api_constants/#ui-schema-version">API_CONSTANTS.md#ui-schema-version</a>)</td>
+<td>The server replaces components your build doesn't know with <code>Fallback</code>. Omit it and <strong>every</strong> component becomes <code>Fallback</code>.</td>
+</tr>
+<tr>
+<td><code>Accept-Language</code></td>
+<td>e.g. <code>de-AT, de;q=0.9, en;q=0.5</code></td>
+<td>All text in the tree arrives translated (highest-quality language wins, fallback <code>en</code>). Changing the app language means reconnecting the RPC websocket, because headers are read at upgrade time.</td>
+</tr>
+<tr>
+<td><code>X-Time-Zone</code></td>
+<td>optional, an IANA time zone id such as <code>Europe/Berlin</code> (<code>ClientTimeZone.HEADER</code>)</td>
+<td>Times on server pages are shown in this zone. Without it, or with an invalid id, they are shown in UTC. Like the language, it is read at upgrade time, so a change applies on reconnect.</td>
+</tr>
+</tbody>
+</table>
+<p>Kotlin clients using <code>BaseRpcServiceManager</code> can call <code>uiHeaders(locale, timeZone)</code> next to <code>apiVersionHeader()</code>, or override <code>uiLocale()</code> and <code>uiTimeZone()</code>.</p>
+<p><code>IHandshakeService.handshake()</code> returns <code>uiSchemaVersion</code>; <code>0</code> means the server has no server-driven UI.</p>
+<p><code>X-Ui-Schema-Version</code> is one of several compatibility headers described in <a href="/docs/api_versioning/">API_VERSIONING.md</a>; see <a href="/docs/client_kotlin_rpc/">CLIENT_KOTLIN_RPC.md</a> for <code>BaseRpcServiceManager</code> and connecting to <code>/rpc/services</code>.</p>
+<h2 id="the-vocabulary"><a class="anchor" href="#the-vocabulary">The vocabulary</a></h2>
+<p>Every node is a <code>UiComponent</code>. On the wire (JSON) each node carries <code>"type"</code> with its serial name; nested trees use the same shape recursively.</p>
+<h3 id="containers"><a class="anchor" href="#containers">Containers</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Fields</th>
+<th>Render as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>column</code></td>
+<td><code>children</code>, <code>spacing</code>, <code>align</code>, <code>weights?</code></td>
+<td>Vertical stack. <code>weights</code> are relative sizes per child when the container has a fixed height.</td>
+</tr>
+<tr>
+<td><code>row</code></td>
+<td><code>children</code>, <code>spacing</code>, <code>align</code>, <code>weights?</code></td>
+<td>Horizontal stack; wrap or scroll on narrow screens. <code>weights</code> of <code>0.0</code> mean "intrinsic size".</td>
+</tr>
+<tr>
+<td><code>grid</code></td>
+<td><code>children</code>, <code>columns</code>, <code>spacing</code></td>
+<td>Grid; reduce <code>columns</code> on small screens.</td>
+</tr>
+<tr>
+<td><code>card</code></td>
+<td><code>children</code>, <code>title?</code>, <code>subtitle?</code>, <code>icon?</code>, <code>image?</code> (<code>{imageId,blurHash?,rounded}</code>), <code>tone</code>, <code>actions</code></td>
+<td>Elevated surface with optional header; <code>actions</code> (usually buttons) go in the footer.</td>
+</tr>
+<tr>
+<td><code>section</code></td>
+<td><code>children</code>, <code>title</code>, <code>collapsible</code>, <code>collapsed</code></td>
+<td>Titled group.</td>
+</tr>
+<tr>
+<td><code>form</code></td>
+<td><code>id</code>, <code>children</code>, <code>submit</code> (<code>invoke</code> action), <code>submitLabel</code>, <code>cancelLabel?</code>, <code>actions</code></td>
+<td>Collect the values of all fields inside and send them with the submit action. The submit button sits in a trailing row; <code>actions</code> (e.g. a scanner portal) are rendered in that same row, before it. Disable submit while a <code>required</code> field is empty.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="leaves"><a class="anchor" href="#leaves">Leaves</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Fields</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text</code></td>
+<td><code>text</code>, <code>style</code> (<code>TITLE</code>/<code>SUBTITLE</code>/<code>BODY</code>/<code>CAPTION</code>/<code>CODE</code>), <code>tone</code>, <code>emphasis</code></td>
+<td><code>CODE</code> is monospaced and preserves newlines.</td>
+</tr>
+<tr>
+<td><code>icon</code></td>
+<td><code>icon</code> (<code>UiIcon</code>), <code>tone</code></td>
+<td>A standalone icon, see <em>Icons</em>.</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td><code>imageId?</code>, <code>url?</code>, <code>rounded</code></td>
+<td><code>imageId</code> refers to <code>IImageService</code>.</td>
+</tr>
+<tr>
+<td><code>badge</code></td>
+<td><code>text</code>, <code>tone</code>, <code>icon?</code></td>
+<td>Small status chip / capsule, optional leading icon.</td>
+</tr>
+<tr>
+<td><code>stat</code></td>
+<td><code>label</code>, <code>value</code>, <code>unit?</code>, <code>icon?</code>, <code>tone</code></td>
+<td>Big number with a label.</td>
+</tr>
+<tr>
+<td><code>progress</code></td>
+<td><code>value?</code> (0–1), <code>label?</code></td>
+<td><code>null</code> = indeterminate.</td>
+</tr>
+<tr>
+<td><code>tile</code></td>
+<td><code>title</code>, <code>subtitle?</code>, <code>icon?</code>, <code>action?</code>, <code>tone</code></td>
+<td>Tappable entry, e.g. in the library slot.</td>
+</tr>
+<tr>
+<td><code>button</code></td>
+<td><code>label</code>, <code>action</code>, <code>style</code>, <code>icon?</code>, <code>enabled</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>listItem</code></td>
+<td><code>title</code>, <code>subtitle?</code>, <code>icon?</code>, <code>image?</code> (<code>{imageId,blurHash?,rounded}</code>), <code>trailing?</code>, <code>action?</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table</code></td>
+<td><code>columns</code>, <code>rows[{cells, action?}]</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>spacer</code></td>
+<td><code>size</code> (<code>NONE</code>/<code>SMALL</code>/<code>MEDIUM</code>/<code>LARGE</code>)</td>
+<td>Empty space of that size.</td>
+</tr>
+<tr>
+<td><code>divider</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>native</code></td>
+<td><code>name</code>, <code>params</code>, <code>fallback?</code></td>
+<td>Portal, see below.</td>
+</tr>
+<tr>
+<td><code>emptyState</code></td>
+<td><code>title</code>, <code>description?</code>, <code>icon?</code>, <code>actions</code></td>
+<td>"Nothing here" placeholder: large muted icon, bold title, secondary description, all centered in the available space (iOS <code>ContentUnavailableView</code>), optional buttons below.</td>
+</tr>
+<tr>
+<td><code>log</code></td>
+<td><code>lines</code>, <code>maxLines</code></td>
+<td>Fixed-height (~300pt) pane of small monospaced secondary text, one entry per line, scroll anchored to the newest line; keep at most <code>maxLines</code>.</td>
+</tr>
+<tr>
+<td><code>live</code></td>
+<td><code>key</code>, <code>child</code></td>
+<td>Render <code>child</code>, then subscribe to <code>subscribeLive(contributionId, key)</code> and apply updates to this subtree only — see <em>Live values</em>.</td>
+</tr>
+<tr>
+<td><code>fallback</code></td>
+<td><code>text?</code></td>
+<td>Inserted by the server for components you don't support. Show <code>text</code> or a generic "update the app" hint.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="form-fields"><a class="anchor" href="#form-fields">Form fields</a></h3>
+<p>All fields have <code>key</code> (the payload key), <code>label</code>, <code>helper?</code> and <code>enabled</code>. All except <code>switch</code> also have <code>error?</code> and <code>required</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Extra fields</th>
+<th>Payload value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>textField</code></td>
+<td><code>value?</code>, <code>placeholder?</code>, <code>secret</code>, <code>multiline</code>, <code>kind</code>, <code>toolbar</code></td>
+<td><code>{"text": "…"}</code></td>
+</tr>
+<tr>
+<td><code>fileField</code></td>
+<td><code>accept</code>, <code>binary</code>, <code>allowPaste</code>, <code>secret</code>, <code>value?</code>, <code>toolbar</code></td>
+<td><code>{"text": "&#x3C;file content>"}</code></td>
+</tr>
+<tr>
+<td><code>searchField</code></td>
+<td><code>value?</code> (<code>{value,label,icon?,image?}</code>), <code>placeholder?</code>, <code>minChars</code>, <code>toolbar</code></td>
+<td><code>{"text": "&#x3C;picked option value>"}</code></td>
+</tr>
+<tr>
+<td><code>numberField</code></td>
+<td><code>value?</code>, <code>min?</code>, <code>max?</code>, <code>step?</code>, <code>toolbar</code></td>
+<td><code>{"number": 3.0}</code></td>
+</tr>
+<tr>
+<td><code>switch</code></td>
+<td><code>value</code></td>
+<td><code>{"flag": true}</code></td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td><code>value?</code>, <code>options[{value,label,icon?,image?}]</code></td>
+<td><code>{"text": "&#x3C;option value>"}</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>secret</code> fields never contain the stored value; submitting an empty value means "unchanged". <code>kind</code> hints at the keyboard: <code>URL</code>, <code>EMAIL</code>, <code>BARCODE</code> (offer a scanner), <code>MULTILINE_URLS</code> (one entry per line, a scanner appends a line). <code>toolbar</code> is the <strong>keyboard accessory toolbar</strong>: shown above the on-screen keyboard while the field is focused (iOS <code>.keyboard</code> toolbar placement, Android IME accessory row; on desktop render it inline under the field), items trailing-aligned — typically a single <code>button</code> with <code>dismissKeyboard</code>.</p>
+<p><code>fileField</code> opens a native file picker filtered by <code>accept</code> (extensions such as <code>.p8</code>) and submits the file's UTF-8 text, or the base64 of its bytes when <code>binary</code> is set. With <code>allowPaste</code> the client also offers pasting that content. Clients on an older UI schema version receive a multi-line <code>textField</code> with the same key instead.</p>
+<h4 id="search-fields"><a class="anchor" href="#search-fields">Search fields</a></h4>
+<p><code>searchField</code> is a search-as-you-type picker. Show <code>value.label</code> while nothing else is picked. Once the user has typed at least <code>minChars</code> characters, call <code>IUiService.search(contributionId, key, query, context)</code> with the contribution that rendered the field, its <code>key</code>, the typed text and the same <code>UiContext</code> the contribution was rendered with, then offer the returned options (at most 50). Debounce the calls and drop responses for outdated queries. The picked option's <code>value</code> is submitted under <code>key</code> with the enclosing <code>form</code>, just like a <code>select</code>. <code>search</code> checks the same access as <code>render</code>.</p>
+<p>Clients on UI schema version 2 or older receive a <code>column</code> instead: a <code>textField</code> with key <code>&#x3C;key>.query</code>, a <code>button</code> that invokes <code>ui.search.&#x3C;key></code> with the enclosing form, and a <code>select</code> with key <code>&#x3C;key></code> holding the results for the query and the selected option. The server answers that invoke with an <code>openPage</code> of the same page whose params carry the query as <code>&#x3C;key>.query</code>, and the reopened page lists the results. This only works on pages and inside a <code>form</code>, so a <code>searchField</code> elsewhere becomes a <code>fallback</code> for those clients.</p>
+<p><code>image</code> on a <code>listItem</code>, on a <code>card</code> header and on an option references a server image by <code>imageId</code> with an optional <code>blurHash</code>. When <code>image</code> is set, render it (as a circle when <code>rounded</code>) in place of <code>icon</code>, and show <code>icon</code> only when there is no image. Clients on UI schema version 2 or older never receive <code>image</code> on <code>listItem</code>, <code>card</code>, <code>select</code> options or <code>searchField</code> values and keep getting the <code>icon</code>.</p>
+<h3 id="icons"><a class="anchor" href="#icons">Icons</a></h3>
+<p>Every <code>icon</code> field is a <code>UiIcon</code>, a sealed type so clients have a real mapping table instead of guessing names:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Fields</th>
+<th>Render as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>named</code></td>
+<td><code>name</code> (<code>UiIconName</code>)</td>
+<td>One of your icon set: <code>SETTINGS</code>, <code>MUSIC</code>, <code>ALBUM</code>, <code>ARTIST</code>, <code>PLAYLIST</code>, <code>IMAGE</code>, <code>STORAGE</code>, <code>STATS</code>, <code>TASK</code>, <code>PLAY</code>, <code>PAUSE</code>, <code>DOWNLOAD</code>, <code>IMPORT</code>, <code>QUEUE</code>, <code>PLUG</code>, <code>LOGIN</code>, <code>HEART</code>, <code>SYNC</code>, <code>SEARCH</code>, <code>KEY</code>, <code>DATABASE</code>, <code>WARNING</code>, <code>ERROR</code>, <code>INFO</code>, <code>USER</code>, <code>CHECK</code>, <code>CLOSE</code>, <code>LINK</code>, <code>FILE</code>, <code>MORE</code>, <code>BARCODE</code>. Map each to a concrete glyph (e.g. iOS <code>QUEUE</code> → <code>list.bullet.clipboard</code>, <code>SYNC</code> → <code>arrow.triangle.2.circlepath</code>, <code>BARCODE</code> → <code>barcode.viewfinder</code>, <code>IMPORT</code> → <code>square.and.arrow.down</code>).</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>url</code></td>
+<td>Remote image at icon size.</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td><code>imageId</code></td>
+<td>Server image (<code>IImageService</code>) at icon size.</td>
+</tr>
+</tbody>
+</table>
+<p>New names are only added with a UI schema version bump, so a client never meets an unknown name.</p>
+<p>Tones map to your design system: <code>DEFAULT</code>, <code>PRIMARY</code> (accent), <code>SUCCESS</code>, <code>WARNING</code>, <code>ERROR</code>, <code>MUTED</code>.</p>
+<h2 id="actions"><a class="anchor" href="#actions">Actions</a></h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Fields</th>
+<th>Client behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoke</code></td>
+<td><code>contributionId</code>, <code>actionId</code>, <code>params</code>, <code>formId?</code>, <code>confirmText?</code></td>
+<td>If <code>confirmText</code> is set, ask first. Build <code>UiInvokePayload(values = params + form values of formId, context)</code> and call <code>invoke(contributionId, actionId, payload)</code>.</td>
+</tr>
+<tr>
+<td><code>openEntity</code></td>
+<td><code>entityType</code>, <code>entityId</code></td>
+<td>Open the native song/album/artist/playlist/user screen.</td>
+</tr>
+<tr>
+<td><code>openPage</code></td>
+<td><code>pageId</code>, <code>params</code>, <code>modal</code></td>
+<td>Open the page renderer for <code>pageId</code>; pass <code>params</code> as <code>UiContext.params</code> to <code>render</code>/<code>subscribe</code>. <code>modal = true</code> asks for a sheet/dialog with a close control instead of a push.</td>
+</tr>
+<tr>
+<td><code>dismissKeyboard</code></td>
+<td></td>
+<td>Unfocus the current input and close the on-screen keyboard (no-op on desktop).</td>
+</tr>
+<tr>
+<td><code>openUrl</code></td>
+<td><code>url</code></td>
+<td>Open in the system browser (used for OAuth logins).</td>
+</tr>
+<tr>
+<td><code>openNative</code></td>
+<td><code>name</code>, <code>params</code></td>
+<td>Open a native screen by portal name, e.g. <code>externalSearch</code> with <code>query</code>.</td>
+</tr>
+<tr>
+<td><code>openMenu</code></td>
+<td><code>items[{label, action, icon?, tone, enabled, id?}]</code>, <code>title?</code></td>
+<td>Show a native menu anchored to the element (dropdown on desktop, context menu or bottom sheet on mobile) and perform the chosen item's <code>action</code>. An item's action may be another <code>openMenu</code> (sub-menu). A "menu button" is simply a <code>button</code> whose action is <code>openMenu</code>; a <code>listItem</code> or <code>tile</code> can open a menu the same way.</td>
+</tr>
+<tr>
+<td><code>refresh</code></td>
+<td></td>
+<td>Re-render the contribution.</td>
+</tr>
+</tbody>
+</table>
+<p><code>UiInvokeResult</code> carries <code>status</code> (<code>OK</code>, <code>VALIDATION_ERROR</code>, <code>ERROR</code>, <code>UNAUTHORIZED</code>), an optional <code>message</code> to toast, <code>fieldErrors</code> (key → text, show next to the field), <code>refresh</code> (re-render now) and <code>next</code> (perform this action afterwards, e.g. <code>openUrl</code>).</p>
+<h2 id="portals"><a class="anchor" href="#portals">Portals</a></h2>
+<p>A <code>native</code> node names a hole for your own UI. Implement at least:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th><code>params</code></th>
+<th>What to render</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>barcodeScanner</code></td>
+<td><code>target</code> = key of the form field to fill</td>
+<td>A scan button; append the scanned code as a new line to that field (or replace its value for single-line fields).</td>
+</tr>
+<tr>
+<td><code>externalSearch</code></td>
+<td><code>query?</code></td>
+<td>Your external-search screen (also reachable through <code>openNative</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>If you don't implement a name, render <code>fallback</code> if present, otherwise nothing.</p>
+<h2 id="reading-and-subscribing"><a class="anchor" href="#reading-and-subscribing">Reading and subscribing</a></h2>
+<ul>
+<li><code>listContributions(kind?, slot?)</code> – discover what exists (<code>UiContributionInfo</code> includes <code>title</code>, <code>icon</code>, <code>live</code>, <code>hooks</code>, <code>cardSize</code> for home cards, access flags).</li>
+<li><code>renderSlot(slot, context)</code> – one call per native screen; render <code>items</code> in order.</li>
+<li><code>render(contributionId, context)</code> – one-off render, e.g. a page.</li>
+<li><code>subscribeWithContext(contributionId, context)</code> – a <code>Flow&#x3C;UiRender></code> that emits immediately and again on every change; use it for pages and live cards with the same <code>UiContext</code> passed to <code>render</code>, so pages opened with <code>params</code> keep them. <code>revision</code> increases per emission; only re-render when <code>root</code> or <code>toolbar</code> actually changed. <code>subscribe(contributionId, entityId?)</code> is the older variant that only carries the entity id.</li>
+</ul>
+<h3 id="live-values"><a class="anchor" href="#live-values">Live values</a></h3>
+<p>Re-rendering a whole page for every log line would be wasteful, so high-frequency data uses a second channel. A <code>live</code> node marks a subtree; the client renders its <code>child</code> immediately and opens <code>subscribeLiveWithContext(contributionId, key, context)</code> (or the older <code>subscribeLive(contributionId, key, entityId?)</code>) — a <code>Flow&#x3C;UiLiveUpdate></code>:</p>
+<table>
+<thead>
+<tr>
+<th>Update</th>
+<th>Effect on the <code>live</code> child</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>replace</code> <code>{child}</code></td>
+<td>Swap the whole child for the new component.</td>
+</tr>
+<tr>
+<td><code>appendLines</code> <code>{lines}</code></td>
+<td>Append to a <code>log</code> child and drop the oldest lines beyond its <code>maxLines</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Rules: one subscription per <code>live</code> node while it is on screen; cancel it when the node disappears; when the page tree is re-rendered by <code>subscribe</code>, keep existing live subscriptions whose <code>key</code> is still present and open/close the rest. The page tree itself only changes on structural events (the importer re-renders on queue changes and login-state changes, never on log output).</p>
+<h3 id="pages-and-the-toolbar"><a class="anchor" href="#pages-and-the-toolbar">Pages and the toolbar</a></h3>
+<p>Every <code>UiRender</code> carries <code>contributionId</code>, <code>root</code>, <code>revision</code> and <code>schemaVersion</code>, the UI schema version the tree was shaped for.</p>
+<p>A <code>UiRender</code> of a <code>PAGE</code> contribution additionally has:</p>
+<ul>
+<li><strong><code>title</code></strong> (use it as the screen title)</li>
+<li><strong><code>toolbar</code></strong>: a list of components for the native app bar — <code>button</code>s (render as icon buttons using <code>icon</code>, with <code>label</code> as tooltip/accessibility text), <code>icon</code>s and <code>native</code> portals. A toolbar button with an <code>openMenu</code> action is the overflow menu.</li>
+</ul>
+<p>Nothing in <code>toolbar</code> appears in <code>root</code>, so the page body stays free of chrome. Slot items and home cards always have an empty <code>toolbar</code>.</p>
+<p>The <code>song.menu</code> slot (and future <code>*.menu</code> slots) is the native context menu of an entity: render each item's <code>root</code> as menu entries — contributions return <code>listItem</code>s or <code>button</code>s there, whose actions you perform when chosen.</p>
+<p><code>UiContext</code> tells the server where the tree is shown: <code>entityType</code>/<code>entityId</code> on detail screens, <code>params</code> for pages opened with parameters.</p>
+<p>Contributions are already filtered by the user's permissions; <code>render</code>/<code>invoke</code> on something the user may not see return 403 (<code>UnauthorizedException</code>).</p>
+<h2 id="intake"><a class="anchor" href="#intake">Intake</a></h2>
+<p>Anything a user hands to the app — a link, a catalog code, a provider id, free text (later: a file) — is an <code>IntakeItem</code>. Instead of calling importer-specific RPCs, clients hand items to the server and plugins offer to handle them:</p>
+<table>
+<thead>
+<tr>
+<th><code>IntakeItem</code></th>
+<th>Fields</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>url</code></td>
+<td><code>url</code></td>
+<td><code>https://tidal.com/browse/album/1</code></td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td><code>kind</code> (<code>ISRC</code>/<code>UPC</code>), <code>value</code></td>
+<td><code>USRC17607839</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><code>provider</code>, <code>id</code>, <code>contentType?</code></td>
+<td>the download button in external search: <code>{"type":"id","provider":"tidal","id":"123","contentType":"track"}</code></td>
+</tr>
+<tr>
+<td><code>text</code></td>
+<td><code>text</code></td>
+<td>a search query</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td><code>fileId</code>, <code>name</code>, <code>mimeType?</code></td>
+<td>reserved for uploads</td>
+</tr>
+</tbody>
+</table>
+<p><code>IntakeItem.parse(line)</code> in <code>common-rpc</code> classifies a pasted line the same way the server does (URL → code → <code>provider:id</code> → text).</p>
+<ul>
+<li><code>intake(items, resolverId?)</code> → <code>UiIntakeResult</code>:
+<ul>
+<li><code>OK</code> — everything acceptable was submitted (<code>accepted</code> count, <code>message</code> to toast, <code>rejected</code> items nobody took, optional <code>next</code>). <strong>No navigation needed</strong>: the external-search download button just calls <code>intake([id])</code> and shows the toast.</li>
+<li><code>NEEDS_CHOICE</code> — several handlers claim the same item (e.g. an Apple Music link that both Tidal and gamdl can import) or only navigational handlers exist (text → external search). Show <code>handlers</code> as a menu; each handler's <code>action</code> is <code>intake</code> with the handler preselected, so performing it calls <code>intake</code> again and yields <code>OK</code>.</li>
+<li><code>UNHANDLED</code> — nothing accepted any item; fall back to native behaviour.</li>
+<li><code>UNAUTHORIZED</code> / <code>ERROR</code> — show <code>message</code>.</li>
+</ul>
+</li>
+<li><code>resolveIntake(items)</code> → the handlers only, when you always want to show a chooser.</li>
+<li><code>UiAction.Intake(items, resolverId?, confirmText?)</code> is the action form of the same call; buttons, menu entries and hook handlers use it.</li>
+</ul>
+<p>Example — download from external search:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">POST</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /ui/intake</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"provider"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"123"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contentType"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"track"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}]</span></span></code></pre>
+<p><code>items</code> is the only body parameter, so the body is the bare array. A preselected handler goes in the <code>resolverId</code> query parameter (<code>POST /ui/intake?resolverId=import.tidal</code>).</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"status"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"OK"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"message"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"1 items queued"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"accepted"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Example — an ambiguous link:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"status"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"NEEDS_CHOICE"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"handlers"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import with Tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import this link?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">   "action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"intake"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"items"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://music.apple.com/album/1"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}], </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"resolverId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import this link?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.gamdl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.gamdl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import with gamdl (Apple Music)"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"intake"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"…"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"…"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"resolverId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.gamdl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]}</span></span></code></pre>
+<p>An Apple Music album link or a MusicBrainz release / release-group link can point at a release that is not out yet (its release date is in the future, or Apple still marks the album incomplete). Tidal has no album for it, so nothing would normally resolve — but when Tidal is the default importer its handler offers anyway, with a description and a confirm text saying that only the tracks already released are imported now.</p>
+<p>On submit the server takes the album's track list from the platform the link came from, prefers a matching MusicBrainz release for titles, positions and ids, looks every ISRC up on Tidal and queues the tracks it finds, tagged as the album (title, track and disc numbers, cover); the receipt reports <code>intake.import.upcomingQueued</code>.</p>
+<p>Tracks that are not on Tidal yet are skipped and listed in the import log — import the album again on release day: the tracks already in the library for that release (same ISRC and barcode) are skipped and the rest is added.</p>
+<p>Work accepted by an intake handler runs in server-side <strong>jobs</strong>, queued per kind (imports never block a favourites sync); the queue page shows their progress and offers Cancel.</p>
+<h2 id="home-cards"><a class="anchor" href="#home-cards">Home cards</a></h2>
+<p><code>getHomeCards()</code> returns every <code>HOME_CARD</code> contribution with <code>pinned</code>, <code>position</code> and its preferred <code>size</code> (<code>UiCardSize</code>: <code>SMALL</code>, <code>MEDIUM</code>, <code>LARGE</code>, <code>WIDE</code>). <code>IChangeService.observeChanges</code> reports the <code>HOME_CARDS</code> topic when the layout changes, so read <code>getHomeCards()</code> again then. Render pinned cards on the home screen (each through <code>subscribe(card.contributionId)</code>), offer the unpinned ones in a picker, and persist changes with <code>setHomeCardPinned</code> / <code>setHomeCardOrder</code>.</p>
+<h2 id="hooks"><a class="anchor" href="#hooks">Hooks</a></h2>
+<p>When the app receives a shared URL or text, call <code>dispatchHook(UiHookEvent.ShareUrl(url, title?))</code> (or <code>ShareText(text)</code>). <code>title</code> is the optional title that accompanied the share. The result is a list of <code>UiHookHandler</code>:</p>
+<ul>
+<li>empty → fall back to your native behaviour;</li>
+<li>one → perform <code>handler.action</code> directly, unless <code>confirmText</code> is set — then ask first;</li>
+<li>several → show a chooser with <code>title</code>/<code>description</code>/<code>icon</code>, then perform the chosen <code>action</code>.</li>
+</ul>
+<p>Nothing is executed on the server during dispatch, so offering never has side effects.</p>
+<p><code>listHookHandlers(kind?)</code> (<code>GET /ui/hookHandlers?kind=</code>) lists every handler that may offer to take hook events for the current user, without an event: a <code>UiHookHandlerInfo</code> per handler with <code>id</code>, <code>source</code>, <code>title</code>, <code>description?</code>, <code>icon?</code> and the <code>kinds</code> it serves. Use it to build a picker or a settings list, for example a default-importer choice.</p>
+<ul>
+<li>Unlike <code>dispatchHook</code> it carries no <code>action</code> and says nothing about a specific URL or text, so whether a handler accepts a given event is only known from <code>dispatchHook</code>.</li>
+<li>Its <code>id</code> matches <code>UiHookHandler.id</code> and <code>UiMenuItem.id</code>, and it is what you pass as <code>resolverId</code> to <code>intake</code>.</li>
+</ul>
+<p>Shared URLs and text are parsed into <code>IntakeItem</code>s, so the handlers are the intake handlers (an <code>intake</code> action per importer that can take the link — "Import with Tidal", confirm "Import this link?") plus contribution offers such as the importer page's "Open in importer" (<code>openPage</code> with the text pre-filled) and, for plain text, "Search catalog".</p>
+<h2 id="worked-example-the-importer-screen"><a class="anchor" href="#worked-example-the-importer-screen">Worked example: the importer screen</a></h2>
+<p>The importer is modelled after the iOS importer screen: a <code>PAGE</code> contribution (<code>core.importer</code>) with the URL editor and the log pane, two modal pages opened from its toolbar (<code>core.importer.queue</code> — the queue sheet — and <code>core.importer.settings</code> — importer logins and plugin sections such as gamdl credentials), and a <code>library</code> tile (<code>core.importer.entry</code>). The mock server (<code>./gradlew :mock-server:run</code>, REST on <code>http://localhost:8081</code>, any <code>Authorization: Bearer x</code> header) serves the same trees, so every step below can be tried with <code>curl</code>.</p>
+<h3 id="1-library-entry"><a class="anchor" href="#1-library-entry">1. Library entry</a></h3>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">POST</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /ui/renderSlot?slot=library</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{}</span></span></code></pre>
+<p><code>slot</code> is a query parameter. The body is the bare <code>UiContext</code>, here an empty one.</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">  "slot"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"library"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">  "items"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [{</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">    "contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer.entry"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">    "title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">    "root"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"tile"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"subtitle"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import music from streaming services"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">             "icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"IMPORT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"openPage"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"pageId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  }]</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Render the tile in your library list. Tapping it performs <code>openPage</code>.</p>
+<h3 id="2-open-the-page"><a class="anchor" href="#2-open-the-page">2. Open the page</a></h3>
+<p>Navigate to your generic page screen and <code>subscribe("core.importer")</code>. The first emission is the iOS layout — two blocks and a toolbar:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">  "contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"revision"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">1</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">  "toolbar"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"button"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"label"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Queue"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"TEXT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"QUEUE"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"openPage"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"pageId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer.queue"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"modal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"button"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"label"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Sync Favorites"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"TEXT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"SYNC"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">     "action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"invoke"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"actionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"syncFavourites"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Are you sure you want to synchronize your favorites?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"button"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"label"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Importer settings"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"TEXT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"SETTINGS"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"openPage"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"pageId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer.settings"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"modal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ],</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">  "root"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"column"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"spacing"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"LARGE"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"children"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"column"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"spacing"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"SMALL"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"children"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import URLs"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"TITLE"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Enter one URL per line to import them."</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"CAPTION"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"tone"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"MUTED"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"form"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">       "submit"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"invoke"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"actionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"formId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">       "submitLabel"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">       "children"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">         {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"textField"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"key"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"input"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"label"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import URLs"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"multiline"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"required"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"kind"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"MULTILINE_URLS"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">          "toolbar"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"button"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"label"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Done"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"TEXT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"CHECK"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"dismissKeyboard"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}]}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">       ],</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">       "actions"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"native"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"barcodeScanner"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"params"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"target"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"input"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}]}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    ]},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"column"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"spacing"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"SMALL"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"children"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Logs"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"style"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"TITLE"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">      {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"live"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"key"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"log"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"child"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"log"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"lines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Fetching metadata…"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Downloading 3/12"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">], </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"maxLines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">500</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">    ]}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  ]}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Mapping to the screen: headline + caption + multi-line editor (the editor's keyboard toolbar is the Done checkmark from <code>textField.toolbar</code>), then a trailing row <code>[scan][Import]</code> — the <code>native</code> portal from <code>form.actions</code> is your barcode scanner button (append scanned codes to <code>input</code>), the submit button is disabled while the field is empty. Below it the "Logs" headline and the <code>log</code> pane. The toolbar buttons become the app-bar icon buttons (Sync only appears while a sync is possible). When the default importer needs a login, a warning <code>card</code> "Login Required" with a Login button precedes the import block — the equivalent of the iOS alert.</p>
+<h3 id="3-stream-the-log"><a class="anchor" href="#3-stream-the-log">3. Stream the log</a></h3>
+<p>Open one live subscription for the <code>live</code> node:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">GET</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /ui/subscribeLive/core.importer?key=log        (SSE)</span></span></code></pre>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"appendLines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"lines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Downloading 4/12"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"appendLines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"lines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Downloading 5/12"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"appendLines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"lines"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Tagging track 5"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]}</span></span></code></pre>
+<p>Append lines to the pane (dropping the oldest beyond 500); the server keeps a rolling 500-line buffer across imports, so the pane is never cleared when an import finishes. A <code>replace</code> only arrives if a contribution deliberately swaps the subtree. The page subscription itself only re-emits on queue or login changes.</p>
+<h3 id="4-submit-the-form"><a class="anchor" href="#4-submit-the-form">4. Submit the form</a></h3>
+<p>Collect the field values under their keys and send the form's submit action (routing to Tidal/YouTube/… is automatic on the server):</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">POST</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /ui/invoke/core.importer?actionId=import</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"values"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"input"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"text"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://tidal.com/browse/album/1234</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">USRC17607839"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"context"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {}}</span></span></code></pre>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"status"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"OK"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"message"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"2 items queued"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"refresh"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Show <code>message</code> as a toast and clear the editor. A <code>VALIDATION_ERROR</code> returns <code>fieldErrors</code>, e.g. <code>{"input": "Enter at least one URL or code."}</code> – display it next to the field.</p>
+<h3 id="5-queue-sheet"><a class="anchor" href="#5-queue-sheet">5. Queue sheet</a></h3>
+<p>The toolbar's Queue button is <code>openPage</code> with <code>modal: true</code>: present <code>subscribe("core.importer.queue")</code> as a sheet with a close control. The tree mirrors the iOS sheet:</p>
+<ul>
+<li>a stat card (<code>Total URLs</code> / <code>Importing</code>, only when URLs are queued)</li>
+<li>a "Currently Importing" header with one entry card</li>
+<li>a "Pending Imports" header with one card per entry</li>
+</ul>
+<p>Each card has:</p>
+<ul>
+<li>an icon + "URLs"/"Favorites" title row</li>
+<li>the joined URLs as a <code>listItem</code> whose action opens a menu listing every URL</li>
+<li>a <code>progress</code> while it runs (value from the job when the importer reports one, otherwise indeterminate)</li>
+<li>a badge row (<code>TRACK</code>, user chip with <code>icon: "user"</code>)</li>
+<li>a <strong>Cancel</strong> button (<code>invoke</code> <code>cancel</code> with the job id) in the card's <code>actions</code></li>
+</ul>
+<p>With nothing queued the root is an <code>emptyState</code> ("Queue is empty") — render it as a <code>ContentUnavailableView</code>. It re-emits on every queue change, so there is no polling.</p>
+<h3 id="6-log-in-and-importer-settings"><a class="anchor" href="#6-log-in-and-importer-settings">6. Log in and importer settings</a></h3>
+<p>The settings gear opens <code>core.importer.settings</code> (modal): an "Importers" section listing every <em>installed</em> importer — authenticated or not — each with a status badge ("Authorized" / "Login required"), and a Login button for the ones that log in through the server (<code>LOGIN</code> capability) and are not authorized yet. Importers that take credentials instead (<code>CREDENTIALS</code> capability, e.g. gamdl) get no Login button; their plugin contributes a credentials section rendered below. Those plugin sections follow as collapsed sections (e.g. gamdl's Apple Music credentials form). A Login <code>invoke</code> returns</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"status"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"OK"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"message"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Complete the login in your browser, then come back."</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"refresh"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">true</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> "next"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"openUrl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://example.org/login"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}</span></span></code></pre>
+<p>Perform <code>next</code> (open the browser). When the login completes, both the settings page and the main page re-render with the importer marked "Authorized" and the login card gone.</p>
+<h3 id="7-share-intent"><a class="anchor" href="#7-share-intent">7. Share intent</a></h3>
+<p>A URL shared to the app:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">POST</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> /ui/dispatchHook</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"shareUrl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://music.apple.com/album/1"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>The event is the only body parameter, so it is sent bare.</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">[</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"source"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"server"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import with Tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"IMPORT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import this link?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">   "action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"intake"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"items"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://music.apple.com/album/1"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}], </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"resolverId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.tidal"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import this link?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.gamdl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.gamdl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"source"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"server"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import with gamdl (Apple Music)"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"IMPORT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import this link?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">   "action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"intake"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"items"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: [{</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"url"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://music.apple.com/album/1"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}], </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"resolverId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"import.gamdl"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"confirmText"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Import this link?"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}},</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">  {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"id"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"contributionId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"source"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"server"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"title"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"Open in importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"icon"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"named"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"name"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"IMPORT"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">   "action"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"type"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"openPage"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"pageId"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"core.importer"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"params"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">"input"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">"https://music.apple.com/album/1"</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">}}}</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]</span></span></code></pre>
+<p>Show the chooser; picking an "Import with …" entry performs its <code>intake</code> action (confirm, then <code>intake(items, resolverId)</code> → <code>OK</code> toast) without ever opening the importer page; "Open in importer" opens the page with the input pre-filled. A Tidal link yields one <code>intake</code> handler plus "Open in importer".</p>
+<h3 id="checklist-for-a-client"><a class="anchor" href="#checklist-for-a-client">Checklist for a client</a></h3>
+<ol>
+<li>Send <code>X-Ui-Schema-Version</code> and <code>Accept-Language</code> on every connection.</li>
+<li>Implement a <code>UiComponent</code> renderer for the vocabulary above, with <code>Fallback</code> handling, <code>live</code> subscriptions and modal pages.</li>
+<li>Implement the <code>barcodeScanner</code> and <code>externalSearch</code> portals.</li>
+<li>Replace the hardcoded importer entry with <code>renderSlot("library")</code> and the importer, queue and settings screens with the page renderer (<code>subscribe("core.importer")</code> etc.).</li>
+<li>Route share intents through <code>dispatchHook</code>, and replace native <code>importIds</code>/<code>importUrls</code> calls (external search download button, album import, recent releases) with <code>intake(items)</code> + toast/chooser.</li>
+<li>Render the home cards (<code>core.importer.card</code> ships: queue stats, current import, buttons into the importer and queue pages) and optionally the <code>settings</code> / <code>admin.dashboard</code> slots for plugin contributions.</li>
+</ol>
+<h2 id="evolving-the-schema"><a class="anchor" href="#evolving-the-schema">Evolving the schema</a></h2>
+<p>New components or enum entries are only added together with a bump of <code>UiSchemaVersion.CURRENT</code>; the server downgrades trees for older clients. Clients never need to handle unknown <code>type</code> values as long as they send the header.</p><!----></article> <footer class="doc-foot svelte-dre9m0"><a class="edit svelte-dre9m0" href="https://github.com/DerTyp7214/synara-api/blob/9e312cdbed8659eb53f53af5f0f3af6588f2fd31/docs/SERVER_DRIVEN_UI.md" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-github size-4" aria-hidden="true"><!--[--><!----><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"><!----></path><!----><!----><path d="M9 18c-4.51 2-5-2-7-2"><!----></path><!----><!--]--><!----><!----></svg><!----> Edit on GitHub <span class="sha svelte-dre9m0">SERVER_DRIVEN_UI.md @ 9e312cd</span></a> <nav class="pn svelte-dre9m0" aria-label="Previous and next"><!--[--><a href="/docs/api_versioning/" class="prev svelte-dre9m0"><small class="legend svelte-dre9m0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-arrow-left size-3.5" aria-hidden="true"><!--[--><!----><path d="m12 19-7-7 7-7"><!----></path><!----><!----><path d="M19 12H5"><!----></path><!----><!--]--><!----><!----></svg><!----> Previous</small> <span class="svelte-dre9m0">API Versioning</span></a><!--]--> <!--[--><a href="/docs/client_settings/" class="next svelte-dre9m0"><small class="legend svelte-dre9m0">Next <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-icon lucide lucide-arrow-right size-3.5" aria-hidden="true"><!--[--><!----><path d="M5 12h14"><!----></path><!----><!----><path d="m12 5 7 7-7 7"><!----></path><!----><!--]--><!----><!----></svg><!----></small> <span class="svelte-dre9m0">Client Settings</span></a><!--]--></nav></footer></div> <!--[--><aside class="toc svelte-dre9m0" aria-label="On this page"><h2 class="legend svelte-dre9m0">On this page</h2> <div class="toc-scroll svelte-dre9m0"><div class="toc-body svelte-ffhs5h"><!--[!--><!--]--> <!--[!--><!--]--> <ul id="toc-side-list" class="groups svelte-ffhs5h"><!--[--><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#concepts"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Concepts</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#headers-and-handshake"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Headers and handshake</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#the-vocabulary" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>The vocabulary</a> <span class="count svelte-ffhs5h" aria-label="4 sections">4</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#containers" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Containers</a></li><li><a href="#leaves" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Leaves</a></li><li><a href="#form-fields" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Form fields</a></li><li><a href="#icons" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Icons</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#actions"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Actions</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#portals"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Portals</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#reading-and-subscribing" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Reading and subscribing</a> <span class="count svelte-ffhs5h" aria-label="2 sections">2</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#live-values" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Live values</a></li><li><a href="#pages-and-the-toolbar" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Pages and the toolbar</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#intake"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Intake</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#home-cards"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Home cards</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#hooks"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Hooks</a><!--]--><!--]--></li><li class="svelte-ffhs5h"><!--[--><details class="disclosure" open><summary class="svelte-ffhs5h"><a href="#worked-example-the-importer-screen" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Worked example: the importer screen</a> <span class="count svelte-ffhs5h" aria-label="8 sections">8</span></summary> <ul class="sub svelte-ffhs5h"><!--[--><li><a href="#1-library-entry" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>1. Library entry</a></li><li><a href="#2-open-the-page" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>2. Open the page</a></li><li><a href="#3-stream-the-log" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>3. Stream the log</a></li><li><a href="#4-submit-the-form" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>4. Submit the form</a></li><li><a href="#5-queue-sheet" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>5. Queue sheet</a></li><li><a href="#6-log-in-and-importer-settings" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>6. Log in and importer settings</a></li><li><a href="#7-share-intent" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>7. Share intent</a></li><li><a href="#checklist-for-a-client" class="svelte-ffhs5h"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Checklist for a client</a></li><!--]--></ul></details><!--]--></li><li class="svelte-ffhs5h"><!--[!--><!--[--><a class="solo svelte-ffhs5h" href="#evolving-the-schema"><span class="led svelte-ffhs5h" aria-hidden="true"></span>Evolving the schema</a><!--]--><!--]--></li><!--]--></ul></div><!----></div></aside><!--]--></div><!----><!----></div></div><!----><!--]--><!----></main> <div class="design-retro contents"><footer class="rear mt-auto svelte-1kbsrt"><div class="shell py-12 md:py-16"><div class="vents svelte-1kbsrt" aria-hidden="true"></div> <div class="mt-10 grid gap-10 md:grid-cols-[1fr_1fr_minmax(0,1.35fr)] md:gap-12"><nav aria-labelledby="footer-source"><h2 id="footer-source" class="legend">On GitHub</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Server source</a></li><li><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Desktop app source</a></li><li><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Releases</a></li><!--]--></ul></nav> <nav aria-labelledby="footer-site"><h2 id="footer-site" class="legend">Synara</h2> <ul class="mt-4 space-y-3"><!--[--><li><a href="/apps/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Apps</a></li><li><a href="/docs/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Docs</a></li><li><a href="/server/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Run a server</a></li><li><a href="/download/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Download</a></li><li><a href="/privacy/" class="jack-link svelte-1kbsrt"><span class="jack svelte-1kbsrt" aria-hidden="true"></span>Privacy</a></li><!--]--></ul></nav> <div class="plate svelte-1kbsrt"><span class="screw top-2 left-2" aria-hidden="true"></span> <span class="screw top-2 right-2" style="--screw-angle: -20deg" aria-hidden="true"></span> <span class="screw bottom-2 left-2" style="--screw-angle: 80deg" aria-hidden="true"></span> <span class="screw right-2 bottom-2" aria-hidden="true"></span> <a href="/" class="inline-flex items-center gap-2.5 rounded-sm text-ink" aria-label="Synara home"><!--$s3--><svg width="100%" height="100%" class="h-7 w-auto" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s3)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-3 w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="model svelte-1kbsrt">Model SR-1</span></a> <p class="mt-4 text-[0.9375rem] text-muted">A music server you run yourself, with native apps that play your library bit for bit.</p> <dl class="ratings svelte-1kbsrt"><div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Server</dt> <dd class="svelte-1kbsrt">GPL-2.0</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Apps</dt> <dd class="svelte-1kbsrt">Free</dd></div> <div class="svelte-1kbsrt"><dt class="svelte-1kbsrt">Made</dt> <dd class="svelte-1kbsrt">© 2026 Synara</dd></div></dl></div></div></div></footer><!----></div> <div class="design-modern contents"><footer class="m-footer mt-auto svelte-tqky0e"><div class="shell"><div class="cols svelte-tqky0e"><div class="about svelte-tqky0e"><a href="/" class="brand svelte-tqky0e" aria-label="Synara home"><span class="inline-flex flex-row items-center gap-2.5 "><!--$s4--><svg width="100%" height="100%" class="h-[2.1em] w-auto shrink-0" viewBox="120 20 280 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="synara-ribbon-s4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"></stop><stop offset="50%" stop-color="#FF4500"></stop><stop offset="100%" stop-color="#FF1493"></stop></linearGradient></defs><path d="M360,150 C360,80 230,80 200,130 C170,180 340,220 340,300 C340,380 210,420 160,380" fill="none" stroke="url(#synara-ribbon-s4)" stroke-width="45" stroke-linecap="round"></path></svg><!----> <svg width="100%" height="100%" viewBox="73 10 105 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-[0.85em] w-auto" aria-hidden="true"><g fill="currentColor"><path d="M80.7031 28.432C78.3831 28.432 76.5911 27.888 75.3271 26.8C74.0791 25.696 73.4631 24.048 73.4791 21.856H77.3911C77.3751 22.768 77.6471 23.464 78.2071 23.944C78.7671 24.424 79.5511 24.664 80.5591 24.664C81.3911 24.664 82.0471 24.528 82.5271 24.256C83.0071 23.984 83.2471 23.568 83.2471 23.008C83.2471 22.544 82.9991 22.208 82.5031 22C82.0231 21.792 81.5431 21.648 81.0631 21.568C80.5831 21.472 80.2871 21.416 80.1751 21.4C78.9431 21.16 77.8791 20.872 76.9831 20.536C76.0871 20.184 75.3351 19.656 74.7271 18.952C74.1191 18.248 73.8151 17.32 73.8151 16.168C73.8151 15.016 74.1191 14.04 74.7271 13.24C75.3351 12.424 76.1431 11.816 77.1511 11.416C78.1751 11.016 79.2871 10.816 80.4871 10.816C81.9431 10.816 83.1991 11.088 84.2551 11.632C85.3271 12.176 86.1671 13 86.7751 14.104C87.0791 14.632 87.2631 15.144 87.3271 15.64C87.3911 16.12 87.4231 16.592 87.4231 17.056H83.5111C83.5111 16.192 83.2791 15.56 82.8151 15.16C82.3511 14.744 81.6311 14.536 80.6551 14.536C79.8711 14.536 79.2631 14.672 78.8311 14.944C78.3991 15.216 78.1831 15.584 78.1831 16.048C78.1831 16.56 78.4711 16.936 79.0471 17.176C79.6231 17.416 80.3511 17.632 81.2311 17.824C82.6711 18.112 83.7911 18.392 84.5911 18.664C85.4071 18.92 86.1111 19.384 86.7031 20.056C87.2951 20.728 87.5911 21.672 87.5911 22.888C87.5911 24.04 87.2711 25.032 86.6311 25.864C85.9911 26.696 85.1431 27.336 84.0871 27.784C83.0471 28.216 81.9191 28.432 80.7031 28.432ZM91.2208 11.296H105.477L98.8048 21.16V28H97.9168V21.16L91.2208 11.296ZM109.61 27.976V11.272H110.546L122.21 22.624V11.272H123.098V27.976H109.61ZM141.752 28H126.008L133.88 10.936L141.752 28ZM127.4 27.112H140.36L133.88 13.048L127.4 27.112ZM158.558 28H145.718V11.296H152.222C153.614 11.296 154.75 11.544 155.63 12.04C156.494 12.52 157.166 13.176 157.646 14.008C158.126 14.84 158.366 15.76 158.366 16.768C158.366 18.016 157.982 19.136 157.214 20.128C156.446 21.104 155.478 21.752 154.31 22.072L158.558 28ZM147.23 12.184L153.758 21.304C154.83 21.08 155.718 20.544 156.422 19.696C157.126 18.848 157.478 17.872 157.478 16.768C157.478 15.888 157.262 15.088 156.83 14.368C156.398 13.648 155.79 13.096 155.006 12.712C154.302 12.36 153.382 12.184 152.246 12.184H147.23ZM146.606 12.76V21.376H152.774L146.606 12.76ZM146.606 27.112H156.878L153.374 22.24L152.63 22.264H146.606V27.112ZM177.283 28H161.539L169.411 10.936L177.283 28ZM162.931 27.112H175.891L169.411 13.048L162.931 27.112Z" fill="currentColor"></path></g></svg><!----> <span class="sr-only">Synara</span></span><!----></a> <p class="tagline svelte-tqky0e">A music server you run yourself, with native apps that play your library bit for bit.</p></div> <nav aria-labelledby="m-footer-site"><h2 id="m-footer-site" class="group-h svelte-tqky0e">Synara</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="/apps/" class="svelte-tqky0e">Apps</a></li><li class="svelte-tqky0e"><a href="/docs/" class="svelte-tqky0e">Docs</a></li><li class="svelte-tqky0e"><a href="/server/" class="svelte-tqky0e">Run a server</a></li><li class="svelte-tqky0e"><a href="/download/" class="svelte-tqky0e">Download</a></li><li class="svelte-tqky0e"><a href="/privacy/" class="svelte-tqky0e">Privacy</a></li><!--]--></ul></nav> <nav aria-labelledby="m-footer-source"><h2 id="m-footer-source" class="group-h svelte-tqky0e">On GitHub</h2> <ul class="svelte-tqky0e"><!--[--><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/synara-api" rel="noopener" class="svelte-tqky0e">Server source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/SynaraDesktop" rel="noopener" class="svelte-tqky0e">Desktop app source</a></li><li class="svelte-tqky0e"><a href="https://github.com/DerTyp7214/Synara" rel="noopener" class="svelte-tqky0e">Releases</a></li><!--]--></ul></nav></div> <div class="base svelte-tqky0e"><p>Server: GPL-2.0, apps free</p> <p>© 2026 Synara</p></div></div></footer><!----></div></div><!--]--><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_3zbfyr = {
+						base: new URL("../..", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("../../internal/immutable/entry/start.ZGwwYrzZ.js"),
+						import("../../internal/immutable/entry/app.DMIzLkDz.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2, 6],
+							data: [null,{type:"data",data:{nav:[{title:"Start",items:[{title:"Overview",href:"/docs/"}]},{title:"Build a client",items:[{title:"Getting Started as a Client",href:"/docs/client_getting_started/",description:"The four API surfaces, picking one, and a first login-and-search call. Start here."},{title:"Kotlin RPC Client Guide",href:"/docs/client_kotlin_rpc/",description:"Using the common-rpc Kotlin/KMP SDK: BaseRpcServiceManager, login, services, streaming Flows."},{title:"REST for Client Developers",href:"/docs/client_rest/",description:"The HTTP/JSON surface for non-Kotlin clients: route derivation, parameter binding, authentication."},{title:"Authentication",href:"/docs/authentication/",description:"Logging in, JWTs and refresh tokens, API keys, and how each is presented over RPC and REST."},{title:"Streaming and Playback",href:"/docs/streaming_and_playback/",description:"Streaming audio, transcoding, queues and multi-device playback sync."},{title:"API Versioning",href:"/docs/api_versioning/",description:"The API-version and UI-schema-version headers and how the server adapts responses to older clients."},{title:"Server-Driven UI",href:"/docs/server_driven_ui/",description:"Rendering server-described UI (slots, pages, home cards, hooks), with the importer as a worked example."},{title:"Client Settings",href:"/docs/client_settings/",description:"Keeping client settings on the server, synced across devices or per device."},{title:"Synara Mock Server",href:"/docs/mock_server/",description:"Running a mock server that generates dummy RPC/REST responses for client development."}]},{title:"Reference",items:[{title:"Synara RPC Services Documentation",href:"/docs/rpc_services/",description:void 0},{title:"Synara Data Models",href:"/docs/models/",description:void 0},{title:"Synara Permissions",href:"/docs/permissions/",description:void 0},{title:"Synara REST API",href:"/docs/rest_api/",description:void 0},{title:"Synara API Constants",href:"/docs/api_constants/",description:void 0},{title:"Environment Variables Documentation",href:"/docs/environment_variables/",description:void 0},{title:"Relation map",href:"https://synara-insights.dertyp.dev/RELATION_MAP.html",description:void 0,external:true},{title:"Commit stats",href:"https://synara-insights.dertyp.dev/STATS.html",description:void 0,external:true}]},{title:"Extend the server",items:[{title:"Synara Custom Plugins",href:"/docs/plugins/",description:"Writing a plugin (ISynaraPlugin): importers, indexers, routes, scheduled tasks, server-driven UI."},{title:"Synara MCP (listen history)",href:"/docs/mcp/",description:"The read-only Model Context Protocol endpoint for querying listening history from an AI assistant."},{title:"Synara Listen Backup",href:"/docs/listen_backup/",description:"Running a standalone receiver that keeps a copy of listening history."},{title:"Synara Credential Server",href:"/docs/credential_server/",description:"Running a standalone server that hands third-party credentials to Synara servers and plugins."}]},{title:"Work on the server",items:[{title:"Architecture",href:"/docs/architecture/",description:"Module map, request flow, package layout, DI, workers, migrations, generators."},{title:"Development",href:"/docs/development/",description:"Cloning, running, testing, the common-rpc submodule workflow, adding an RPC method, troubleshooting."},{title:"Deprecations",href:"/docs/deprecations/",description:"Checklist of what to remove or change when an API, UI schema or plugin API version bump reaches a target version."}]}]},uses:{}},{type:"data",data:{title:"Server-Driven UI",path:"/docs/server_driven_ui/",hasMermaid:false,toc:[{id:"concepts",text:"Concepts",depth:2},{id:"headers-and-handshake",text:"Headers and handshake",depth:2},{id:"the-vocabulary",text:"The vocabulary",depth:2},{id:"containers",text:"Containers",depth:3},{id:"leaves",text:"Leaves",depth:3},{id:"form-fields",text:"Form fields",depth:3},{id:"icons",text:"Icons",depth:3},{id:"actions",text:"Actions",depth:2},{id:"portals",text:"Portals",depth:2},{id:"reading-and-subscribing",text:"Reading and subscribing",depth:2},{id:"live-values",text:"Live values",depth:3},{id:"pages-and-the-toolbar",text:"Pages and the toolbar",depth:3},{id:"intake",text:"Intake",depth:2},{id:"home-cards",text:"Home cards",depth:2},{id:"hooks",text:"Hooks",depth:2},{id:"worked-example-the-importer-screen",text:"Worked example: the importer screen",depth:2},{id:"1-library-entry",text:"1. Library entry",depth:3},{id:"2-open-the-page",text:"2. Open the page",depth:3},{id:"3-stream-the-log",text:"3. Stream the log",depth:3},{id:"4-submit-the-form",text:"4. Submit the form",depth:3},{id:"5-queue-sheet",text:"5. Queue sheet",depth:3},{id:"6-log-in-and-importer-settings",text:"6. Log in and importer settings",depth:3},{id:"7-share-intent",text:"7. Share intent",depth:3},{id:"checklist-for-a-client",text:"Checklist for a client",depth:3},{id:"evolving-the-schema",text:"Evolving the schema",depth:2}],editUrl:"https://github.com/DerTyp7214/synara-api/blob/9e312cdbed8659eb53f53af5f0f3af6588f2fd31/docs/SERVER_DRIVEN_UI.md",file:"SERVER_DRIVEN_UI.md",sha:"9e312cd",prev:{title:"API Versioning",href:"/docs/api_versioning/"},next:{title:"Client Settings",href:"/docs/client_settings/"}},uses:{params:["slug"],parent:1}}],
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>
