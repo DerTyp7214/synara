@@ -34,7 +34,7 @@
         <section id="m-apps-{p.id}" class="ma-plat ma-{p.frame}" aria-labelledby="m-apps-{p.id}-h">
             <div class="ma-stage tint tint-light-years">
                 <div class="ma-backdrop" aria-hidden="true">
-                    <img src="/demo/covers/light-years.webp" alt="" width="600" height="600" loading="lazy" decoding="async"/>
+                    <img src="/demo/covers/light-years.webp" alt="" draggable="false" width="600" height="600" loading="lazy" decoding="async"/>
                 </div>
                 <div class="shell ma-hero">
                     <div class="ma-copy">

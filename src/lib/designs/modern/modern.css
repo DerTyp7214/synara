@@ -700,6 +700,19 @@
 	display: none !important;
 }
 
+/* ---------- Text selection (Modern chrome; the shared rules are in app.css) ----------
+ * Header and footer link lists, the segmented controls, the hero demo player (title, artist, times,
+ * transport, format badge), platform chips and the share page's platform rows are not selectable.
+ * Body copy, .prose, code and the share title/artist stay selectable.
+ */
+:root[data-design="modern"] :is(
+	.m-header, .m-footer ul, .seg, .seg *, .menu-label, .mg-label, .ma-chips, .m-hero .player,
+	.m-hero .player *, .ms-list a, .ms-ico, .ms-kind, .ms-time
+) {
+	-webkit-user-select: none;
+	user-select: none;
+}
+
 /* ---------- Phase 1 overrides for scoped Retro component styles ----------
  * These components still render under Modern until Phase 2 gives them Modern variants. Unlayered and
  * one specificity step above Svelte's scoped selectors. Delete each block with its component's variant.

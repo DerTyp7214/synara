@@ -1062,3 +1062,41 @@
 		color: var(--shiki-light);
 	}
 }
+
+/* ---------- Text selection ----------
+ * UI chrome (buttons, toggles, chips, readouts, decoration, media) is not selectable, so a double click
+ * or a drag across a control never highlights it. Everything a visitor might copy (body copy, .prose,
+ * code, the share page title) stays selectable. Never set `none` on body or a large container: name
+ * the chrome elements. A parent `none` would leak into its children, so selectable regions are
+ * restated below.
+ */
+@layer components {
+	:is(
+		.key, .selector, .selector *, .tag, .led, .screw, .vents, .jack, .jack-link, .legend, .label,
+		.model, .power, .lcd-dots, .code-block-head, details > summary,
+		.mmd-keys, .mmd-key, .dsw, .dsw *, .switch, .switch *, .rv-handle, .rv-line, .rv-input,
+		header.strip, .mobile-nav, .rear ul, .docs-nav, .pc-label, .pc-chips
+	),
+	.lcd:not(pre),
+	.lcd:not(pre) *,
+	img, picture, canvas, video,
+	svg:where(:not(.mmd-stage svg)) {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+	/* Decorative media and frames: no ghost drag either. */
+	img, picture, .dv, .dv *, .rv, .app-icon {
+		-webkit-user-drag: none;
+	}
+	.dv, .dv *, .rv, .rv * {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+
+	/* Selectable on purpose. */
+	.prose, .code-block pre, .code-block pre *, code, .code-inline, .readout,
+	.credits-body, .toc-body a, input, textarea {
+		-webkit-user-select: text;
+		user-select: text;
+	}
+}

@@ -21,7 +21,7 @@
 {#snippet pic(theme: 'dark' | 'light', cls: string)}
     <picture class={cls}>
         <source type="image/avif" srcset={srcset(theme, 'avif')} {sizes}/>
-        <img class="shot" src={src(theme)} srcset={srcset(theme, 'webp')} {sizes} {alt} width={s.w} height={s.h}
+        <img class="shot" draggable="false" src={src(theme)} srcset={srcset(theme, 'webp')} {sizes} {alt} width={s.w} height={s.h}
              loading="lazy" decoding="async" fetchpriority={priority ? 'high' : 'auto'}/>
     </picture>
 {/snippet}

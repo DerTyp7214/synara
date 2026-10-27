@@ -76,7 +76,7 @@
 
     <header class="ms-top">
         <a href="/" class="brand" aria-label="Synara home">
-            <img src="/brand/app-icon-fg.svg" alt="" width="32" height="32" class="brand-icon"/>
+            <img src="/brand/app-icon-fg.svg" alt="" draggable="false" width="32" height="32" class="brand-icon"/>
             <span class="brand-name">Synara</span>
         </a>
     </header>
@@ -84,7 +84,7 @@
     <main class="ms-stage">
         {#if empty}
             <section class="ms-empty" aria-labelledby="ms-empty-h">
-                <img src="/brand/app-icon-fg.svg" alt="" width="96" height="96" class="ms-empty-icon"/>
+                <img src="/brand/app-icon-fg.svg" alt="" draggable="false" width="96" height="96" class="ms-empty-icon"/>
                 <h1 id="ms-empty-h">Nothing shared yet</h1>
                 <p>
                     This page shows songs, albums and artists that someone shared from Synara.
@@ -100,6 +100,7 @@
                             {#key cors}
                                 <img
                                     src={cover}
+                                    draggable="false"
                                     alt="Cover art for {title}"
                                     crossorigin={cors ? 'anonymous' : undefined}
                                     onload={(e) => tintFrom(e.currentTarget as HTMLImageElement)}

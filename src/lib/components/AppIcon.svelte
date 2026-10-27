@@ -5,7 +5,7 @@
     let { class: className = '', alt = '' }: { class?: string; alt?: string } = $props();
 </script>
 
-<img src="/brand/app-icon-fg.svg" {alt} width="440" height="440" decoding="async" class="app-icon {className}"/>
+<img src="/brand/app-icon-fg.svg" {alt} width="440" height="440" draggable="false" decoding="async" class="app-icon {className}"/>
 
 <style>
     .app-icon {

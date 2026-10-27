@@ -132,7 +132,7 @@
                 <div class="art">
                     <div class="window">
                         {#if cover}
-                            <img src={cover} alt="Cover art for {title}" class="art-img" onerror={() => (coverFailed = true)} />
+                            <img src={cover} alt="Cover art for {title}" class="art-img" draggable="false" onerror={() => (coverFailed = true)} />
                         {:else if loading}
                             <div class="art-img skeleton" aria-hidden="true"></div>
                         {:else}
@@ -216,6 +216,11 @@
 {/if}
 
 <style>
+    /* The title and artist sit in an LCD (not selectable); people copy song names. */
+    .screen :is(.name, .artists, .album) {
+        -webkit-user-select: text;
+        user-select: text;
+    }
     .share {
         min-height: 100dvh;
         display: flex;

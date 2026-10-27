@@ -102,7 +102,7 @@
 <section class="m-hero tint {song.tint}" aria-labelledby="m-hero-h">
     <div class="backdrop" aria-hidden="true">
         {#each songs as s, i (s.cover)}
-            <img src={s.cover} alt="" width="600" height="600" decoding="async" class={i === index ? 'on' : ''}/>
+            <img src={s.cover} alt="" draggable="false" width="600" height="600" decoding="async" class={i === index ? 'on' : ''}/>
         {/each}
     </div>
 
@@ -121,7 +121,7 @@
             <figure class="player glass mh-squircle" bind:this={card} aria-label="Demo of the Synara player">
                 <div class="cover mh-squircle">
                     {#each songs as s, i (s.cover)}
-                        <img src={s.cover} alt="" width="600" height="600" decoding="async" class={i === index ? 'on' : ''}/>
+                        <img src={s.cover} alt="" draggable="false" width="600" height="600" decoding="async" class={i === index ? 'on' : ''}/>
                     {/each}
                 </div>
                 <div class="track">
