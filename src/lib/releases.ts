@@ -224,7 +224,7 @@ export const DESKTOP_FILES: DesktopFile[] = [
 	{ kind: 'deb', os: 'linux', suffix: 'linux-x64.deb', label: 'Linux', format: 'Debian / Ubuntu', ext: '.deb' },
 	{ kind: 'tar', os: 'linux', suffix: 'linux-x64.tar.gz', label: 'Linux', format: 'Portable archive', ext: '.tar.gz' },
 	{ kind: 'msi', os: 'windows', suffix: 'windows-x64.msi', label: 'Windows', format: 'Installer', ext: '.msi' },
-	{ kind: 'dmg', os: 'macos', suffix: 'macos-x64.dmg', label: 'macOS (Apple Silicon)', format: 'Disk image', ext: '.dmg' }
+	{ kind: 'dmg', os: 'macos', suffix: 'macos-arm64.dmg', label: 'macOS (Apple Silicon)', format: 'Disk image', ext: '.dmg' }
 ];
 export function recommendedDesktopFile(os: VisitorOs): DesktopFileKind | null {
 	return DESKTOP_FILES.find((f) => f.os === os)?.kind ?? null;
