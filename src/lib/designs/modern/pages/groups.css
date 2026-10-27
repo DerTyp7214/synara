@@ -6,292 +6,292 @@
 
 /* ---------- Page layout ---------- */
 .mp {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 2rem;
-	padding-block: 1.25rem 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  padding-block: 1.25rem 4rem;
 }
 .mp-main {
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
-	min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
 }
 .mp-side .h-display {
-	font-size: clamp(2.125rem, 1.7rem + 1.6vw, 2.875rem);
+  font-size: clamp(2.125rem, 1.7rem + 1.6vw, 2.875rem);
 }
 @media (min-width: 64rem) {
-	.mp {
-		grid-template-columns: minmax(0, 20rem) minmax(0, 42rem);
-		justify-content: space-between;
-		gap: 4rem;
-		padding-block: 3.5rem 6rem;
-		align-items: start;
-	}
-	.mp-side {
-		position: sticky;
-		top: calc(var(--header-h) + 2.5rem);
-	}
+  .mp {
+    grid-template-columns: minmax(0, 20rem) minmax(0, 42rem);
+    justify-content: space-between;
+    gap: 4rem;
+    padding-block: 3.5rem 6rem;
+    align-items: start;
+  }
+  .mp-side {
+    position: sticky;
+    top: calc(var(--header-h) + 2.5rem);
+  }
 }
 
 /* ---------- Inset-grouped section ---------- */
 .mg-head {
-	padding: 0 1rem 0.5rem;
-	font-size: var(--ios-footnote-size);
-	font-weight: 600;
-	line-height: 1.3;
-	color: var(--color-muted);
+  padding: 0 1rem 0.5rem;
+  font-size: var(--ios-footnote-size);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-muted);
 }
 .mg-foot {
-	padding: 0.5rem 1rem 0;
-	font-size: var(--ios-footnote-size);
-	line-height: 1.4;
-	color: var(--color-muted);
+  padding: 0.5rem 1rem 0;
+  font-size: var(--ios-footnote-size);
+  line-height: 1.4;
+  color: var(--color-muted);
 }
 .mg-foot.warn {
-	display: flex;
-	gap: 0.5rem;
-	color: var(--color-warn);
+  display: flex;
+  gap: 0.5rem;
+  color: var(--color-warn);
 }
 .mg-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	border-radius: var(--m-radius-group);
-	background: var(--m-grouped-bg-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--m-radius-group);
+  background: var(--m-grouped-bg-2);
 }
 @supports (corner-shape: squircle) {
-	.mg-list,
-	.mg-icon {
-		corner-shape: squircle;
-	}
+  .mg-list,
+  .mg-icon {
+    corner-shape: squircle;
+  }
 }
 
 /* ---------- Row ---------- */
 .mg-row {
-	--sep-left: 1rem;
-	position: relative;
-	display: flex;
-	align-items: center;
-	gap: 0.875rem;
-	min-height: 3.5rem;
-	padding: 0.75rem 1rem;
+  --sep-left: 1rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 3.5rem;
+  padding: 0.75rem 1rem;
 }
 .mg-row.has-icon {
-	--sep-left: calc(1rem + 2.25rem + 0.875rem);
+  --sep-left: calc(1rem + 2.25rem + 0.875rem);
 }
 .mg-row + .mg-row::before,
 .mg-body::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: var(--sep-left);
-	right: 0;
-	height: 1px;
-	background: var(--color-line);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--sep-left);
+  right: 0;
+  height: 1px;
+  background: var(--color-line);
 }
 /* Rows that follow a highlighted row keep the hairline; the highlighted row itself is a tinted fill. */
 .mg-row.yours {
-	background: color-mix(in oklab, var(--color-accent) 13%, var(--m-grouped-bg-2));
+  background: color-mix(in oklab, var(--color-accent) 13%, var(--m-grouped-bg-2));
 }
 .mg-row.yours + .mg-row::before,
 .mg-row.yours::before {
-	opacity: 0;
+  opacity: 0;
 }
 .mg-icon {
-	flex: none;
-	display: grid;
-	place-items: center;
-	width: 2.25rem;
-	height: 2.25rem;
-	border-radius: 0.625rem;
-	background: var(--m-primary-container);
-	color: var(--m-on-primary-container);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+  background: var(--m-primary-container);
+  color: var(--m-on-primary-container);
 }
 .mg-icon.dim {
-	background: var(--m-grouped-bg-3);
-	color: var(--color-muted);
+  background: var(--m-grouped-bg-3);
+  color: var(--color-muted);
 }
 .mg-text {
-	flex: 1 1 8rem;
-	min-width: 0;
+  flex: 1 1 8rem;
+  min-width: 0;
 }
 .mg-title {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 0.25rem 0.5rem;
-	font-size: var(--ios-body-size);
-	font-weight: 500;
-	line-height: 1.3;
-	letter-spacing: var(--ios-body-tracking);
-	color: var(--color-ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  font-size: var(--ios-body-size);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: var(--ios-body-tracking);
+  color: var(--color-ink);
 }
 .mg-sub {
-	margin-top: 0.125rem;
-	font-size: var(--ios-subheadline-size);
-	line-height: 1.35;
-	letter-spacing: var(--ios-subheadline-tracking);
-	color: var(--color-muted);
-	overflow-wrap: anywhere;
+  margin-top: 0.125rem;
+  font-size: var(--ios-subheadline-size);
+  line-height: 1.35;
+  letter-spacing: var(--ios-subheadline-tracking);
+  color: var(--color-muted);
+  overflow-wrap: anywhere;
 }
 .mg-trail {
-	flex: none;
-	font-size: var(--ios-subheadline-size);
-	color: var(--color-muted);
+  flex: none;
+  font-size: var(--ios-subheadline-size);
+  color: var(--color-muted);
 }
 .mono {
-	font-family: var(--font-mono);
-	font-size: 0.8125rem;
-	letter-spacing: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0;
 }
 /* A block inside a group (code, a longer description). */
 .mg-body {
-	position: relative;
-	padding: 0.75rem;
-	--sep-left: 0;
+  position: relative;
+  padding: 0.75rem;
+  --sep-left: 0;
 }
 .mg-body .code-block {
-	background: var(--m-grouped-bg-3);
-	/* concentric: group radius minus the 0.75rem inset */
-	border-radius: calc(var(--m-radius-group) - 0.75rem);
+  background: var(--m-grouped-bg-3);
+  /* concentric: group radius minus the 0.75rem inset */
+  border-radius: calc(var(--m-radius-group) - 0.75rem);
 }
 .mg-body .code-block + .code-block {
-	margin-top: 0.5rem;
+  margin-top: 0.5rem;
 }
 .mg-body .btn-row {
-	margin-top: 0.75rem;
-	display: flex;
+  margin-top: 0.75rem;
+  display: flex;
 }
 .mg-body p.mg-sub {
-	padding: 0.25rem 0.25rem 0.75rem;
+  padding: 0.25rem 0.25rem 0.75rem;
 }
 
 /* Download buttons collapse to their icon on narrow screens (the row's title names the file). */
 .mg-btn .lbl {
-	display: none;
+  display: none;
 }
 @media (min-width: 30rem) {
-	.mg-btn .lbl {
-		display: inline;
-	}
+  .mg-btn .lbl {
+    display: inline;
+  }
 }
 @media (max-width: 29.99rem) {
-	.mg-btn {
-		width: 2.5rem;
-		height: 2.5rem;
-		min-height: 0;
-		padding: 0;
-	}
+  .mg-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-height: 0;
+    padding: 0;
+  }
 }
 
 /* Navigation row (links to other pages): chevron at the end, press highlight. */
 a.mg-row {
-	color: inherit;
-	transition: background-color var(--dur-ui);
+  color: inherit;
+  transition: background-color var(--dur-ui);
 }
 a.mg-row:hover {
-	background: color-mix(in oklab, var(--color-ink) 5%, transparent);
+  background: color-mix(in oklab, var(--color-ink) 5%, transparent);
 }
 a.mg-row:active {
-	background: color-mix(in oklab, var(--color-ink) 9%, transparent);
+  background: color-mix(in oklab, var(--color-ink) 9%, transparent);
 }
 .mg-chev {
-	flex: none;
-	color: var(--color-faint);
+  flex: none;
+  color: var(--color-faint);
 }
 .mg-row:focus-visible {
-	outline-offset: -3px;
-	border-radius: var(--m-radius-group);
+  outline-offset: -3px;
+  border-radius: var(--m-radius-group);
 }
 
 /* A disclosure group (summary row + revealed rows). */
 .mg-disclosure > summary {
-	list-style: none;
-	cursor: pointer;
+  list-style: none;
+  cursor: pointer;
 }
 .mg-disclosure > summary::-webkit-details-marker {
-	display: none;
+  display: none;
 }
 .mg-disclosure > summary .mg-chev {
-	transition: transform 260ms var(--ease-spring);
+  transition: transform 260ms var(--ease-spring);
 }
 .mg-disclosure[open] > summary .mg-chev {
-	transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 @media (prefers-reduced-motion: reduce) {
-	.mg-disclosure > summary .mg-chev {
-		transition: none;
-	}
+  .mg-disclosure > summary .mg-chev {
+    transition: none;
+  }
 }
 
 /* Segmented pickers inside a group. */
 .mg-picker {
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-	gap: 0.5rem;
-	padding: 0.75rem 1rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem 0.875rem;
 }
 .mg-picker .selector {
-	display: grid;
-	width: 100%;
+  display: grid;
+  width: 100%;
 }
 .mg-picker + .mg-picker {
-	position: relative;
+  position: relative;
 }
 .mg-picker + .mg-picker::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 1rem;
-	right: 0;
-	height: 1px;
-	background: var(--color-line);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 0;
+  height: 1px;
+  background: var(--color-line);
 }
 .mg-picker .mg-label {
-	font-size: var(--ios-subheadline-size);
-	font-weight: 500;
-	color: var(--color-ink);
+  font-size: var(--ios-subheadline-size);
+  font-weight: 500;
+  color: var(--color-ink);
 }
 
 /* Step badge in a numbered list (a real sequence). */
 .mg-num {
-	flex: none;
-	display: grid;
-	place-items: center;
-	width: 1.75rem;
-	height: 1.75rem;
-	border-radius: 50%;
-	background: var(--m-tint-fill);
-	color: var(--color-accent-ink);
-	font-size: var(--ios-subheadline-size);
-	font-weight: 600;
-	font-variant-numeric: tabular-nums;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--m-tint-fill);
+  color: var(--color-accent-ink);
+  font-size: var(--ios-subheadline-size);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Rows inside list items (link rows): the separator belongs to the row. */
 .mg-list > li + li > .mg-row::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 1rem;
-	right: 0;
-	height: 1px;
-	background: var(--color-line);
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 0;
+  height: 1px;
+  background: var(--color-line);
 }
 
 /* Content that changes with a switch (channel, compose variant): a short crossfade/slide on arrival.
  * `.swap` is only set after the visitor has used a switch, never on first paint. */
 @media (prefers-reduced-motion: no-preference) {
-	.swap {
-		animation: m-swap 300ms var(--ease-out-soft, cubic-bezier(0.2, 0.7, 0.2, 1)) both;
-	}
-	@keyframes m-swap {
-		from {
-			opacity: 0;
-			transform: translateY(6px);
-		}
-	}
+  .swap {
+    animation: m-swap 300ms var(--ease-out-soft, cubic-bezier(0.2, 0.7, 0.2, 1)) both;
+  }
+  @keyframes m-swap {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
 }

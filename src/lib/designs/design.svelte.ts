@@ -8,28 +8,28 @@
  * (set before any module runs), is re-read by `design.sync()` when the root layout mounts, and follows
  * `design.set()` from the toggle.
  */
-import { applyDesignPref, readDesignPref, type DesignPref } from '$lib/theme';
+import { applyDesignPref, readDesignPref, type DesignPref } from '$lib/theme'
 
-let current = $state<DesignPref>(readDesignPref());
+let current = $state<DesignPref>(readDesignPref())
 
 export const design = {
-	/** 'retro' | 'modern' */
-	get current(): DesignPref {
-		return current;
-	},
-	get isModern(): boolean {
-		return current === 'modern';
-	},
-	get isRetro(): boolean {
-		return current === 'retro';
-	},
-	/** Apply, persist and publish a design. */
-	set(next: DesignPref) {
-		applyDesignPref(next);
-		current = next;
-	},
-	/** Re-read the <html> attribute. */
-	sync() {
-		current = readDesignPref();
-	}
-};
+  /** 'retro' | 'modern' */
+  get current(): DesignPref {
+    return current
+  },
+  get isModern(): boolean {
+    return current === 'modern'
+  },
+  get isRetro(): boolean {
+    return current === 'retro'
+  },
+  /** Apply, persist and publish a design. */
+  set(next: DesignPref) {
+    applyDesignPref(next)
+    current = next
+  },
+  /** Re-read the <html> attribute. */
+  sync() {
+    current = readDesignPref()
+  },
+}

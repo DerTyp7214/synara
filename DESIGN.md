@@ -24,6 +24,7 @@ Sources of truth: `src/app.css` (shared base and Retro), `src/lib/designs/modern
 - Icons: `@lucide/svelte`, per-icon imports, `aria-hidden="true"` next to text.
 
 ### Theme and design switching
+
 - Two independent axes on `<html>`: `data-theme="light|dark"` (absent = follow the OS; dark is the fallback) and
   `data-design="modern"` (absent = Retro). `app.html` ships `data-design="modern"`, so prerendered and no-JS HTML is
   Modern/system; the inline script removes the attribute for a stored or requested Retro. There is no server-side branching.
@@ -74,10 +75,12 @@ hidden by CSS (global rule in `app.css`, `display: none !important`):
 ## Shared content and data
 
 ### Copy lives in data
+
 Facts are in `src/lib/components/home/content.ts`, `download/content.ts`, `server/content.ts`; release logic in `$lib/releases.ts`. Markup should
 not hardcode product claims.
 
 ### Docs delivery
+
 Docs HTML is not part of the serialized page data. `+page.server.ts` returns metadata only; `+page.ts` adds the HTML
 (`$lib/docs/html.ts`): from the docs pipeline during prerender, from the already-rendered `<article data-doc>` when hydrating,
 and from the target's prerendered page on client-side navigation.
@@ -96,20 +99,20 @@ The one memorable thing is the hero front panel: the amber display and the movin
 
 ### Tokens (Tailwind utilities are generated from them)
 
-| Token | Utility examples | Use |
-|---|---|---|
-| `bg` | `bg-bg` | page background: the shelf the gear sits on |
-| `surface` | `bg-surface` | faceplates, modules |
-| `raised` | `bg-raised` | light fills, hover |
-| `recess` | `bg-recess` | wells, slots, inline code, the rear panel (footer) |
-| `ink` / `muted` / `faint` | `text-ink` … | primary / secondary / tertiary text. `faint` is still AA on `bg` and `surface` |
-| `line` / `line-strong` | `border-line` | hairlines; strong for plates and tags |
-| `accent` | `bg-accent` | indicator orange: lit LEDs, primary key, patch cables. Not for text |
-| `accent-ink` | `text-accent-ink` | accent as text (AA in both themes) |
-| `on-accent` | | text on the orange key |
-| `ok` / `warn` | `text-ok`, `text-warn` | status |
-| `led-off` | | unlit LED |
-| `lcd` / `lcd-ink` / `lcd-dim` / `lcd-ghost` | `text-(--color-lcd-ink)` | the amber display. **Identical in both themes**: it is a lit panel, not paper |
+| Token                                       | Utility examples         | Use                                                                            |
+| ------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------ |
+| `bg`                                        | `bg-bg`                  | page background: the shelf the gear sits on                                    |
+| `surface`                                   | `bg-surface`             | faceplates, modules                                                            |
+| `raised`                                    | `bg-raised`              | light fills, hover                                                             |
+| `recess`                                    | `bg-recess`              | wells, slots, inline code, the rear panel (footer)                             |
+| `ink` / `muted` / `faint`                   | `text-ink` …             | primary / secondary / tertiary text. `faint` is still AA on `bg` and `surface` |
+| `line` / `line-strong`                      | `border-line`            | hairlines; strong for plates and tags                                          |
+| `accent`                                    | `bg-accent`              | indicator orange: lit LEDs, primary key, patch cables. Not for text            |
+| `accent-ink`                                | `text-accent-ink`        | accent as text (AA in both themes)                                             |
+| `on-accent`                                 |                          | text on the orange key                                                         |
+| `ok` / `warn`                               | `text-ok`, `text-warn`   | status                                                                         |
+| `led-off`                                   |                          | unlit LED                                                                      |
+| `lcd` / `lcd-ink` / `lcd-dim` / `lcd-ghost` | `text-(--color-lcd-ink)` | the amber display. **Identical in both themes**: it is a lit panel, not paper  |
 
 Tailwind's default palette is removed (`--color-*: initial`).
 
@@ -141,6 +144,7 @@ labels, meter captions, footer jack groups. It is not an eyebrow above section h
 Layout: `.shell` (76rem), `.shell-narrow` (46rem), `.section`, `.section-ruled`.
 
 Surfaces
+
 - `.faceplate`: brushed plate with bevel. The hero, the CTA rack unit, strips of channel modules.
 - `.module` + `.module-head` (legend strip: `.module-title` on the heading, status LED/readout on the right) + `.module-body`.
   `.module.is-selected` is the "yours / lit" modifier (accent border); pair it with a lit LED or `.tag-lit`.
@@ -151,6 +155,7 @@ Surfaces
 Indicators: `.led` (off), `.led.on` (orange), `.led.ok` (green). `.tag`, `.tag-lit` (small engraved status: Coming soon, Your system).
 
 Keys (buttons and button-links)
+
 - `.key` neutral cap; `.key-primary` orange cap (**one per view region**); `.key-quiet` (no cap, for tertiary actions).
 - Sizes `.key-sm`, `.key-lg`, `.key-icon`. Keys press down 2px on `:active`. Labels are written in sentence case in markup; CSS
   sets them in condensed caps.
@@ -158,6 +163,7 @@ Keys (buttons and button-links)
   Used for Stable/Dev (`ChannelToggle`) and SQLite/Postgres/Full (`SetupSteps`).
 
 Display
+
 - `.lcd`: amber-on-dark glass with a glow. `.lcd-dim` for secondary text on it, `.lcd-dots` for Doto numerals.
 - `CodeBlock.svelte` is a terminal module: legend strip with a Copy key, the code on an `.lcd`. It has `min-width: 0` and
   `max-width: 100%`, so it never widens a grid or the page; long lines scroll inside it.
@@ -168,6 +174,7 @@ Other: `.disclosure` (shared `details > summary` with a triangle), `.spec` (spec
 Scrollbars are thin everywhere: a faceplate-coloured thumb, and an amber thumb on a dark track inside `.lcd`.
 
 ### Retro components (`src/lib/designs/retro`, shared ones in `src/lib/components`)
+
 - `designs/retro/Header.svelte`: a rack strip. Logo, engraved `SR-1` badge, nav as a bank of push-buttons (LED lit on the current page),
   design switch, theme switch, power LED. Hidden on `/share/`.
 - `designs/retro/ThemeToggle.svelte`: a three-position slide switch (system / light / dark). Click moves the lever one step.
@@ -179,6 +186,7 @@ Scrollbars are thin everywhere: a faceplate-coloured thumb, and an amber thumb o
 - Icons: `@lucide/svelte`, per-icon imports, `aria-hidden="true"` next to text.
 
 ### Theming
+
 Dark (graphite) is default; light (off-white aluminium) applies via the OS or `<html data-theme="light">`; `data-theme="dark"`
 forces dark. The inline script in `app.html` applies `localStorage['synara-theme']` before paint; `$lib/theme.ts` holds the
 `theme-color` values (`#1c1c1e` / `#e6e5e0`). Prefer tokens; if you must branch use the `light:` / `dark:` custom variants.
@@ -186,6 +194,7 @@ Base CSS variables live in `@layer theme`: dark values on `:root`, light values 
 (it expands to both `data-theme="light"` and the OS preference). Don't move them out of the layer.
 
 ### Do / don't
+
 - Do: left-align; keep one bold element per page; use legends, LEDs and screws where they label real hardware-like structure;
   sentence case in copy; keep prose plain and readable.
 - Don't: gradient buttons or gradient text; display serifs; three identical soft-shadow cards; a gradient bar above headings;
@@ -193,6 +202,7 @@ Base CSS variables live in `@layer theme`: dark values on `:root`, light values 
   new colours outside the tokens; the amber display for anything but readouts and code.
 
 ### Motion
+
 - The VU meters and the display's clock are the one moving element. They run on `requestAnimationFrame`, stop when off-screen
   or the tab is hidden, can be paused with the Pause demo key, and are static under `prefers-reduced-motion`.
 - The 404 "NO SIGNAL" blinks four times, then stops; none under reduced motion.
@@ -210,6 +220,7 @@ Files: `src/lib/designs/modern/tokens.css` (generated, committed), `modern.css` 
 Transition helpers), the components listed under "Modern components", and `pages/*` (inner pages).
 
 ### Colour
+
 - Tonal roles from the shared `AppColorScheme` idea: `scripts/gen-tonal-tokens.mjs` (`pnpm gen:tokens`) builds a
   material-color-utilities `DynamicScheme` from seed **#FF8A00** (the iOS AccentColor) with the apps' `ColorSchemeBuilder`
   palettes (primary keeps the seed chroma, secondary c16, tertiary hue+60 c24, neutral c4, neutral variant c8), dark and light,
@@ -229,8 +240,8 @@ Transition helpers), the components listed under "Modern components", and `pages
   `--tint-on-secondary-container`, `--tint-tertiary`, `--tint-vivid` (backdrop blobs), `--tint-surface`, `--tint-surface-high`,
   `--tint-ink`, `--tint-muted`, `--tint-outline` (they follow the theme).
   - Static covers: a build-time class from the generator, e.g. `class="tint tint-light-years"` for
-    `/demo/covers/light-years.webp` (Stellardrone, *Light Years*) and `.tint-directionless` for
-    `/demo/covers/directionless.webp` (Broke For Free, *Directionless EP*). Both are CC BY 4.0: credit them where shown
+    `/demo/covers/light-years.webp` (Stellardrone, _Light Years_) and `.tint-directionless` for
+    `/demo/covers/directionless.webp` (Broke For Free, _Directionless EP_). Both are CC BY 4.0: credit them where shown
     (see `static/demo/covers/ATTRIBUTION.txt`). Add covers to `COVERS` in the generator.
   - Runtime covers (share page): `applyCoverTint(img, el)` from `$lib/designs/modern/coverTint` (QuantizerCelebi + Score on a
     64 px canvas, then the same roles). The image needs CORS (`crossorigin="anonymous"`); on failure it changes nothing and
@@ -241,8 +252,9 @@ Transition helpers), the components listed under "Modern components", and `pages
   `--color-led-off` = outline variant; `--font-label` = sans, `--font-lcd` = mono. Don't use them in new Modern code.
 
 ### Liquid Glass
+
 - `.glass` (Tailwind utility): `--glass-specular` over `--glass-bg`, `backdrop-filter: blur(var(--glass-blur))
-  saturate(var(--glass-saturate))`, a `--glass-border` rim, an inner `--glass-highlight` line and `--glass-shadow`.
+saturate(var(--glass-saturate))`, a `--glass-border` rim, an inner `--glass-highlight` line and `--glass-shadow`.
   `.glass-card` (16, `Theme.cornerRadius`) and `.glass-card-lg` (28, `largeCornerRadius`) add the app's explicit glass shapes;
   `.capsule` for pills.
 - Fallbacks are built in: `prefers-reduced-transparency: reduce` and no `backdrop-filter` support give `--glass-solid`.
@@ -251,6 +263,7 @@ Transition helpers), the components listed under "Modern components", and `pages
   surfaces.
 
 ### Shapes
+
 - Native first: capsules (`--m-radius-capsule`) for buttons, pills, tags and segmented controls; circles for icon buttons
   (`.key-icon`); inset-grouped cards at `--m-radius-group` (26 px; `--radius-plate` maps to it).
 - Concentric nesting: inner radius = outer radius - inset. `--radius-key` is 14 px = 26 - 12 for things inset 0.75rem in a
@@ -259,11 +272,12 @@ Transition helpers), the components listed under "Modern components", and `pages
 - `corner-shape: squircle` is applied to cards where supported (progressive enhancement; never to capsules).
 
 ### Type
+
 - `--font-sans`: `-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, sans-serif`. Real
   SF on Apple platforms (it can't be self-hosted); self-hosted **Inter** (variable, latin, `static/fonts/Inter-var.woff2`,
   OFL) elsewhere. Inter sits before `system-ui` on purpose: `system-ui` always resolves, so nothing after it would ever load.
   `--font-display` puts SF Pro Display first for headings. `--font-mono`: `"SF Mono", ui-monospace, SFMono-Regular, Menlo,
-  "IBM Plex Mono", monospace`.
+"IBM Plex Mono", monospace`.
 - iOS text styles as tokens `--ios-<style>-size|-leading|-weight|-tracking` for `large-title`, `title1`, `title2`, `title3`,
   `headline`, `body`, `callout`, `subheadline`, `footnote`, `caption1`, `caption2` (Large Dynamic Type sizes: 34, 28, 22, 20,
   17, 17, 16, 15, 13, 12, 11 px). Headings use the emphasised weights (700/600). The web's big headings scale the iOS sizes
@@ -271,6 +285,7 @@ Transition helpers), the components listed under "Modern components", and `pages
 - `.legend` becomes a grouped-section header (footnote, semibold, secondary, sentence case). No condensed caps anywhere.
 
 ### Component idioms (baseline reskin of the shared classes)
+
 - Buttons: `.key` = **tinted** capsule (accent text on `--m-tint-fill`), `.key-primary` = **prominent** (accent fill,
   `on-accent` text, one per region), `.key-quiet` = **plain** (accent text, fill on hover). Press = scale 0.97 with a spring, no 2 px drop.
 - `.selector` = iOS segmented control, as in the app's `GlassSegmentedControl` (see `shots/ios/*/05-listening-stats`,
@@ -291,6 +306,7 @@ Transition helpers), the components listed under "Modern components", and `pages
   until it has a Modern variant). Delete it with that variant.
 
 ### Modern components (`src/lib/designs/modern`)
+
 - `Header.svelte`: a floating Liquid Glass capsule (52 px, sticky, 10 px from the top; `--header-h` is 4.25rem on Modern
   so sticky things clear it). Logo, then the `nav.ts` links as tab-bar items: the current page is a neutral pill
   (`--m-fill-strong`) with an accent label and `aria-current="page"`, as in the app's tab bar; hash links are never current. From lg up, the design switch and
@@ -308,7 +324,7 @@ Transition helpers), the components listed under "Modern components", and `pages
     title/artist with a heart, a thin progress bar with elapsed and total time and the format as the centre accessory,
     and shuffle / rewind / play-pause / fast-forward / repeat. Play/Pause is the app's glass button: cover-tinted glass
     with the glyph in `--tint-primary`. It is a small playback demo without audio, with two CC BY 4.0
-    songs (Stellardrone, *Light Years*, and Broke For Free, "Night Owl" from *Directionless EP*). Each plays about 16 s
+    songs (Stellardrone, _Light Years_, and Broke For Free, "Night Owl" from _Directionless EP_). Each plays about 16 s
     of real-time progress from an offset and then moves on to the next, looping. Play/Pause (it morphs between a
     rounded square and a circle like the app's button) and Previous/Next (rewind and fast-forward glyphs) are real buttons. Shuffle and repeat are
     decoration, and the ticking times are `aria-hidden`. One rAF loop runs only while playing, on screen
@@ -340,21 +356,22 @@ Transition helpers), the components listed under "Modern components", and `pages
   that live in the components are the ones Retro already had (e.g. "Your server", "Any machine that runs Docker").
 
 ### Motion
+
 Response motion in the iOS idiom, Modern only (every rule is scoped to `[data-design=modern]`). Under
 `prefers-reduced-motion` it is instant: `app.css` zeroes transitions and animations, and the script-driven View
 Transitions are skipped (`canTransition()` in `designs/modern/motion.ts`).
 
-| Token | Value | Use |
-|---|---|---|
-| `--m-dur-press` | 160ms | button press, hover fills |
-| `--m-dur-control` | 320ms | segment thumb, switches, chevron |
-| `--m-dur-panel` | 380ms | menus, popovers, disclosure height, tab panels |
-| `--m-dur-page` | 340ms | page push, theme/design crossfade |
-| `--ease-spring` | `cubic-bezier(0.3, 1.25, 0.5, 1)` | bouncy: thumbs, toggles, presses, the play button |
-| `--m-ease-spring-soft` | `cubic-bezier(0.25, 1.1, 0.4, 1)` | slight overshoot: panels popping in |
-| `--m-ease-out` | `cubic-bezier(0.22, 1, 0.36, 1)` | heights, fades, page pushes |
-| `--m-ease-in-out` | `cubic-bezier(0.42, 0, 0.2, 1)` | crossfades |
-| `--m-tint-dur` | 1200ms | a cover change re-tinting a section |
+| Token                  | Value                             | Use                                               |
+| ---------------------- | --------------------------------- | ------------------------------------------------- |
+| `--m-dur-press`        | 160ms                             | button press, hover fills                         |
+| `--m-dur-control`      | 320ms                             | segment thumb, switches, chevron                  |
+| `--m-dur-panel`        | 380ms                             | menus, popovers, disclosure height, tab panels    |
+| `--m-dur-page`         | 340ms                             | page push, theme/design crossfade                 |
+| `--ease-spring`        | `cubic-bezier(0.3, 1.25, 0.5, 1)` | bouncy: thumbs, toggles, presses, the play button |
+| `--m-ease-spring-soft` | `cubic-bezier(0.25, 1.1, 0.4, 1)` | slight overshoot: panels popping in               |
+| `--m-ease-out`         | `cubic-bezier(0.22, 1, 0.36, 1)`  | heights, fades, page pushes                       |
+| `--m-ease-in-out`      | `cubic-bezier(0.42, 0, 0.2, 1)`   | crossfades                                        |
+| `--m-tint-dur`         | 1200ms                            | a cover change re-tinting a section               |
 
 - Cover tints blend: `modern.css` registers the `--tint-*` roles with `@property` as `<color>`, so a section can
   `transition-property: --tint-primary, --tint-ink, ...` when its cover class (or `coverTint.ts` values) changes.
@@ -376,6 +393,7 @@ Transitions are skipped (`canTransition()` in `designs/modern/motion.ts`).
 - No ambient loops: the VU meters don't run on Modern, and nothing animates on page load.
 
 ### Do / don't
+
 - Do: grouped backgrounds with inset-grouped cards; glass on chrome over something colourful; capsule controls; concentric
   radii; cover-derived colour where a cover is shown; SF/Inter at the iOS scale; system-like line icons (lucide).
 - Don't: Retro hardware (screws, LEDs, condensed caps, the amber display, bevels) or its wording; glass on content cards or

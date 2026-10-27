@@ -1,4 +1,4 @@
-import { nav } from '$lib/docs/load';
-import type { LayoutServerLoad } from './$types';
+import { nav } from '$lib/docs/load'
+import type { LayoutServerLoad } from './$types'
 
-export const load: LayoutServerLoad = () => ({ nav: nav() });
+export const load: LayoutServerLoad = () => ({ nav: nav() })

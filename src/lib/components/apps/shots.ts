@@ -2,311 +2,219 @@
 // base: the URL prefix, files are <base>-<dark|light>-<width>.{avif,webp}. light: false means the dark shot
 // is shown in both themes. w/h: the source size (aspect ratio).
 
-export type ShotInfo = { base: string; w: number; h: number; widths: number[]; light: boolean };
+export type ShotInfo = { base: string; w: number; h: number; widths: number[]; light: boolean }
 
 export const shots = {
-	"ios-now-playing": {
-		"base": "/apps/ios/now-playing",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720,
-			1080
-		],
-		"light": true
-	},
-	"ios-home": {
-		"base": "/apps/ios/home",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-home-colorful": {
-		"base": "/apps/ios/home-colorful",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-setup-sync": {
-		"base": "/apps/ios/setup-sync",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-setup-remote": {
-		"base": "/apps/ios/setup-remote",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-setup-optional": {
-		"base": "/apps/ios/setup-optional",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-album": {
-		"base": "/apps/ios/album",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-lyrics": {
-		"base": "/apps/ios/lyrics",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-stats": {
-		"base": "/apps/ios/stats",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-connect": {
-		"base": "/apps/ios/connect",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-login": {
-		"base": "/apps/ios/login",
-		"w": 1320,
-		"h": 2868,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"ios-widget": {
-		"base": "/apps/ios/widget",
-		"w": 1194,
-		"h": 578,
-		"widths": [
-			400,
-			800
-		],
-		"light": false
-	},
-	"ios-watch": {
-		"base": "/apps/ios/watch",
-		"w": 410,
-		"h": 502,
-		"widths": [
-			205,
-			410
-		],
-		"light": false
-	},
-	"android-now-playing": {
-		"base": "/apps/android/now-playing",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720,
-			1080
-		],
-		"light": true
-	},
-	"android-home": {
-		"base": "/apps/android/home",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"android-album": {
-		"base": "/apps/android/album",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"android-lyrics": {
-		"base": "/apps/android/lyrics",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"android-stats": {
-		"base": "/apps/android/stats",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"android-connect": {
-		"base": "/apps/android/connect",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"android-login": {
-		"base": "/apps/android/login",
-		"w": 1080,
-		"h": 2400,
-		"widths": [
-			360,
-			720
-		],
-		"light": true
-	},
-	"android-widget": {
-		"base": "/apps/android/widget",
-		"w": 1026,
-		"h": 352,
-		"widths": [
-			400,
-			800
-		],
-		"light": true
-	},
-	"android-notification": {
-		"base": "/apps/android/notification",
-		"w": 1080,
-		"h": 1010,
-		"widths": [
-			540,
-			1080
-		],
-		"light": true
-	},
-	"desktop-album": {
-		"base": "/apps/desktop/album",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": true
-	},
-	"desktop-visualizer": {
-		"base": "/apps/desktop/visualizer",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": false
-	},
-	"desktop-stats": {
-		"base": "/apps/desktop/stats",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": true
-	},
-	"desktop-library": {
-		"base": "/apps/desktop/library",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": true
-	},
-	"desktop-connect": {
-		"base": "/apps/desktop/connect",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": true
-	},
-	"desktop-login": {
-		"base": "/apps/desktop/login",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": true
-	},
-	"desktop-lyrics": {
-		"base": "/apps/desktop/lyrics",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": false
-	},
-	"desktop-queue": {
-		"base": "/apps/desktop/queue",
-		"w": 3200,
-		"h": 2000,
-		"widths": [
-			800,
-			1600
-		],
-		"light": false
-	}
-} as const satisfies Record<string, ShotInfo>;
+  'ios-now-playing': {
+    base: '/apps/ios/now-playing',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720, 1080],
+    light: true,
+  },
+  'ios-home': {
+    base: '/apps/ios/home',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-home-colorful': {
+    base: '/apps/ios/home-colorful',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-setup-sync': {
+    base: '/apps/ios/setup-sync',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-setup-remote': {
+    base: '/apps/ios/setup-remote',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-setup-optional': {
+    base: '/apps/ios/setup-optional',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-album': {
+    base: '/apps/ios/album',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-lyrics': {
+    base: '/apps/ios/lyrics',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-stats': {
+    base: '/apps/ios/stats',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-connect': {
+    base: '/apps/ios/connect',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-login': {
+    base: '/apps/ios/login',
+    w: 1320,
+    h: 2868,
+    widths: [360, 720],
+    light: true,
+  },
+  'ios-widget': {
+    base: '/apps/ios/widget',
+    w: 1194,
+    h: 578,
+    widths: [400, 800],
+    light: false,
+  },
+  'ios-watch': {
+    base: '/apps/ios/watch',
+    w: 410,
+    h: 502,
+    widths: [205, 410],
+    light: false,
+  },
+  'android-now-playing': {
+    base: '/apps/android/now-playing',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720, 1080],
+    light: true,
+  },
+  'android-home': {
+    base: '/apps/android/home',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720],
+    light: true,
+  },
+  'android-album': {
+    base: '/apps/android/album',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720],
+    light: true,
+  },
+  'android-lyrics': {
+    base: '/apps/android/lyrics',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720],
+    light: true,
+  },
+  'android-stats': {
+    base: '/apps/android/stats',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720],
+    light: true,
+  },
+  'android-connect': {
+    base: '/apps/android/connect',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720],
+    light: true,
+  },
+  'android-login': {
+    base: '/apps/android/login',
+    w: 1080,
+    h: 2400,
+    widths: [360, 720],
+    light: true,
+  },
+  'android-widget': {
+    base: '/apps/android/widget',
+    w: 1026,
+    h: 352,
+    widths: [400, 800],
+    light: true,
+  },
+  'android-notification': {
+    base: '/apps/android/notification',
+    w: 1080,
+    h: 1010,
+    widths: [540, 1080],
+    light: true,
+  },
+  'desktop-album': {
+    base: '/apps/desktop/album',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: true,
+  },
+  'desktop-visualizer': {
+    base: '/apps/desktop/visualizer',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: false,
+  },
+  'desktop-stats': {
+    base: '/apps/desktop/stats',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: true,
+  },
+  'desktop-library': {
+    base: '/apps/desktop/library',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: true,
+  },
+  'desktop-connect': {
+    base: '/apps/desktop/connect',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: true,
+  },
+  'desktop-login': {
+    base: '/apps/desktop/login',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: true,
+  },
+  'desktop-lyrics': {
+    base: '/apps/desktop/lyrics',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: false,
+  },
+  'desktop-queue': {
+    base: '/apps/desktop/queue',
+    w: 3200,
+    h: 2000,
+    widths: [800, 1600],
+    light: false,
+  },
+} as const satisfies Record<string, ShotInfo>
 
-export type ShotKey = keyof typeof shots;
+export type ShotKey = keyof typeof shots

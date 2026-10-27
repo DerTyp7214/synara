@@ -1,99 +1,107 @@
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import remarkRehype from 'remark-rehype';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeShiki from '@shikijs/rehype';
-import rehypeStringify from 'rehype-stringify';
-import { SKIP, visit } from 'unist-util-visit';
-import { toString } from 'hast-util-to-string';
-import { toString as mdToString } from 'mdast-util-to-string';
-import type { Element, ElementContent, Root } from 'hast';
-import type { Root as MdRoot } from 'mdast';
-import { posix } from 'node:path';
-import { PAGES_BASE, REPO, REPO_BRANCH } from './config';
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkRehype from 'remark-rehype'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeShiki from '@shikijs/rehype'
+import rehypeStringify from 'rehype-stringify'
+import { SKIP, visit } from 'unist-util-visit'
+import { toString } from 'hast-util-to-string'
+import { toString as mdToString } from 'mdast-util-to-string'
+import type { Element, ElementContent, Root } from 'hast'
+import type { Root as MdRoot } from 'mdast'
+import { posix } from 'node:path'
+import { PAGES_BASE, REPO, REPO_BRANCH } from './config'
 
-export type TocItem = { id: string; text: string; depth: 2 | 3 };
-export type Rendered = { html: string; toc: TocItem[]; hasMermaid: boolean };
+export type TocItem = { id: string; text: string; depth: 2 | 3 }
+export type Rendered = { html: string; toc: TocItem[]; hasMermaid: boolean }
 
-const PAGE_FILES = new Set(['RELATION_MAP.html', 'STATS.html', 'index.html']);
+const PAGE_FILES = new Set(['RELATION_MAP.html', 'STATS.html', 'index.html'])
 
 /** Rewrites a link found in docs/<file>.md. `known` = set of lowercase-agnostic doc filenames. */
 export function rewriteHref(href: string, known: Set<string>): string {
-	if (!href || href.startsWith('#') || href.startsWith('/') || /^[a-z][a-z0-9+.-]*:/i.test(href)) return href;
-	const hashAt = href.indexOf('#');
-	const path = hashAt === -1 ? href : href.slice(0, hashAt);
-	const hash = hashAt === -1 ? '' : href.slice(hashAt);
-	const resolved = posix.normalize(posix.join('docs', path));
-	if (resolved === 'docs/README.md') return '/docs/' + hash;
-	if (resolved.startsWith('docs/') && !resolved.slice(5).includes('/')) {
-		const name = resolved.slice(5);
-		if (name.endsWith('.md') && known.has(name)) return `/docs/${name.slice(0, -3).toLowerCase()}/${hash}`;
-		if (PAGE_FILES.has(name)) return name === 'index.html' ? `${PAGES_BASE}/${hash}` : `${PAGES_BASE}/${name}${hash}`;
-	}
-	return `${REPO}/blob/${REPO_BRANCH}/${resolved}${hash}`;
+  if (!href || href.startsWith('#') || href.startsWith('/') || /^[a-z][a-z0-9+.-]*:/i.test(href))
+    return href
+  const hashAt = href.indexOf('#')
+  const path = hashAt === -1 ? href : href.slice(0, hashAt)
+  const hash = hashAt === -1 ? '' : href.slice(hashAt)
+  const resolved = posix.normalize(posix.join('docs', path))
+  if (resolved === 'docs/README.md') return '/docs/' + hash
+  if (resolved.startsWith('docs/') && !resolved.slice(5).includes('/')) {
+    const name = resolved.slice(5)
+    if (name.endsWith('.md') && known.has(name))
+      return `/docs/${name.slice(0, -3).toLowerCase()}/${hash}`
+    if (PAGE_FILES.has(name))
+      return name === 'index.html' ? `${PAGES_BASE}/${hash}` : `${PAGES_BASE}/${name}${hash}`
+  }
+  return `${REPO}/blob/${REPO_BRANCH}/${resolved}${hash}`
 }
 
 /** Inline html is limited to the generated `<a name>` anchors and `<br>`; anything else (e.g. `<showId>` placeholders) is shown as text. */
 const htmlHandler = (_state: unknown, node: { value: string }): ElementContent => {
-	const v = node.value.trim();
-	const a = /^<a name="([^"]+)">$/.exec(v);
-	if (a) return { type: 'element', tagName: 'a', properties: { id: a[1], name: a[1] }, children: [] };
-	if (v === '</a>') return { type: 'text', value: '' };
-	if (/^<br\s*\/?>$/.test(v)) return { type: 'element', tagName: 'br', properties: {}, children: [] };
-	return { type: 'text', value: node.value };
-};
+  const v = node.value.trim()
+  const a = /^<a name="([^"]+)">$/.exec(v)
+  if (a)
+    return { type: 'element', tagName: 'a', properties: { id: a[1], name: a[1] }, children: [] }
+  if (v === '</a>') return { type: 'text', value: '' }
+  if (/^<br\s*\/?>$/.test(v))
+    return { type: 'element', tagName: 'br', properties: {}, children: [] }
+  return { type: 'text', value: node.value }
+}
 
 /** A heading that holds a named anchor takes that name as its id (GitHub-style anchors in the generated docs). */
 function rehypeNamedAnchors() {
-	return (tree: Root) => {
-		visit(tree, 'element', (node: Element) => {
-			if (!/^h[1-6]$/.test(node.tagName)) return;
-			const i = node.children.findIndex((c) => c.type === 'element' && c.tagName === 'a' && c.properties?.name && !c.properties.href);
-			if (i === -1) return;
-			const a = node.children[i] as Element;
-			node.properties = { ...node.properties, id: String(a.properties.name) };
-			node.children.splice(i, 1);
-			const last = node.children[node.children.length - 1];
-			if (last?.type === 'text') last.value = last.value.trimEnd();
-		});
-	};
+  return (tree: Root) => {
+    visit(tree, 'element', (node: Element) => {
+      if (!/^h[1-6]$/.test(node.tagName)) return
+      const i = node.children.findIndex(
+        (c) => c.type === 'element' && c.tagName === 'a' && c.properties?.name && !c.properties.href
+      )
+      if (i === -1) return
+      const a = node.children[i] as Element
+      node.properties = { ...node.properties, id: String(a.properties.name) }
+      node.children.splice(i, 1)
+      const last = node.children[node.children.length - 1]
+      if (last?.type === 'text') last.value = last.value.trimEnd()
+    })
+  }
 }
 
 function rehypeDocs(opts: { known: Set<string> }) {
-	return (tree: Root, file: { data: Record<string, unknown> }) => {
-		const toc: TocItem[] = [];
-		let hasMermaid = false;
-		visit(tree, 'element', (node: Element, index, parent) => {
-			if (node.tagName === 'a' && typeof node.properties?.href === 'string') {
-				const next = rewriteHref(node.properties.href, opts.known);
-				node.properties.href = next;
-				if (/^https?:/.test(next)) {
-					node.properties.rel = ['noopener'];
-				}
-			} else if (node.tagName === 'h2' || node.tagName === 'h3') {
-				const id = node.properties?.id;
-				if (typeof id === 'string') toc.push({ id, text: toString(node), depth: node.tagName === 'h2' ? 2 : 3 });
-			} else if (node.tagName === 'pre' && parent && index !== undefined) {
-				const code = node.children[0];
-				if (code?.type === 'element' && code.tagName === 'code') {
-					const cls = (code.properties?.className as string[] | undefined) ?? [];
-					if (cls.includes('language-mermaid')) {
-						hasMermaid = true;
-						parent.children[index] = {
-							type: 'element',
-							tagName: 'pre',
-							properties: { className: ['mermaid'] },
-							children: [{ type: 'text', value: toString(code) }]
-						};
-					}
-				}
-			}
-		});
-		file.data.toc = toc;
-		file.data.hasMermaid = hasMermaid;
-	};
+  return (tree: Root, file: { data: Record<string, unknown> }) => {
+    const toc: TocItem[] = []
+    let hasMermaid = false
+    visit(tree, 'element', (node: Element, index, parent) => {
+      if (node.tagName === 'a' && typeof node.properties?.href === 'string') {
+        const next = rewriteHref(node.properties.href, opts.known)
+        node.properties.href = next
+        if (/^https?:/.test(next)) {
+          node.properties.rel = ['noopener']
+        }
+      } else if (node.tagName === 'h2' || node.tagName === 'h3') {
+        const id = node.properties?.id
+        if (typeof id === 'string')
+          toc.push({ id, text: toString(node), depth: node.tagName === 'h2' ? 2 : 3 })
+      } else if (node.tagName === 'pre' && parent && index !== undefined) {
+        const code = node.children[0]
+        if (code?.type === 'element' && code.tagName === 'code') {
+          const cls = (code.properties?.className as string[] | undefined) ?? []
+          if (cls.includes('language-mermaid')) {
+            hasMermaid = true
+            parent.children[index] = {
+              type: 'element',
+              tagName: 'pre',
+              properties: { className: ['mermaid'] },
+              children: [{ type: 'text', value: toString(code) }],
+            }
+          }
+        }
+      }
+    })
+    file.data.toc = toc
+    file.data.hasMermaid = hasMermaid
+  }
 }
 
 /**
@@ -102,62 +110,69 @@ function rehypeDocs(opts: { known: Set<string> }) {
  * "Regenerated by" table columns.
  */
 function remarkStripMaintainerNotes() {
-	return (tree: MdRoot) => {
-		visit(tree, (node, index, parent) => {
-			if (!parent || index === undefined) return;
-			if (node.type === 'paragraph') {
-				const text = mdToString(node);
-				if (/do not edit by hand/i.test(text) || /^\.\/gradlew generateDocs\b/.test(text) || /^The pages workflow regenerates/.test(text)) {
-					parent.children.splice(index, 1);
-					return [SKIP, index];
-				}
-			}
-			if (node.type === 'heading') {
-				const last = node.children[node.children.length - 1];
-				if (last?.type === 'text') last.value = last.value.replace(/\s*\(generated, do not edit\)\s*$/i, '');
-			}
-			if (node.type === 'table') {
-				const column = node.children[0]?.children.findIndex((cell) => /^regenerated by$/i.test(mdToString(cell).trim()));
-				if (column !== undefined && column > 0) {
-					for (const row of node.children) row.children.splice(column, 1);
-					node.align?.splice(column, 1);
-				}
-			}
-		});
-	};
+  return (tree: MdRoot) => {
+    visit(tree, (node, index, parent) => {
+      if (!parent || index === undefined) return
+      if (node.type === 'paragraph') {
+        const text = mdToString(node)
+        if (
+          /do not edit by hand/i.test(text) ||
+          /^\.\/gradlew generateDocs\b/.test(text) ||
+          /^The pages workflow regenerates/.test(text)
+        ) {
+          parent.children.splice(index, 1)
+          return [SKIP, index]
+        }
+      }
+      if (node.type === 'heading') {
+        const last = node.children[node.children.length - 1]
+        if (last?.type === 'text')
+          last.value = last.value.replace(/\s*\(generated, do not edit\)\s*$/i, '')
+      }
+      if (node.type === 'table') {
+        const column = node.children[0]?.children.findIndex((cell) =>
+          /^regenerated by$/i.test(mdToString(cell).trim())
+        )
+        if (column !== undefined && column > 0) {
+          for (const row of node.children) row.children.splice(column, 1)
+          node.align?.splice(column, 1)
+        }
+      }
+    })
+  }
 }
 
 function makeProcessor(known: Set<string>) {
-	return unified()
-		.use(remarkParse)
-		.use(remarkGfm)
-		.use(remarkStripMaintainerNotes)
-		.use(remarkRehype, { allowDangerousHtml: true, handlers: { html: htmlHandler } as never })
-		.use(rehypeNamedAnchors)
-		.use(rehypeSlug)
-		.use(rehypeDocs, { known })
-		.use(rehypeAutolinkHeadings, { behavior: 'wrap', properties: { className: ['anchor'] } })
-		.use(rehypeShiki, {
-			themes: { light: 'github-light', dark: 'github-dark' },
-			defaultColor: false,
-			fallbackLanguage: 'text',
-			lazy: true
-		})
-		.use(rehypeStringify);
+  return unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkStripMaintainerNotes)
+    .use(remarkRehype, { allowDangerousHtml: true, handlers: { html: htmlHandler } as never })
+    .use(rehypeNamedAnchors)
+    .use(rehypeSlug)
+    .use(rehypeDocs, { known })
+    .use(rehypeAutolinkHeadings, { behavior: 'wrap', properties: { className: ['anchor'] } })
+    .use(rehypeShiki, {
+      themes: { light: 'github-light', dark: 'github-dark' },
+      defaultColor: false,
+      fallbackLanguage: 'text',
+      lazy: true,
+    })
+    .use(rehypeStringify)
 }
 
-let processor: ReturnType<typeof makeProcessor> | undefined;
-let processorKnown: Set<string> | undefined;
+let processor: ReturnType<typeof makeProcessor> | undefined
+let processorKnown: Set<string> | undefined
 
 export async function renderMarkdown(source: string, known: Set<string>): Promise<Rendered> {
-	if (!processor || processorKnown !== known) {
-		processor = makeProcessor(known);
-		processorKnown = known;
-	}
-	const file = await processor.process(source);
-	return {
-		html: String(file),
-		toc: (file.data.toc as TocItem[]) ?? [],
-		hasMermaid: Boolean(file.data.hasMermaid)
-	};
+  if (!processor || processorKnown !== known) {
+    processor = makeProcessor(known)
+    processorKnown = known
+  }
+  const file = await processor.process(source)
+  return {
+    html: String(file),
+    toc: (file.data.toc as TocItem[]) ?? [],
+    hasMermaid: Boolean(file.data.hasMermaid),
+  }
 }

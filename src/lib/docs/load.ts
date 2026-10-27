@@ -1,152 +1,172 @@
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { execFileSync } from 'node:child_process';
-import { dirname, join, resolve } from 'node:path';
-import { REPO, REPO_BRANCH } from './config';
-import { renderMarkdown, type TocItem } from './render';
-import { fromMarkdown } from 'mdast-util-from-markdown';
-import { gfmFromMarkdown } from 'mdast-util-gfm';
-import { gfm } from 'micromark-extension-gfm';
-import { toString } from 'mdast-util-to-string';
-import { visit } from 'unist-util-visit';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
+import { dirname, join, resolve } from 'node:path'
+import { REPO, REPO_BRANCH } from './config'
+import { renderMarkdown, type TocItem } from './render'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import { gfmFromMarkdown } from 'mdast-util-gfm'
+import { gfm } from 'micromark-extension-gfm'
+import { toString } from 'mdast-util-to-string'
+import { visit } from 'unist-util-visit'
 
-export type NavItem = { title: string; href: string; description?: string; external?: boolean };
-export type NavGroup = { title: string; items: NavItem[] };
+export type NavItem = { title: string; href: string; description?: string; external?: boolean }
+export type NavGroup = { title: string; items: NavItem[] }
 export type DocPage = {
-	slug: string;
-	file: string;
-	title: string;
-	html: string;
-	toc: TocItem[];
-	hasMermaid: boolean;
-	lines: number;
-	editUrl: string;
-	sha: string;
-};
+  slug: string
+  file: string
+  title: string
+  html: string
+  toc: TocItem[]
+  hasMermaid: boolean
+  lines: number
+  editUrl: string
+  sha: string
+}
 
-const root = resolve(process.cwd());
+const root = resolve(process.cwd())
 
 export function docsDir(): string {
-	const dir = process.env.SYNARA_DOCS_DIR ? resolve(process.env.SYNARA_DOCS_DIR) : join(root, '.docs-src', 'docs');
-	if (!existsSync(dir)) {
-		throw new Error(`Docs directory not found: ${dir}. Run "pnpm fetch-docs" or set SYNARA_DOCS_DIR.`);
-	}
-	return dir;
+  const dir = process.env.SYNARA_DOCS_DIR
+    ? resolve(process.env.SYNARA_DOCS_DIR)
+    : join(root, '.docs-src', 'docs')
+  if (!existsSync(dir)) {
+    throw new Error(
+      `Docs directory not found: ${dir}. Run "pnpm fetch-docs" or set SYNARA_DOCS_DIR.`
+    )
+  }
+  return dir
 }
 
 export function docsSha(): string {
-	try {
-		if (process.env.SYNARA_DOCS_DIR) {
-			return execFileSync('git', ['rev-parse', 'HEAD'], { cwd: dirname(docsDir()), stdio: ['ignore', 'pipe', 'ignore'] })
-				.toString()
-				.trim();
-		}
-		return readFileSync(join(root, '.docs-src', '.sha'), 'utf8').trim();
-	} catch {
-		return REPO_BRANCH;
-	}
+  try {
+    if (process.env.SYNARA_DOCS_DIR) {
+      return execFileSync('git', ['rev-parse', 'HEAD'], {
+        cwd: dirname(docsDir()),
+        stdio: ['ignore', 'pipe', 'ignore'],
+      })
+        .toString()
+        .trim()
+    }
+    return readFileSync(join(root, '.docs-src', '.sha'), 'utf8').trim()
+  } catch {
+    return REPO_BRANCH
+  }
 }
 
-export const slugOf = (file: string) => (file === 'README.md' ? '' : file.slice(0, -3).toLowerCase());
+export const slugOf = (file: string) =>
+  file === 'README.md' ? '' : file.slice(0, -3).toLowerCase()
 
 export function listDocFiles(): string[] {
-	const dir = docsDir();
-	return readdirSync(dir)
-		.filter((f) => f.endsWith('.md') && statSync(join(dir, f)).isFile())
-		.sort();
+  const dir = docsDir()
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md') && statSync(join(dir, f)).isFile())
+    .sort()
 }
 
 function firstH1(src: string, fallback: string): string {
-	const m = /^#\s+(.+?)\s*#*\s*$/m.exec(src);
-	return m ? m[1].replace(/[`*_]/g, '') : fallback;
+  const m = /^#\s+(.+?)\s*#*\s*$/m.exec(src)
+  return m ? m[1].replace(/[`*_]/g, '') : fallback
 }
 
-const cache = new Map<string, DocPage>();
+const cache = new Map<string, DocPage>()
 
 export async function loadDoc(file: string): Promise<DocPage> {
-	const hit = cache.get(file);
-	if (hit) return hit;
-	const dir = docsDir();
-	const source = readFileSync(join(dir, file), 'utf8');
-	const known = new Set(listDocFiles());
-	const r = await renderMarkdown(source, known);
-	const sha = docsSha();
-	const page: DocPage = {
-		slug: slugOf(file),
-		file,
-		title: firstH1(source, file.replace(/\.md$/, '')),
-		html: r.html,
-		toc: r.toc,
-		hasMermaid: r.hasMermaid,
-		lines: source.split('\n').length,
-		editUrl: `${REPO}/blob/${sha === REPO_BRANCH ? REPO_BRANCH : sha}/docs/${file}`,
-		sha
-	};
-	cache.set(file, page);
-	return page;
+  const hit = cache.get(file)
+  if (hit) return hit
+  const dir = docsDir()
+  const source = readFileSync(join(dir, file), 'utf8')
+  const known = new Set(listDocFiles())
+  const r = await renderMarkdown(source, known)
+  const sha = docsSha()
+  const page: DocPage = {
+    slug: slugOf(file),
+    file,
+    title: firstH1(source, file.replace(/\.md$/, '')),
+    html: r.html,
+    toc: r.toc,
+    hasMermaid: r.hasMermaid,
+    lines: source.split('\n').length,
+    editUrl: `${REPO}/blob/${sha === REPO_BRANCH ? REPO_BRANCH : sha}/docs/${file}`,
+    sha,
+  }
+  cache.set(file, page)
+  return page
 }
 
 export function fileForSlug(slug: string): string | undefined {
-	return listDocFiles().find((f) => slugOf(f) === slug);
+  return listDocFiles().find((f) => slugOf(f) === slug)
 }
 
 export function nav(): NavGroup[] {
-	const dir = docsDir();
-	const files = listDocFiles();
-	const known = new Set(files);
-	const titles = new Map(files.map((f) => [f, firstH1(readFileSync(join(dir, f), 'utf8'), f)]));
-	const tree = fromMarkdown(readFileSync(join(dir, 'README.md'), 'utf8'), {
-		extensions: [gfm()],
-		mdastExtensions: [gfmFromMarkdown()]
-	});
+  const dir = docsDir()
+  const files = listDocFiles()
+  const known = new Set(files)
+  const titles = new Map(files.map((f) => [f, firstH1(readFileSync(join(dir, f), 'utf8'), f)]))
+  const tree = fromMarkdown(readFileSync(join(dir, 'README.md'), 'utf8'), {
+    extensions: [gfm()],
+    mdastExtensions: [gfmFromMarkdown()],
+  })
 
-	const groups: NavGroup[] = [{ title: 'Start', items: [{ title: 'Overview', href: '/docs/' }] }];
-	const seen = new Set<string>(['README.md']);
-	let current: NavGroup | undefined;
-	for (const node of tree.children) {
-		if (node.type === 'heading' && node.depth === 2) {
-			current = { title: toString(node).replace(/\s*\(.*\)\s*$/, ''), items: [] };
-			groups.push(current);
-			continue;
-		}
-		if (!current) continue;
-		visit(node, 'tableRow', (row, _index, table) => {
-			const link = row.children[0] && findLink(row.children[0]);
-			if (!link) return;
-			const url = (link as { url: string }).url;
-			// The reference table's second column holds gradle commands, not descriptions.
-			const header = table && 'children' in table ? (table.children[0] as typeof row | undefined) : undefined;
-			const descColumn = header?.children[1] ? toString(header.children[1]) : '';
-			const desc = row.children[1] && !/regenerated by/i.test(descColumn) ? toString(row.children[1]) : undefined;
-			if (known.has(url) && url !== 'README.md') {
-				if (seen.has(url)) return;
-				seen.add(url);
-				current!.items.push({ title: titles.get(url)!, href: `/docs/${slugOf(url)}/`, description: desc });
-			} else if (/^(RELATION_MAP|STATS)\.html$/.test(url)) {
-				current!.items.push({
-					title: url === 'STATS.html' ? 'Commit stats' : 'Relation map',
-					href: rewriteExternal(url),
-					description: desc,
-					external: true
-				});
-			}
-		});
-	}
-	const rest = files.filter((f) => !seen.has(f));
-	if (rest.length) groups.push({ title: 'Other', items: rest.map((f) => ({ title: titles.get(f)!, href: `/docs/${slugOf(f)}/` })) });
-	return groups.filter((g) => g.items.length);
+  const groups: NavGroup[] = [{ title: 'Start', items: [{ title: 'Overview', href: '/docs/' }] }]
+  const seen = new Set<string>(['README.md'])
+  let current: NavGroup | undefined
+  for (const node of tree.children) {
+    if (node.type === 'heading' && node.depth === 2) {
+      current = { title: toString(node).replace(/\s*\(.*\)\s*$/, ''), items: [] }
+      groups.push(current)
+      continue
+    }
+    if (!current) continue
+    visit(node, 'tableRow', (row, _index, table) => {
+      const link = row.children[0] && findLink(row.children[0])
+      if (!link) return
+      const url = (link as { url: string }).url
+      // The reference table's second column holds gradle commands, not descriptions.
+      const header =
+        table && 'children' in table ? (table.children[0] as typeof row | undefined) : undefined
+      const descColumn = header?.children[1] ? toString(header.children[1]) : ''
+      const desc =
+        row.children[1] && !/regenerated by/i.test(descColumn)
+          ? toString(row.children[1])
+          : undefined
+      if (known.has(url) && url !== 'README.md') {
+        if (seen.has(url)) return
+        seen.add(url)
+        current!.items.push({
+          title: titles.get(url)!,
+          href: `/docs/${slugOf(url)}/`,
+          description: desc,
+        })
+      } else if (/^(RELATION_MAP|STATS)\.html$/.test(url)) {
+        current!.items.push({
+          title: url === 'STATS.html' ? 'Commit stats' : 'Relation map',
+          href: rewriteExternal(url),
+          description: desc,
+          external: true,
+        })
+      }
+    })
+  }
+  const rest = files.filter((f) => !seen.has(f))
+  if (rest.length)
+    groups.push({
+      title: 'Other',
+      items: rest.map((f) => ({ title: titles.get(f)!, href: `/docs/${slugOf(f)}/` })),
+    })
+  return groups.filter((g) => g.items.length)
 }
 
-import { PAGES_BASE } from './config';
-const rewriteExternal = (name: string) => `${PAGES_BASE}/${name}`;
+import { PAGES_BASE } from './config'
+const rewriteExternal = (name: string) => `${PAGES_BASE}/${name}`
 
 function findLink(node: unknown): unknown {
-	let found: unknown;
-	visit(node as never, 'link', (l: unknown) => {
-		found ??= l;
-	});
-	return found;
+  let found: unknown
+  visit(node as never, 'link', (l: unknown) => {
+    found ??= l
+  })
+  return found
 }
 
 export function flatNav(groups: NavGroup[]): NavItem[] {
-	return groups.flatMap((g) => g.items).filter((i) => !i.external);
+  return groups.flatMap((g) => g.items).filter((i) => !i.external)
 }
