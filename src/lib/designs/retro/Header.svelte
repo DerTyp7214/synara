@@ -32,7 +32,7 @@
             <span class="model" aria-hidden="true">SR-1</span>
         </a>
 
-        <nav aria-label="Main" class="hidden md:block">
+        <nav aria-label="Main" class="hidden min-[54rem]:block">
             <ul class="bank">
                 {#each links as link (link.href)}
                     {@const active = isActive(link.href)}
@@ -52,7 +52,7 @@
             <span class="power hidden sm:inline-flex" aria-hidden="true"><span class="led ok"></span>Power</span>
             <button
                     type="button"
-                    class="key key-icon md:hidden"
+                    class="key key-icon min-[54rem]:hidden"
                     aria-expanded={open}
                     aria-controls="mobile-nav"
                     aria-label={open ? 'Close menu' : 'Open menu'}
@@ -64,7 +64,7 @@
     </div>
 
     {#if open}
-        <nav id="mobile-nav" aria-label="Main" class="mobile-nav md:hidden">
+        <nav id="mobile-nav" aria-label="Main" class="mobile-nav min-[54rem]:hidden">
             <ul class="shell flex flex-col py-2">
                 {#each links as link (link.href)}
                     {@const active = isActive(link.href)}

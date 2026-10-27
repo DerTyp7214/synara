@@ -4,6 +4,7 @@ export type NavLink = { href: string; label: string };
 /** Main navigation (header). */
 export const mainLinks: NavLink[] = [
 	{ href: '/#features', label: 'Features' },
+	{ href: '/apps/', label: 'Apps' },
 	{ href: '/docs/', label: 'Docs' },
 	{ href: '/server/', label: 'Server' },
 	{ href: '/download/', label: 'Download' }
@@ -18,6 +19,7 @@ export const sourceLinks: NavLink[] = [
 
 /** Footer: pages on this site. */
 export const siteLinks: NavLink[] = [
+	{ href: '/apps/', label: 'Apps' },
 	{ href: '/docs/', label: 'Docs' },
 	{ href: '/server/', label: 'Run a server' },
 	{ href: '/download/', label: 'Download' },

@@ -12,6 +12,7 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "fetch-docs": "node scripts/fetch-docs.mjs",
     "gen:tokens": "node scripts/gen-tonal-tokens.mjs",
+    "build:app-shots": "node scripts/build-app-shots.mjs",
     "predev": "node scripts/fetch-docs.mjs",
     "prebuild": "node scripts/fetch-docs.mjs",
     "precheck": "node scripts/fetch-docs.mjs"

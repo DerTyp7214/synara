@@ -52,7 +52,7 @@ export const features: { title: string; body: string }[] = [
 	},
 	{
 		title: 'Multi-device playback',
-		body: 'Share one queue across your devices, hand it from desktop to phone, and control playback on one device from another.'
+		body: 'On the Apple apps and desktop, share one queue across your devices and control playback on one device from another. Android devices can be controlled remotely too.'
 	},
 	{
 		title: 'Radio and podcasts',
