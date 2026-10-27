@@ -30,6 +30,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
+      - name: Lint
+        run: pnpm lint
       - name: Build
         env:
           PUBLIC_LINKRESOLVER_API_KEY: ${{ secrets.LINKRESOLVER_API_KEY }}
