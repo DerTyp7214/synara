@@ -12,8 +12,8 @@
       <span class="lcd src">track.flac<span class="lcd-dim ml-3">24/96</span></span>
       <span class="wire"></span>
       <span class="outs">
-        {#each lossless.formats as f, i (f)}
-          <span class="out"><span class="led {i === 0 ? 'on' : ''}"></span>{f}</span>
+        {#each lossless.formats as f, i (f.name)}
+          <span class="out"><span class="led {i === 0 ? 'on' : ''}"></span>{f.name}</span>
         {/each}
       </span>
     </div>

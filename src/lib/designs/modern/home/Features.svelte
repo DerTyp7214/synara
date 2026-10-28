@@ -24,6 +24,7 @@
   // Modern features: two larger cards for the lead features, then everything else as inset-grouped
   // rows with leading icon tiles (iOS Settings), then the apps behind a segmented control.
   const { lossless, imports } = leadFeatures
+  let format = $state(0)
 
   // Icon and tile tone per feature title. Unknown titles fall back to a neutral sparkle.
   type Tone = 'primary' | 'secondary' | 'tertiary'
@@ -83,11 +84,14 @@
         <span class="mh-tile lg mh-tile-primary" aria-hidden="true"><AudioWaveform /></span>
         <h3 class="h-title mt-5">{lossless.title}</h3>
         <p class="mh-sub mt-2!">{lossless.body}</p>
-        <div class="formats" aria-hidden="true">
-          {#each lossless.formats as f, i (f)}
-            <span class={i === 0 ? 'on' : ''}>{f}</span>
+        <div class="selector formats" role="group" aria-label="Stream format">
+          {#each lossless.formats as f, i (f.name)}
+            <button type="button" aria-pressed={format === i} onclick={() => (format = i)}
+              >{f.name}</button
+            >
           {/each}
         </div>
+        <p class="format-detail mh-sub" aria-live="polite">{lossless.formats[format].detail}</p>
       </article>
 
       <article class="mh-group lead-card">
@@ -193,30 +197,15 @@
     margin-bottom: 1.5rem;
   }
 
-  /* A quiet, non-interactive picture of the stream options: the original is the selected segment. */
-  .formats {
-    display: inline-flex;
-    gap: 0;
+  /* Fixed-width segments, so the bold selected label never widens the control. */
+  .lead-card .formats {
+    grid-auto-columns: 6.5rem;
     margin-top: auto;
-    padding: 2px;
-    border-radius: var(--m-radius-capsule);
-    background: var(--m-seg-track);
-    box-shadow: inset 0 0 0 1px var(--m-seg-border);
   }
-  .formats span {
-    min-width: 5rem;
-    padding: 0.375rem 1rem;
-    border-radius: var(--m-radius-capsule);
-    text-align: center;
-    font-size: var(--ios-subheadline-size);
-    font-weight: 500;
-    color: var(--color-muted);
-  }
-  .formats span.on {
-    font-weight: 600;
-    color: var(--color-ink);
-    background: var(--m-thumb);
-    box-shadow: none;
+  .lead-card .format-detail {
+    min-height: 2lh;
+    margin-top: 0.75rem;
+    margin-bottom: 0;
   }
   .sources {
     display: flex;

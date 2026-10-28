@@ -42,7 +42,22 @@ export const leadFeatures = {
   lossless: {
     title: 'Lossless at the source',
     body: 'Your library is kept in a lossless format: FLAC by default, or WAV/AIFF. Synara transcodes to Opus or AAC on the fly, or ahead of time, when a connection or download needs it. The lossless file stays untouched.',
-    formats: ['Original', 'Opus', 'AAC'],
+    formats: [
+      {
+        name: 'Original',
+        detail:
+          'The lossless file as it sits in your library, in FLAC, WAV or AIFF. Nothing is re-encoded.',
+      },
+      {
+        name: 'Opus',
+        detail: 'The default transcode. An .ogg file at the bitrate the app asks for.',
+      },
+      {
+        name: 'AAC',
+        detail:
+          'An .m4a file at the bitrate the app asks for. The Apple apps download in AAC, and radio streams use it too.',
+      },
+    ],
   },
   imports: {
     title: 'Bring your music',
