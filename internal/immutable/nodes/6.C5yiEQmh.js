@@ -1,1 +1,0 @@
-import{d as o,D as a}from"../chunks/BZtNzLn5.js";import"../chunks/DsnmJJEf.js";const n=async({data:e,fetch:t})=>({...e,html:await o(e.file,e.path,t)}),c=Object.freeze(Object.defineProperty({__proto__:null,load:n},Symbol.toStringTag,{value:"Module"}));function i(e,t){a(e,{get data(){return t.data}})}export{i as component,c as universal};
