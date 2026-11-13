@@ -16,7 +16,7 @@
   <title>Synara | Your music, bit for bit</title>
   <meta
     name="description"
-    content="Synara is a music server you run yourself, with native apps for Android and desktop. Keep your FLAC, WAV and AIFF library lossless, import from Tidal, Apple Music, YouTube and SoundCloud, and scrobble to ListenBrainz and Last.fm."
+    content="Synara is a music server you run yourself, with native apps for Android, iPhone, iPad and desktop. Keep your FLAC, WAV and AIFF library lossless, import from Tidal, Apple Music, YouTube and SoundCloud, and scrobble to ListenBrainz and Last.fm."
   />
 </svelte:head>
 

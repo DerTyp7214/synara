@@ -40,7 +40,8 @@ export type AppPlatform = {
   body: string
   /** Platforms, as chips. */
   platforms: string[]
-  soon?: boolean
+  /** Platforms that are not released yet, shown unlit after the live ones. */
+  later?: string[]
   download?: { href: string; label: string }
   frame: Frame
   hero: Shot
@@ -116,10 +117,11 @@ export const platforms: AppPlatform[] = [
   {
     id: 'apple',
     short: 'Apple',
-    title: 'iPhone, iPad, Mac and more',
+    title: 'iPhone, iPad and more',
     body: apple.body,
-    platforms: ['iPhone', 'iPad', 'Mac', 'Apple TV', 'Apple Watch', 'CarPlay'],
-    soon: true,
+    platforms: ['iPhone', 'iPad', 'Apple Watch', 'CarPlay'],
+    later: ['Mac', 'Apple TV'],
+    download: { href: apple.appStore.href, label: apple.appStore.label },
     frame: 'iphone',
     hero: {
       key: 'ios-now-playing',

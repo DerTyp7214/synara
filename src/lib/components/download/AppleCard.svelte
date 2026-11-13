@@ -1,23 +1,32 @@
 <script lang="ts">
   import Apple from '@lucide/svelte/icons/apple'
-
-  let { yours = false }: { yours?: boolean } = $props()
+  import Store from '@lucide/svelte/icons/store'
   import { apple } from './content'
+
+  let { yours = false, primary = false }: { yours?: boolean; primary?: boolean } = $props()
 </script>
 
-<!-- A blanking plate: the rack slot is reserved, the module isn't installed yet. -->
-<article class="module-blank" aria-labelledby="apple-h">
-  <div class="module-head border-line!">
-    <h2 id="apple-h" class="module-title text-muted!">
+<article class="module {yours ? 'is-selected' : ''}" aria-labelledby="apple-h">
+  <div class="module-head">
+    <h2 id="apple-h" class="module-title">
       <Apple class="size-5" aria-hidden="true" />Apple
     </h2>
-    <span class="tag">Coming soon</span>
+    {#if yours}
+      <span class="tag tag-lit"><span class="led on" aria-hidden="true"></span>Your system</span>
+    {:else}
+      <span class="led" aria-hidden="true"></span>
+    {/if}
   </div>
   <div class="module-body">
-    <p class="meta">
-      {apple.body}
-      {#if yours}{apple.meanwhile}{/if}
-    </p>
-    <div class="vents mt-5" aria-hidden="true"></div>
+    <p class="meta">{apple.body}</p>
+    <a
+      href={apple.appStore.href}
+      target="_blank"
+      rel="noopener"
+      class="key key-lg mt-6 w-full {primary ? 'key-primary' : ''}"
+    >
+      <Store class="size-5" aria-hidden="true" />
+      {apple.appStore.label}
+    </a>
   </div>
 </article>

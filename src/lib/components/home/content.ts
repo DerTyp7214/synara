@@ -25,8 +25,7 @@ export const platforms: Platform[] = [
   {
     id: 'apple',
     name: 'Apple',
-    detail: 'iOS, iPadOS, macOS, tvOS, watchOS and CarPlay.',
-    soon: true,
+    detail: 'iPhone, iPad, Apple Watch and CarPlay. Mac and Apple TV later.',
   },
 ]
 
@@ -125,9 +124,8 @@ export const apps: { name: string; note: string; soon?: boolean; items: string[]
   },
   {
     name: 'Apple',
-    note: 'Coming soon',
-    soon: true,
-    items: ['iPhone and iPad', 'Mac', 'Apple TV and Apple Watch', 'CarPlay'],
+    note: 'iOS 26 and newer',
+    items: ['iPhone and iPad', 'Apple Watch', 'CarPlay'],
   },
 ]
 
@@ -140,7 +138,7 @@ export const setupSteps = [
 /** Page copy around the components above. */
 export const hero = {
   title: 'Your music, bit\u00a0for\u00a0bit.',
-  lead: 'Synara is a music server you run on your own hardware. Your FLAC, WAV and AIFF files stay lossless, and native apps on Android and desktop play them the way they were recorded.',
+  lead: 'Synara is a music server you run on your own hardware. Your FLAC, WAV and AIFF files stay lossless, and native apps on Android, iPhone, iPad and desktop play them the way they were recorded.',
   licence: 'The server is open source under GPL-2.0. The apps are free.',
   /** Format indicators on the front panel: the library formats above. */
   formats: ['FLAC', 'WAV', 'AIFF'],
@@ -160,6 +158,6 @@ export const sections = {
   },
   cta: {
     title: 'Get the apps.',
-    lead: 'Desktop for Linux, Windows and macOS. Android 12 and newer. Apple apps are coming soon.',
+    lead: 'Desktop for Linux, Windows and macOS. Android 12 and newer. iPhone and iPad with iOS 26 and newer.',
   },
 }

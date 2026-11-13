@@ -8,7 +8,7 @@
 
   // Retro /apps/: each app is a rack of display modules. The screenshots sit behind a plain dark bezel
   // in a recessed well, and the module's legend strip names the screen. The platform list is a row of
-  // LED tags (lit = available now, unlit = coming soon). The rows of modules scroll inside their rack.
+  // LED tags (lit = available now, unlit = not released yet). The rows of modules scroll inside their rack.
   const sizes = {
     hero: {
       iphone: '(min-width: 64rem) 18rem, 64vw',
@@ -47,18 +47,25 @@
         <div class="min-w-0">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h2 id="apps-{p.id}-h" class="h-section">{p.title}</h2>
-            {#if p.soon}<span class="tag">Coming soon</span>{/if}
           </div>
           <p class="lead mt-5">{p.body}</p>
           <ul class="ra-tags" aria-label="Platforms">
             {#each p.platforms as name (name)}
-              <li class="tag {p.soon ? '' : 'tag-lit'}">
-                <span class="led {p.soon ? '' : 'on'}" aria-hidden="true"></span>{name}
+              <li class="tag tag-lit">
+                <span class="led on" aria-hidden="true"></span>{name}
               </li>
+            {/each}
+            {#each p.later ?? [] as name (name)}
+              <li class="tag"><span class="led" aria-hidden="true"></span>{name} later</li>
             {/each}
           </ul>
           {#if p.download}
-            <a href={p.download.href} class="key key-primary key-lg mt-8">
+            <a
+              href={p.download.href}
+              class="key key-primary key-lg mt-8"
+              target={p.download.href.startsWith('http') ? '_blank' : undefined}
+              rel={p.download.href.startsWith('http') ? 'noopener' : undefined}
+            >
               <Download class="size-4.5" aria-hidden="true" />{p.download.label}<span
                 class="sr-only"
               >
@@ -72,8 +79,7 @@
           <figcaption class="module-head">
             <span class="legend">{p.short} display</span>
             <span class="legend inline-flex items-center gap-2"
-              ><span class="led {p.soon ? '' : 'on'}" aria-hidden="true"></span>{p.hero
-                .caption}</span
+              ><span class="led on" aria-hidden="true"></span>{p.hero.caption}</span
             >
           </figcaption>
           <div class="ra-bay">

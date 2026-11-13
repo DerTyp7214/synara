@@ -56,15 +56,20 @@
           <div class="ma-copy">
             <div class="ma-title">
               <h2 id="m-apps-{p.id}-h" class="h-section">{p.title}</h2>
-              {#if p.soon}<span class="tag ma-soon">Coming soon</span>{/if}
             </div>
             <p class="lead">{p.body}</p>
             <ul class="ma-chips" aria-label="Platforms">
               {#each p.platforms as name (name)}<li>{name}</li>{/each}
+              {#each p.later ?? [] as name (name)}<li class="ma-later">{name} later</li>{/each}
             </ul>
             {#if p.download}
               <div class="ma-actions">
-                <a href={p.download.href} class="key key-primary key-lg">
+                <a
+                  href={p.download.href}
+                  class="key key-primary key-lg"
+                  target={p.download.href.startsWith('http') ? '_blank' : undefined}
+                  rel={p.download.href.startsWith('http') ? 'noopener' : undefined}
+                >
                   <Download class="size-[1.1rem]" aria-hidden="true" />{p.download.label}<span
                     class="sr-only"
                   >
@@ -299,10 +304,9 @@
     margin-top: 1rem;
     color: var(--tint-muted);
   }
-  .ma-soon {
-    color: var(--tint-ink);
-    border-color: var(--tint-outline);
-    background: color-mix(in oklab, var(--tint-surface-high) 70%, transparent);
+  .ma-chips li.ma-later {
+    color: var(--tint-muted);
+    opacity: 0.7;
   }
   .ma-chips {
     display: flex;

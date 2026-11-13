@@ -41,7 +41,7 @@
   <title>Download | Synara</title>
   <meta
     name="description"
-    content="Download Synara for Android, Linux, Windows and macOS, add the Arch Linux repository, or pull the server image. Stable and dev channels."
+    content="Download Synara for Android, iPhone, iPad, Linux, Windows and macOS, add the Arch Linux repository, or pull the server image. Stable and dev channels."
   />
 </svelte:head>
 
@@ -69,13 +69,18 @@
         />
       </div>
       <div class="flex min-w-0 flex-col gap-5 {mobile ? 'order-1 lg:order-none' : ''}">
+        {#if os === 'ios'}
+          <AppleCard yours primary />
+        {/if}
         <AndroidDownload
           {channel}
           info={android[channel]}
           yours={os === 'android'}
           primary={os === null || os === 'android'}
         />
-        <AppleCard yours={os === 'ios'} />
+        {#if os !== 'ios'}
+          <AppleCard />
+        {/if}
         <ServerImage {channel} />
       </div>
     </div>

@@ -5,6 +5,7 @@
   import Laptop from '@lucide/svelte/icons/laptop'
   import Monitor from '@lucide/svelte/icons/monitor'
   import Server from '@lucide/svelte/icons/server'
+  import Store from '@lucide/svelte/icons/store'
   import Smartphone from '@lucide/svelte/icons/smartphone'
   import TriangleAlert from '@lucide/svelte/icons/triangle-alert'
   import CodeBlock from '$lib/components/CodeBlock.svelte'
@@ -214,17 +215,31 @@
       {/if}
     </section>
 
-    <section style:order="5" aria-labelledby="m-apple-h">
+    <section style:order={os === 'ios' ? 0 : 5} aria-labelledby="m-apple-h">
       <h2 id="m-apple-h" class="mg-head">Apple</h2>
       <ul class="mg-list">
-        <li class="mg-row has-icon">
-          <span class="mg-icon dim" aria-hidden="true"><Apple class="size-5" /></span>
+        <li class="mg-row has-icon" class:yours={os === 'ios'}>
+          <span class="mg-icon" aria-hidden="true"><Apple class="size-5" /></span>
           <div class="mg-text">
-            <p class="mg-title">iPhone, iPad, Mac and more <span class="tag">Coming soon</span></p>
-            <p class="mg-sub">{apple.body}{os === 'ios' ? ` ${apple.meanwhile}` : ''}</p>
+            <p class="mg-title">
+              iPhone and iPad
+              {#if os === 'ios'}<span class="tag tag-lit">Your system</span>{/if}
+            </p>
+            <p class="mg-sub">App Store</p>
           </div>
+          <a
+            href={apple.appStore.href}
+            target="_blank"
+            rel="noopener"
+            class="mg-btn key key-sm {os === 'ios' ? 'key-primary' : ''}"
+          >
+            <Store class="size-4" aria-hidden="true" /><span class="lbl"
+              >{apple.appStore.label}</span
+            ><span class="sr-only"> for iPhone and iPad</span>
+          </a>
         </li>
       </ul>
+      <p class="mg-foot">{apple.body}</p>
     </section>
   </div>
 </div>

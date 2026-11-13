@@ -8,7 +8,7 @@
   <title>Apps | Synara</title>
   <meta
     name="description"
-    content="Screenshots of the Synara apps for Android and desktop (Linux, Windows and macOS), and of the coming apps for iPhone, iPad, Mac, Apple TV, Apple Watch and CarPlay."
+    content="Screenshots of the Synara apps for Android, iPhone, iPad and desktop (Linux, Windows and macOS). Mac and Apple TV apps are coming later."
   />
 </svelte:head>
 

@@ -10,7 +10,7 @@ export const intro = {
 
 export const channelNotes = {
   stable:
-    'Release builds. Android has one. Desktop and the server have none yet, so they use the current dev builds.',
+    'Release builds. Android has one, and the iPhone and iPad app comes from the App Store. Desktop and the server have none yet, so they use the current dev builds.',
   dev: 'Built from the latest commit. New features first, and sometimes new bugs.',
 } as const
 
@@ -28,9 +28,8 @@ export const android = {
 }
 
 export const apple = {
-  body: 'Native apps for iPhone, iPad, Mac, Apple TV, Apple Watch and CarPlay are in the works.',
-  /** Shown to visitors on iOS. */
-  meanwhile: 'Until then, a Subsonic-compatible player can connect to your server.',
+  body: 'iPhone and iPad with iOS 26 and iPadOS 26 and newer, with Apple Watch and CarPlay included. Mac and Apple TV apps are coming later.',
+  appStore: { href: 'https://apps.apple.com/app/id6768415018', label: 'App Store' },
 }
 
 export const server = {
